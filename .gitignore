@@ -1,0 +1,16 @@
+/.bundle
+/.ruby-version
+/.yardoc
+/Gemfile.lock
+/_commands/
+/_site/
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/vendor/
+/tmp/
+*.swp
+.jekyll-metadata
+.sass-cache/
