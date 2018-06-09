@@ -7,7 +7,8 @@ module Tenji
 
     def initialize(file)
       metadata = file.exist? ? YAML.load_file(file.realpath) : {}
-      @name = metadata[:name] || file.parent.relative_path_from(file.parent.parent)
+      @name = metadata[:name] ||
+              file.parent.relative_path_from(file.parent.parent)
       @description = metadata[:description] || ''
       @period = metadata[:period] || ''
       @singles = metadata[:singles] || false
@@ -32,14 +33,6 @@ module Tenji
       @gallery_dir.children.select { |c| c.directory? }
     end
 
-    def gallery_pages(dirs:)
-      dirs.each do |d|
-        metadata = gallery_metadata dir: d
-        images = gallery_images dir: d
-        puts metadata.inspect
-      end
-    end
-
     def gallery_images(dir:)
       dir.children.select { |f| f.extname == '.jpg' }
     end
@@ -47,6 +40,14 @@ module Tenji
     def gallery_metadata(dir:)
       file_path = dir + '/_gallery.yml'
       gm = GalleryMetadata.new file_path
+    end
+
+    def gallery_pages(dirs:)
+      dirs.each do |d|
+        metadata = gallery_metadata dir: d
+        images = gallery_images dir: d
+        puts metadata.inspect
+      end
     end
   end
 end
