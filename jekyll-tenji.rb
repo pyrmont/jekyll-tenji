@@ -17,12 +17,14 @@ module Tenji
 
   class GalleryPageGenerator < Jekyll::Generator
     safe true
-    
+
+    GALLERY_BASE_DIR = '_albums'
+
     attr_accessor :gallery_dir
 
     def generate(site)
       base_dir = Pathname.new site.source
-      @gallery_dir = base_dir + '_galleries'
+      @gallery_dir = base_dir + GALLERY_BASE_DIR
       gp = gallery_pages dirs: gallery_dirs
     end
 
