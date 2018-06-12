@@ -1,6 +1,6 @@
 require 'tenji/gallery/image'
 require 'tenji/gallery/metadata'
-require 'tenji/gallery/page'
+# require 'tenji/gallery/page'
 require 'tenji/refinements'
 
 module Tenji
@@ -10,6 +10,9 @@ module Tenji
     attr_accessor :metadata, :images
     
     def initialize(dir:)
+      msg = "The directory #{dir} does not exist."
+      raise StandardError, msg unless dir.exist?
+
       @metadata = init_metadata dir
       @images = init_images dir
     end
