@@ -10,7 +10,8 @@ class TenjiGalleryTest < Minitest::Test
         obj = Tenji::Gallery.new dir: dir
         assert_equal 'Tenji::Gallery', obj.class.name
         assert_equal 'Tenji::Gallery::Metadata', obj.metadata.class.name
-        assert_equal [ 'Tenji::Gallery::Image' ], obj.images.map { |i| i.class.name }
+        assert_equal [ 'Tenji::Gallery::Image' ],
+                     obj.images.map { |i| i.class.name }
       end
 
       should "raise an error if the file doesn't exist" do
