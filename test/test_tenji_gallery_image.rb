@@ -9,6 +9,7 @@ class TenjiGalleryImageTest < Minitest::Test
         file = Pathname.new 'test/data/_albums/gallery1/photo1.jpg'
         obj = Tenji::Gallery::Image.new file
         assert_equal 'Tenji::Gallery::Image', obj.class.name
+        assert_equal 'photo1.jpg', obj.name
       end
 
       should "raise an error if the file doesn't exist" do
