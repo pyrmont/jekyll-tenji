@@ -34,6 +34,10 @@ class TenjiGalleryImageTest < Minitest::Test
     end
 
     context "has a method #generate that" do
+      teardown do
+        tmp = Pathname.new 'tmp'
+        tmp.children.each { |c| c.delete }
+      end
       should "generate thumbnails" do
         input_name = @file.basename.sub_ext('')
         output_dir = Pathname.new 'tmp'
