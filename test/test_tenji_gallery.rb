@@ -19,5 +19,30 @@ class TenjiGalleryTest < Minitest::Test
         assert_raises(StandardError) { Tenji::Gallery.new dir }
       end
     end
+
+    context "has a class method .read_yaml that" do
+      should "return frontmatter and text if a metadata file exists" do
+        metadata = { 'name' => 'Test Gallery',
+                     'description' => 'An example of a gallery.',
+                     'period' => '1 January 2018 - 5 January 2018',
+                     'singles' => true,
+                     'paginate' => 15 }
+        dir = Pathname.new 'test/data/_albums/gallery2'
+        file = dir + Tenji::Gallery::METADATA_FILE 
+        data, content = Tenji::Gallery.read_yaml file
+        assert_equal 'Hash', data.class.name
+        assert_equal metadata, data
+        assert_equal 'String', content.class.name
+        assert_equal '', content
+      end
+
+      should "return nil and nil if a metadata file doesn't exist" do
+        dir = Pathname.new 'not/a/real/path'
+        file = dir + Tenji::Gallery::METADATA_FILE
+        data, content = Tenji::Gallery.read_yaml file
+        assert_nil data
+        assert_nil content
+      end
+    end
   end
 end

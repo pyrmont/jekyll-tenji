@@ -7,15 +7,42 @@ module Tenji
   class Gallery
     using Tenji::Refinements
 
-    attr_accessor :metadata, :images
+    METADATA_FILE = '_gallery.md'
+
+    attr_accessor :images, :metadata, :text
     
     def initialize(dir:)
       msg = "The directory #{dir} does not exist."
       raise StandardError, msg unless dir.exist?
 
-      @metadata = init_metadata dir
+      fm, text = Tenji::Gallery.read_yaml(dir + METADATA_FILE)
+      @metadata = init_metadata fm
+      @text = text
+      
       @images = init_images dir
     end
+    
+    def self.read_yaml(file, config = {})
+      return nil, nil unless file.exist?
+
+      filename = file.realpath.to_s
+
+      begin
+        content = File.read filename
+        if content =~ Jekyll::Document::YAML_FRONT_MATTER_REGEXP
+          content = $POSTMATCH
+          data = SafeYAML.load Regexp.last_match(1)
+        end
+      rescue Psych::SyntaxError => e
+        Jekyll.logger.warn "YAML Exception reading #{filename}: #{e.message}"
+        raise e if config["strict_front_matter"]
+      rescue StandardError => e
+        Jekyll.logger.warn "Error reading file #{filename}: #{e.message}"
+        raise e if config["strict_front_matter"]
+      end
+
+      [ data, content ]
+    end 
 
     private
 
@@ -25,9 +52,8 @@ module Tenji
       end
     end
 
-    def init_metadata(dir)
-      file_path = dir + '_gallery.md'
-      Tenji::Gallery::Metadata.new file_path
+    def init_metadata(frontmatter)
+      Tenji::Gallery::Metadata.new frontmatter
     end
   end
 end
