@@ -14,6 +14,7 @@ module Tenji
         
         @data = gallery.metadata
         @content = gallery.text
+        @images = gallery.images
 
         Jekyll::Hooks.trigger :pages, :post_init, self
       end

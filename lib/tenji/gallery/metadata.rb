@@ -12,6 +12,7 @@ module Tenji
         @data['period'] = Tenji::Gallery::Metadata.parse_period @data['period']
         @data['singles'] ||= false
         @data['paginate'] ||= 25
+        @data['layout'] ||= 'gallery_index'
       end
 
       def [](k)

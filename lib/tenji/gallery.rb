@@ -15,7 +15,7 @@ module Tenji
       raise StandardError, msg unless dir.exist?
 
       fm, text = Tenji::Gallery.read_yaml(dir + METADATA_FILE)
-      @metadata = init_metadata fm
+      @metadata = init_metadata fm, dir
       @text = text
       
       @images = init_images dir
@@ -51,8 +51,8 @@ module Tenji
       end
     end
 
-    def init_metadata(frontmatter)
-      Tenji::Gallery::Metadata.new frontmatter
+    def init_metadata(frontmatter, dir)
+      Tenji::Gallery::Metadata.new frontmatter, dir.basename.to_s
     end
   end
 end
