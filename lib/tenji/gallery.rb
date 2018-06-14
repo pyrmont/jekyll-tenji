@@ -20,7 +20,7 @@ module Tenji
       
       @images = init_images dir
     end
-    
+
     def self.read_yaml(file, config = {})
       return nil, nil unless file.exist?
 
@@ -42,6 +42,7 @@ module Tenji
 
       [ data, content ]
     end 
+
 
     private
 
