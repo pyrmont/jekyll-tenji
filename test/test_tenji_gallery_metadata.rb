@@ -6,7 +6,7 @@ class TenjiGalleryMetadataTest < Minitest::Test
   context "Tenji::Gallery::Metadata" do
     context "has a method #initialize that" do
       should "return a default object when no YAML file exists" do
-        file = Pathname.new 'test/data/_albums/gallery1/_gallery.yml'
+        file = Pathname.new 'test/data/_albums/gallery1/_gallery.md'
         obj = Tenji::Gallery::Metadata.new file
         assert_equal 'Tenji::Gallery::Metadata', obj.class.name
         assert_equal 'gallery1', obj.name
@@ -17,7 +17,7 @@ class TenjiGalleryMetadataTest < Minitest::Test
       end
 
       should "return a custom object when a YAML file exists" do
-        file = Pathname.new 'test/data/_albums/gallery2/_gallery.yml'
+        file = Pathname.new 'test/data/_albums/gallery2/_gallery.md'
         obj = Tenji::Gallery::Metadata.new file
         period = [ Date.parse('1 January 2018'), Date.parse('5 January 2018') ]
         assert_equal 'Tenji::Gallery::Metadata', obj.class.name

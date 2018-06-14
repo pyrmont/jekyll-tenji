@@ -26,7 +26,7 @@ module Tenji
     end
 
     def init_metadata(dir)
-      file_path = dir + '_gallery.yml'
+      file_path = dir + '_gallery.md'
       Tenji::Gallery::Metadata.new file_path
     end
   end
