@@ -3,15 +3,19 @@ require 'jekyll'
 module Tenji
   class Gallery
     class Metadata
-      attr_accessor :name, :description, :period, :singles, :paginate
+      attr_accessor :data
 
-      def initialize(metadata = nil, dir_name)
-        metadata ||= Hash.new
-        @name = metadata["name"] || dir_name
-        @description = metadata["description"] || ''
-        @period = Tenji::Gallery::Metadata.parse_period metadata["period"]
-        @singles = metadata["singles"] || false
-        @paginate = metadata["paginate"] || 25
+      def initialize(metadata = {}, dir_name)
+        @data = metadata || Hash.new
+        @data['name'] ||= dir_name
+        @data['description'] ||= ''
+        @data['period'] = Tenji::Gallery::Metadata.parse_period @data['period']
+        @data['singles'] ||= false
+        @data['paginate'] ||= 25
+      end
+
+      def [](k)
+        @data[k]
       end
 
       def self.parse_period(period_string)

@@ -1,6 +1,5 @@
 require 'tenji/gallery/image'
 require 'tenji/gallery/metadata'
-# require 'tenji/gallery/page'
 require 'tenji/refinements'
 
 module Tenji
