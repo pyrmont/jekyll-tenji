@@ -9,7 +9,7 @@ module Tenji
     METADATA_FILE = '_gallery.md'
 
     attr_accessor :images, :metadata, :text
-    
+
     def initialize(dir:)
       msg = "The directory #{dir} does not exist."
       raise StandardError, msg unless dir.exist?
@@ -17,20 +17,8 @@ module Tenji
       fm, text = Tenji::Gallery.read_yaml(dir + METADATA_FILE)
       @metadata = init_metadata fm, dir
       @text = text
-      
+
       @images = init_images dir
-    end
-
-    def generate_pages(site, base, prefix_path)
-      pages = Array.new
-      pages.concat generate_index(site, base, prefix_path)
-      pages.concat generate_singles(site, base, prefix_path)
-    end
-
-    def generate_files(site, base, prefix_path)
-      files = Array.new
-      files.concat generate_photos(site, base, prefix_path)
-      files.concat generate_thumbs(site, base, prefix_path)
     end
 
     private def init_images(dir)
@@ -65,7 +53,7 @@ module Tenji
       end
 
       [ data, content ]
-    end 
+    end
 
   end
 end
