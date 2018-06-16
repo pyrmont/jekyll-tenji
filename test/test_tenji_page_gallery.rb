@@ -8,7 +8,7 @@ class TenjiPageGalleryTest < Minitest::Test
       should "return an object" do
         dir = Pathname.new 'test/data/_albums/gallery1'
         gallery = Tenji::Gallery.new dir: dir
-        obj = Tenji::Page::Gallery.new '', '', '', gallery 
+        obj = Tenji::Page::Gallery.new gallery, '', '', '', '' 
         assert_equal 'Tenji::Page::Gallery', obj.class.name
       end
     end

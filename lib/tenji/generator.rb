@@ -1,7 +1,7 @@
 require 'jekyll'
 require 'pathname'
 require 'tenji/gallery'
-require 'tenji/page/gallery'
+require 'tenji/generator/gallery'
 require 'tenji/refinements'
 
 module Tenji
@@ -13,17 +13,19 @@ module Tenji
     safe true
 
     def generate(site)
-      dir = Pathname.new(site.source) + Tenji::Generator::GALLERIES_DIR
-      generate_pages site, dir
+      galleries_dir = Pathname.new(site.source) + Tenji::Generator::GALLERIES_DIR
+      galleries = init_galleries galleries_dir
+      galleries.each do |g|
+        gg = Tenji::Generator::Gallery.new g, site, site.source, galleries_dir
+        site.pages.concat gg.generate_index
+        site.static_files.concat gg.generate_photos
+        site.static_files.concat gg.generate_thumbs
+      end
     end
 
-    private
-
-    def generate_pages(site, dir)
-      dir.subdirectories.each do |d|
-        g = Tenji::Gallery.new dir: d
-        p = Tenji::Page::Gallery.new site, site.source, d.basename.to_s, g
-        site.pages << p
+    private def init_galleries(dir)
+      dir.subdirectories.map do |d|
+        Tenji::Gallery.new dir: d
       end
     end
   end

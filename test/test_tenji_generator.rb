@@ -19,7 +19,7 @@ class TenjiGeneratorTest < Minitest::Test
       should "add Gallery pages to a site object" do
         generator = Tenji::Generator.new
         assert_equal [], @site.pages
-        generator.generate(@site)
+        generator.generate @site
         page_types = @site.pages.map { |p| p.class.name }.uniq
         assert_equal ['Tenji::Page::Gallery'], page_types
       end

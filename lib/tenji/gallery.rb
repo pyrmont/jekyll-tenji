@@ -21,6 +21,28 @@ module Tenji
       @images = init_images dir
     end
 
+    def generate_pages(site, base, prefix_path)
+      pages = Array.new
+      pages.concat generate_index(site, base, prefix_path)
+      pages.concat generate_singles(site, base, prefix_path)
+    end
+
+    def generate_files(site, base, prefix_path)
+      files = Array.new
+      files.concat generate_photos(site, base, prefix_path)
+      files.concat generate_thumbs(site, base, prefix_path)
+    end
+
+    private def init_images(dir)
+      dir.images.map do |i|
+        Tenji::Gallery::Image.new i
+      end
+    end
+
+    private def init_metadata(frontmatter, dir)
+      Tenji::Gallery::Metadata.new frontmatter, dir.basename.to_s
+    end
+
     def self.read_yaml(file, config = {})
       return nil, nil unless file.exist?
 
@@ -34,26 +56,16 @@ module Tenji
         end
       rescue Psych::SyntaxError => e
         Jekyll.logger.warn "YAML Exception reading #{filename}: #{e.message}"
-        raise e if config["strict_front_matter"]
+        # raise e if config["strict_front_matter"]
+        raise e
       rescue StandardError => e
         Jekyll.logger.warn "Error reading file #{filename}: #{e.message}"
-        raise e if config["strict_front_matter"]
+        # raise e if config["strict_front_matter"]
+        raise e
       end
 
       [ data, content ]
     end 
 
-
-    private
-
-    def init_images(dir)
-      dir.images.map do |i|
-        Tenji::Gallery::Image.new i
-      end
-    end
-
-    def init_metadata(frontmatter, dir)
-      Tenji::Gallery::Metadata.new frontmatter, dir.basename.to_s
-    end
   end
 end
