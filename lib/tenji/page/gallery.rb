@@ -1,10 +1,19 @@
 require 'jekyll'
 require 'pathname'
+require 'tenji/refinements'
 
 module Tenji
   module Page
     class Gallery < Jekyll::Page
+      using Tenji::Refinements
+
       def initialize(gallery, site, base, dir, name)
+        gallery.is_a! Tenji::Gallery
+        site.is_a! Jekyll::Site
+        base.is_a! Pathname
+        dir.is_a! Pathname
+        name.is_a! String
+
         @site = site
         @base = base
         @dir = dir

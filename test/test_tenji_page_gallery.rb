@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'pathname'
 require 'tenji/gallery'
 require 'tenji/page/gallery'
 
@@ -8,7 +9,9 @@ class TenjiPageGalleryTest < Minitest::Test
       should "return an object" do
         dir = Pathname.new 'test/data/_albums/gallery1'
         gallery = Tenji::Gallery.new dir: dir
-        obj = Tenji::Page::Gallery.new gallery, '', '', '', '' 
+        site = TestSite.site
+        base = Pathname.new site.source
+        obj = Tenji::Page::Gallery.new gallery, site, base, dir, 'index.html' 
         assert_equal 'Tenji::Page::Gallery', obj.class.name
       end
     end

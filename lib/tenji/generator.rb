@@ -14,6 +14,8 @@ module Tenji
     safe true
 
     def generate(site)
+      site.is_a! Jekyll::Site
+
       galleries_dir = Pathname.new(site.source) + Tenji::Generator::GALLERIES_DIR
       galleries = init_galleries galleries_dir
       write_thumbnails site, galleries
@@ -21,6 +23,10 @@ module Tenji
     end
 
     private def generate_galleries(site, galleries, dir)
+      site.is_a! Jekyll::Site
+      galleries.is_a! Array
+      dir.is_a! Pathname
+
       galleries.each do |g|
         gg = Tenji::Generator::Gallery.new g, site, site.source, dir
         site.pages.concat gg.generate_index
@@ -30,12 +36,17 @@ module Tenji
     end
 
     private def init_galleries(dir)
+      dir.is_a! Pathname
+
       dir.subdirectories.map do |d|
         Tenji::Gallery.new dir: d
       end
     end
 
     private def write_thumbnails(site, galleries)
+      site.is_a! Jekyll::Site
+      galleries.is_a! Array
+
       galleries.each do |g|
         g.images.each do |i|
           output_dir = Pathname.new site.dest

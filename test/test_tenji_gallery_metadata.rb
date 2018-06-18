@@ -6,7 +6,7 @@ class TenjiGalleryMetadataTest < Minitest::Test
   context "Tenji::Gallery::Metadata" do
     context "has a method #initialize that" do
       should "return a default object when no metadata is passed" do
-        obj = Tenji::Gallery::Metadata.new nil, 'gallery1'
+        obj = Tenji::Gallery::Metadata.new Hash.new, 'gallery1'
         assert_equal 'Tenji::Gallery::Metadata', obj.class.name
         assert_equal 'gallery1', obj['name']
         assert_equal '', obj['description']

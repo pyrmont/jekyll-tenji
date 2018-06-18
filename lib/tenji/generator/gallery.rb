@@ -1,20 +1,21 @@
 require 'pathname'
 require 'tenji/page/gallery'
+require 'tenji/refinements'
 require 'tenji/static_file'
-require 'tenji/verify'
 
 module Tenji
   class Generator < Jekyll::Generator
     class Gallery
-      include Tenji::Verify
+      using Tenji::Refinements
 
-      attr_accessor :gallery, :site, :base, :prefix_path
+      attr_reader :gallery, :site, :base, :prefix_path
 
       def initialize(gallery, site, base, prefix_path)
-        verify [ gallery, Tenji::Gallery ],
-               [ site, Jekyll::Site ],
-               [ base, Pathname ],
-               [ prefix_path, Pathname ]
+        gallery.is_a! Tenji::Gallery
+        site.is_a! Jekyll::Site
+        base.is_a! Pathname
+        prefix_path.is_a! Pathname
+
         @gallery = gallery
         @site = site
         @base = base

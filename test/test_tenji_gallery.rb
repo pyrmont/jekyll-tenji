@@ -36,11 +36,11 @@ class TenjiGalleryTest < Minitest::Test
         assert_equal '', content
       end
 
-      should "return nil and nil if a metadata file doesn't exist" do
+      should "return {} and nil if a metadata file doesn't exist" do
         dir = Pathname.new 'not/a/real/path'
         file = dir + Tenji::Gallery::METADATA_FILE
         data, content = Tenji::Gallery.read_yaml file
-        assert_nil data
+        assert_equal Hash.new, data
         assert_nil content
       end
     end

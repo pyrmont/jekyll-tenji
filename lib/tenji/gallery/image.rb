@@ -1,15 +1,17 @@
 require 'tenji/gallery/image/thumb'
+require 'tenji/refinements'
 
 module Tenji
   class Gallery
     class Image
+      using Tenji::Refinements
 
-      attr_accessor :name, :thumbs
+      attr_reader :name, :thumbs
 
       def initialize(file)
-        msg = "The file #{file} doesn't exist."
-        raise StandardError, msg unless file.exist?
-
+        file.is_a! Pathname
+        file.exist!
+        
         @name = file.basename.to_s
         @thumbs = Tenji::Gallery::Image::Thumb.new file
       end
