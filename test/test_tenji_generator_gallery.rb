@@ -7,15 +7,13 @@ require 'tenji/generator/gallery'
 class TenjiGeneratorGalleryTest < Minitest::Test
   context "Tenji::Generator::Gallery" do
     setup do
-      Jekyll.logger.log_level = :error
-      source_dir = Pathname.new('test/data').realpath.to_s
-      dest_dir = Pathname.new('tmp').realpath.to_s
-      config = Jekyll.configuration({ 'source' => source_dir,
-                                      'destination' => dest_dir,
-                                      'url' => 'http://localhost' })
-      @site = Jekyll::Site.new config
-      path = Pathname.new 'test/data/_albums/gallery2'
+      @site = TestSite.site source: 'test/data', dest: 'tmp'
+      path = Pathname.new 'test/data/gallery2'
       @gallery = Tenji::Gallery.new dir: path
+    end
+
+    teardown do
+      @site = nil
     end
 
     context "has a method #initialize that" do
@@ -29,14 +27,15 @@ class TenjiGeneratorGalleryTest < Minitest::Test
     end
 
     context "has a method #generate_index that" do
-      should "return an array of Page objects" do
+      should "add to an array of Page objects" do
         base = Pathname.new @site.source
         prefix_path = Pathname.new 'gallery2'
         generator = Tenji::Generator::Gallery.new @gallery, @site, base,
                                                   prefix_path
-        obj = generator.generate_index
+        pages = Array.new
+        generator.generate_index pages
         assert_equal [ 'Tenji::Page::Gallery' ],
-                     obj.map { |o| o.class.name }.uniq
+                     pages.map { |p| p.class.name }.uniq
       end
     end
   end

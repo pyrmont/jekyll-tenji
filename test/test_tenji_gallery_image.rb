@@ -6,7 +6,7 @@ class TenjiGalleryImageTest < Minitest::Test
   context "Tenji::Gallery::Image" do
     context "has a method #initialize that" do
       should "return an object if the file exists" do
-        file = Pathname.new 'test/data/_albums/gallery1/photo1.jpg'
+        file = Pathname.new 'test/data/gallery1/photo1.jpg'
         obj = Tenji::Gallery::Image.new file
         assert_equal 'Tenji::Gallery::Image', obj.class.name
         assert_equal 'photo1.jpg', obj.name

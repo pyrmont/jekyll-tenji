@@ -3,25 +3,26 @@ require 'pathname'
 require 'tenji/writer/thumbs'
 
 class TenjiWriterThumbsTest < Minitest::Test
-  context "Tenji::Wrter::Thumbs" do
+  context "Tenji::Writer::Thumbs" do
     setup do
-      @file = Pathname.new 'test/data/_albums/gallery2/01-castle.jpg'
+      subdir = ('a'..'z').to_a.shuffle[0,8].join
+      @temp_dir = Pathname.new('tmp/' + subdir)
+      @temp_dir.mkpath
+      @file = Pathname.new 'test/data/gallery2/01-castle.jpg'
       @obj = Tenji::Gallery::Image.new @file
     end
 
-    context "has a class method #write that" do
-      teardown do
-        tmp = Pathname.new 'tmp'
-        tmp.children.each { |c| c.delete }
-      end
+    teardown do
+      @temp_dir.rmtree
+    end
 
+    context "has a class method #write that" do
       should "write thumbnails" do
         input_name = @file.basename.sub_ext('')
-        output_dir = Pathname.new 'tmp'
         output_basename = "#{input_name}-small.jpg"
         sizes = { 'small' => { 'x' => 400, 'y' => 400 } }
-        Tenji::Writer::Thumbs.write @obj.thumbs, output_dir, sizes
-        assert_equal (output_dir + output_basename).realpath.to_s,
+        Tenji::Writer::Thumbs.write @obj.thumbs, @temp_dir, sizes
+        assert_equal (@temp_dir + output_basename).realpath.to_s,
                      @obj.thumbs['small']
       end
     end

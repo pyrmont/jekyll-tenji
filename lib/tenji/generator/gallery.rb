@@ -22,29 +22,34 @@ module Tenji
         @prefix_path = prefix_path
       end
 
-      def generate_index()
-        pages = Array.new
+      def generate_index(pages)
+        pages.is_a! Array
         pages << Tenji::Page::Gallery.new(@gallery, @site, @base, @prefix_path,
                                           'index.html')
       end
 
-      def generate_photos()
-        @gallery.images.map do |i|
-          Tenji::StaticFile.new @site, @base, @prefix_path, i.name
+      def generate_photos(files)
+        files.is_a! Array
+        @gallery.images.each do |i|
+          files << Tenji::StaticFile.new(@site, @base, @prefix_path, i.name)
         end
       end
 
-      def generate_singles()
-        @gallery.images.map do |i|
-          Tenji::Page::Single.new i, @site, @base, @prefix_path
+      def generate_singles(pages)
+        pages.is_a! Array
+        @gallery.images.each do |i|
+          pages << Tenji::Page::Single.new(i, @site, @base, @prefix_path)
         end
       end
 
-      def generate_thumbs()
-        @gallery.images.map do |i|
+      def generate_thumbs(files)
+        files.is_a! Array
+
+        @gallery.images.each do |i|
           i.thumbs.files.map do |key,value|
             path = Pathname.new value
-            Tenji::StaticFile.new @site, @base, @prefix_path, path.basename.to_s
+            files << Tenji::StaticFile.new(@site, @base, @prefix_path, 
+                                           path.basename.to_s)
           end
         end
       end

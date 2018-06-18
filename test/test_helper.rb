@@ -11,20 +11,13 @@ require 'shoulda/context'
 require 'jekyll'
 
 class TestSite
-  @@site = nil
-
-  def self.reset
-    Jekyll.logger.log_level = :error
-    source_dir = Pathname.new('test/data').realpath.to_s
-    dest_dir = Pathname.new('tmp').realpath.to_s
+  def self.site(source:, dest:, log_level: :error)
+    Jekyll.logger.log_level = log_level
+    source_dir = Pathname.new(source).realpath.to_s
+    dest_dir = Pathname.new(dest).realpath.to_s
     config = Jekyll.configuration({ 'source' => source_dir,
                                     'destination' => dest_dir,
                                     'url' => 'http://localhost' })
-    @@site = Jekyll::Site.new config
-  end
-
-  def self.site
-    return @@site if @@site
-    self.reset
+    Jekyll::Site.new config
   end
 end

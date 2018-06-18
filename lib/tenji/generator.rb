@@ -28,10 +28,11 @@ module Tenji
       dir.is_a! Pathname
 
       galleries.each do |g|
-        gg = Tenji::Generator::Gallery.new g, site, site.source, dir
-        site.pages.concat gg.generate_index
-        site.static_files.concat gg.generate_photos
-        site.static_files.concat gg.generate_thumbs
+        source = Pathname.new site.source
+        gg = Tenji::Generator::Gallery.new g, site, source, dir
+        gg.generate_index site.pages
+        gg.generate_photos site.static_files
+        gg.generate_thumbs site.static_files
       end
     end
 

@@ -6,7 +6,7 @@ class TenjiGalleryTest < Minitest::Test
   context "Tenji::Gallery" do
     context "has a method #initialize that" do
       should "return an object if the directory exists" do
-        dir = Pathname.new 'test/data/_albums/gallery1/'
+        dir = Pathname.new 'test/data/gallery1/'
         obj = Tenji::Gallery.new dir: dir
         assert_equal 'Tenji::Gallery', obj.class.name
         assert_equal 'Tenji::Gallery::Metadata', obj.metadata.class.name
@@ -27,7 +27,7 @@ class TenjiGalleryTest < Minitest::Test
                      'period' => '1 January 2018 - 5 January 2018',
                      'singles' => true,
                      'paginate' => 15 }
-        dir = Pathname.new 'test/data/_albums/gallery2'
+        dir = Pathname.new 'test/data/gallery2'
         file = dir + Tenji::Gallery::METADATA_FILE 
         data, content = Tenji::Gallery.read_yaml file
         assert_equal 'Hash', data.class.name
@@ -45,7 +45,8 @@ class TenjiGalleryTest < Minitest::Test
       end
 
       should "raise an error if an invalid file is given" do
-        file = Pathname.new 'test/data/gallery3/_gallery.md'
+        dir = Pathname.new 'test/data/gallery3'
+        file = dir + Tenji::Gallery::METADATA_FILE
         config = { 'strict_front_matter' => true }
         assert_raises(Psych::SyntaxError) do
           capture_io { Tenji::Gallery.read_yaml file, config }
