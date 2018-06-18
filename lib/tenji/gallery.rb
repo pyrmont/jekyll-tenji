@@ -22,22 +22,26 @@ module Tenji
     end
 
     private def init_images(dir)
+      dir.is_a! Pathname
+
       dir.images.map do |i|
         Tenji::Gallery::Image.new i
       end
     end
 
     private def init_metadata(frontmatter, dir)
+      frontmatter.is_a! Hash
+      dir.is_a! Pathname
       Tenji::Gallery::Metadata.new frontmatter, dir.basename.to_s
     end
 
     def self.read_yaml(file, config = {})
-      file.is_a! Pathname and config.is_a! Hash
+      file.is_a! Pathname
+      config.is_a! Hash
 
       return Hash.new, nil unless file.exist?
 
       filename = file.realpath.to_s
-
       begin
         content = File.read filename
         if content =~ Jekyll::Document::YAML_FRONT_MATTER_REGEXP
