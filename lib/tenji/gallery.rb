@@ -39,7 +39,9 @@ module Tenji
       file.is_a! Pathname
       config.is_a! Hash
 
-      return Hash.new, nil unless file.exist?
+      data = Hash.new
+      content = nil
+      return [ data, content ] unless file.exist?
 
       filename = file.realpath.to_s
       begin
@@ -50,12 +52,10 @@ module Tenji
         end
       rescue Psych::SyntaxError => e
         Jekyll.logger.warn "YAML Exception reading #{filename}: #{e.message}"
-        # raise e if config["strict_front_matter"]
-        raise e
+        raise e if config["strict_front_matter"]
       rescue StandardError => e
         Jekyll.logger.warn "Error reading file #{filename}: #{e.message}"
-        # raise e if config["strict_front_matter"]
-        raise e
+        raise e if config["strict_front_matter"]
       end
 
       [ data, content ]

@@ -43,6 +43,14 @@ class TenjiGalleryTest < Minitest::Test
         assert_equal Hash.new, data
         assert_nil content
       end
+
+      should "raise an error if an invalid file is given" do
+        file = Pathname.new 'test/data/gallery3/_gallery.md'
+        config = { 'strict_front_matter' => true }
+        assert_raises(Psych::SyntaxError) do
+          capture_io { Tenji::Gallery.read_yaml file, config }
+        end
+      end
     end
   end
 end
