@@ -5,6 +5,14 @@ require 'tenji/generator'
 
 class TenjiGeneratorTest < Minitest::Test
   context "Tenji::Generator" do
+    setup do
+      Tenji::Config.configure
+    end
+
+    teardown do
+      Tenji::Config.reset
+    end
+
     context "has a method #generate that" do
       setup do
         subdir = ('a'..'z').to_a.shuffle[0,8].join

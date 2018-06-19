@@ -1,5 +1,6 @@
 require 'jekyll'
 require 'pathname'
+require 'tenji/config'
 require 'tenji/gallery'
 require 'tenji/generator/gallery'
 require 'tenji/refinements'
@@ -9,14 +10,12 @@ module Tenji
   class Generator < Jekyll::Generator
     using Tenji::Refinements
 
-    GALLERIES_DIR = '_albums'
-
     safe true
 
     def generate(site)
       site.is_a! Jekyll::Site
 
-      galleries_dir = Pathname.new(site.source) + Tenji::Generator::GALLERIES_DIR
+      galleries_dir = Pathname.new(site.source) + Tenji::Config.dir(:galleries)
       galleries = init_galleries galleries_dir
       write_thumbnails site, galleries
       generate_galleries site, galleries, galleries_dir
@@ -50,11 +49,13 @@ module Tenji
       site.is_a! Jekyll::Site
       galleries.is_a! Array
 
+      base_dir = Pathname.new(site.source)
+
       galleries.each do |g|
-        prefix_dir = Pathname.new(GALLERIES_DIR) + g.dirname
+        prefix_dir = Pathname.new(Tenji::Config.dir(:galleries)) + g.dirname
         g.images.each do |i|
-          source = Pathname.new(site.source) + prefix_dir + i.name
-          output_dir = Pathname.new(site.source) + '_thumbs' + g.dirname
+          source = base_dir + prefix_dir + i.name
+          output_dir = base_dir + Tenji::Config.dir(:thumbs) + g.dirname
           output_dir.mkpath unless output_dir.exist?
           Tenji::Writer::Thumbs.write i.thumbs, source, output_dir, g.metadata['sizes']
         end

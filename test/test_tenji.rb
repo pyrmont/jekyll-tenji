@@ -7,6 +7,14 @@ class TenjiTest < Minitest::Test
   using Tenji::Refinements
 
   context "Tenji" do
+    setup do
+      Tenji::Config.configure
+    end
+
+    teardown do
+      Tenji::Config.reset
+    end
+
     context "is a Jekyll plugin that" do
       setup do
         subdir = ('a'..'z').to_a.shuffle[0,8].join
@@ -19,7 +27,7 @@ class TenjiTest < Minitest::Test
 
       teardown do
         @temp_dir.rmtree
-        @site = nil 
+        @site = nil
       end
 
       should "render a photo gallery" do

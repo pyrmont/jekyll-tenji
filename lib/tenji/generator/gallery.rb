@@ -25,8 +25,8 @@ module Tenji
 
       def generate_index(pages)
         pages.is_a! Array
-        pages << Tenji::Page::Gallery.new(@gallery, @site, @base, @prefix_path,
-                                          'index.html')
+        name = 'index' + Tenji::Config.ext(:page, output: true)
+        pages << Tenji::Page::Gallery.new(@gallery, @site, @base, @prefix_path, name)
       end
 
       def generate_photos(files)
@@ -50,7 +50,8 @@ module Tenji
 
         @gallery.images.each do |i|
           i.thumbs.files.map do |key,value|
-            prefix_path = (Pathname.new('_thumbs') + @gallery.dirname).to_s
+            thumb_dir = Pathname.new Tenji::Config.dir(:thumbs)
+            prefix_path = (thumb_dir + @gallery.dirname).to_s
             files << Tenji::StaticFile.new(@site, @base, prefix_path, value)
           end
         end

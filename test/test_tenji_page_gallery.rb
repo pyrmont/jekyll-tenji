@@ -5,6 +5,14 @@ require 'tenji/page/gallery'
 
 class TenjiPageGalleryTest < Minitest::Test
   context "Tenji::Page::Gallery" do
+    setup do
+      Tenji::Config.configure
+    end
+
+    teardown do
+      Tenji::Config.reset
+    end
+
     context "has a method #initialize that" do
       should "return an object" do
         dir = Pathname.new 'test/data/gallery1'

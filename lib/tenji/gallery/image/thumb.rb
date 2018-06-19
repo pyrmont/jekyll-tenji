@@ -9,8 +9,9 @@ module Tenji
 
         attr_reader :files
 
-        def initialize()
-          @files = Hash.new
+        def initialize(sizes)
+          sizes.is_a! Hash
+          @files = sizes
         end
 
         def [](k)

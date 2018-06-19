@@ -7,12 +7,14 @@ require 'tenji/generator/gallery'
 class TenjiGeneratorGalleryTest < Minitest::Test
   context "Tenji::Generator::Gallery" do
     setup do
+      Tenji::Config.configure
       @site = TestSite.site source: 'test/data', dest: 'tmp'
       path = Pathname.new 'test/data/gallery2'
       @gallery = Tenji::Gallery.new dir: path
     end
 
     teardown do
+      Tenji::Config.reset
       @site = nil
     end
 

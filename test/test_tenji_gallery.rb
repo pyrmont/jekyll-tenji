@@ -4,6 +4,14 @@ require 'tenji/gallery'
 
 class TenjiGalleryTest < Minitest::Test
   context "Tenji::Gallery" do
+    setup do
+      Tenji::Config.configure
+    end
+
+    teardown do
+      Tenji::Config.reset
+    end
+
     context "has a method #initialize that" do
       should "return an object if the directory exists" do
         dir = Pathname.new 'test/data/gallery1/'
@@ -28,7 +36,7 @@ class TenjiGalleryTest < Minitest::Test
                      'singles' => true,
                      'paginate' => 15 }
         dir = Pathname.new 'test/data/gallery2'
-        file = dir + Tenji::Gallery::METADATA_FILE 
+        file = dir + Tenji::Config.file(:metadata) 
         data, content = Tenji::Gallery.read_yaml file
         assert_equal 'Hash', data.class.name
         assert_equal metadata, data
@@ -38,7 +46,7 @@ class TenjiGalleryTest < Minitest::Test
 
       should "return {} and nil if a metadata file doesn't exist" do
         dir = Pathname.new 'not/a/real/path'
-        file = dir + Tenji::Gallery::METADATA_FILE
+        file = dir + Tenji::Config.file(:metadata)
         data, content = Tenji::Gallery.read_yaml file
         assert_equal Hash.new, data
         assert_equal '', content
@@ -46,7 +54,7 @@ class TenjiGalleryTest < Minitest::Test
 
       should "raise an error if an invalid file is given" do
         dir = Pathname.new 'test/data/gallery3'
-        file = dir + Tenji::Gallery::METADATA_FILE
+        file = dir + Tenji::Config.file(:metadata)
         config = { 'strict_front_matter' => true }
         assert_raises(Psych::SyntaxError) do
           capture_io { Tenji::Gallery.read_yaml file, config }

@@ -5,14 +5,16 @@ require 'tenji/writer/thumbs'
 class TenjiWriterThumbsTest < Minitest::Test
   context "Tenji::Writer::Thumbs" do
     setup do
+      Tenji::Config.configure
       subdir = ('a'..'z').to_a.shuffle[0,8].join
       @temp_dir = Pathname.new('tmp/' + subdir)
       @temp_dir.mkpath
       @file = Pathname.new 'test/data/gallery2/01-castle.jpg'
-      @obj = Tenji::Gallery::Image.new @file
+      @obj = Tenji::Gallery::Image.new @file, Hash.new
     end
 
     teardown do
+      Tenji::Config.reset
       @temp_dir.rmtree
     end
 

@@ -6,8 +6,6 @@ module Tenji
   class Gallery
     using Tenji::Refinements
 
-    METADATA_FILE = '_gallery.md'
-
     attr_reader :dirname, :images, :metadata, :text
 
     def initialize(dir:)
@@ -16,7 +14,7 @@ module Tenji
 
       @dirname = dir.basename.to_s
 
-      fm, text = self.class.read_yaml(dir + METADATA_FILE)
+      fm, text = self.class.read_yaml(dir + Tenji::Config.file(:metadata))
       @metadata = init_metadata fm, dir
       @text = text
 
@@ -27,7 +25,7 @@ module Tenji
       dir.is_a! Pathname
 
       dir.images.map do |i|
-        Tenji::Gallery::Image.new i
+        Tenji::Gallery::Image.new i, @metadata['sizes']
       end
     end
 
@@ -62,6 +60,5 @@ module Tenji
 
       [ data, content ]
     end
-
   end
 end
