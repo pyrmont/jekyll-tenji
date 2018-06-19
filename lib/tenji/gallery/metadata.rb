@@ -3,29 +3,22 @@ require 'tenji/refinements'
 
 module Tenji
   class Gallery
-    class Metadata
+    class Metadata < Hash
       using Tenji::Refinements
-
-      attr_reader :data
 
       def initialize(metadata, dir_name)
         metadata.is_a! Hash
         dir_name.is_a! String
 
-        @data = metadata
-        @data['name'] ||= dir_name
-        @data['description'] ||= ''
+        self.merge! metadata
+        self['name'] ||= dir_name
+        self['description'] ||= ''
 
-        @data['layout'] ||= 'gallery_index'
-        @data['paginate'] ||= 25
-        @data['period'] = self.class.parse_period(@data['period'] || '')
-        @data['singles'] ||= false
-        @data['sizes'] ||= { 'small' => { 'x' => 400, 'y' => 400  } }
-      end
-
-      def [](k)
-        k.is_a! String
-        @data[k]
+        self['layout'] ||= 'gallery_index'
+        self['paginate'] ||= 25
+        self['period'] = self.class.parse_period(self['period'] || '')
+        self['singles'] ||= false
+        self['sizes'] ||= { 'small' => { 'x' => 400, 'y' => 400  } }
       end
 
       def self.parse_period(period)

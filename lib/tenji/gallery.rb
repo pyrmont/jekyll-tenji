@@ -8,11 +8,13 @@ module Tenji
 
     METADATA_FILE = '_gallery.md'
 
-    attr_reader :images, :metadata, :text
+    attr_reader :dirname, :images, :metadata, :text
 
     def initialize(dir:)
       dir.is_a! Pathname
       dir.exist!
+
+      @dirname = dir.basename.to_s
 
       fm, text = self.class.read_yaml(dir + METADATA_FILE)
       @metadata = init_metadata fm, dir
@@ -40,7 +42,7 @@ module Tenji
       config.is_a! Hash
 
       data = Hash.new
-      content = nil
+      content = ''
       return [ data, content ] unless file.exist?
 
       filename = file.realpath.to_s

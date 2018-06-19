@@ -21,9 +21,8 @@ class TenjiWriterThumbsTest < Minitest::Test
         input_name = @file.basename.sub_ext('')
         output_basename = "#{input_name}-small.jpg"
         sizes = { 'small' => { 'x' => 400, 'y' => 400 } }
-        Tenji::Writer::Thumbs.write @obj.thumbs, @temp_dir, sizes
-        assert_equal (@temp_dir + output_basename).realpath.to_s,
-                     @obj.thumbs['small']
+        Tenji::Writer::Thumbs.write @obj.thumbs, @file, @temp_dir, sizes
+        assert_equal output_basename, @obj.thumbs['small']
       end
     end
   end

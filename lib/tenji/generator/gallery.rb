@@ -1,5 +1,6 @@
 require 'pathname'
 require 'tenji/page/gallery'
+require 'tenji/page/single'
 require 'tenji/refinements'
 require 'tenji/static_file'
 
@@ -18,8 +19,8 @@ module Tenji
 
         @gallery = gallery
         @site = site
-        @base = base
-        @prefix_path = prefix_path
+        @base = base.to_s
+        @prefix_path = prefix_path.to_s
       end
 
       def generate_index(pages)
@@ -37,8 +38,10 @@ module Tenji
 
       def generate_singles(pages)
         pages.is_a! Array
+        return Array.new unless @gallery.metadata['singles']
         @gallery.images.each do |i|
-          pages << Tenji::Page::Single.new(i, @site, @base, @prefix_path)
+          pages << Tenji::Page::Single.new(i, @site, @base, @prefix_path, 
+                                           i.name)
         end
       end
 
@@ -47,9 +50,8 @@ module Tenji
 
         @gallery.images.each do |i|
           i.thumbs.files.map do |key,value|
-            path = Pathname.new value
-            files << Tenji::StaticFile.new(@site, @base, @prefix_path, 
-                                           path.basename.to_s)
+            prefix_path = (Pathname.new('_thumbs') + @gallery.dirname).to_s
+            files << Tenji::StaticFile.new(@site, @base, prefix_path, value)
           end
         end
       end

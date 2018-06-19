@@ -41,7 +41,7 @@ class TenjiGalleryTest < Minitest::Test
         file = dir + Tenji::Gallery::METADATA_FILE
         data, content = Tenji::Gallery.read_yaml file
         assert_equal Hash.new, data
-        assert_nil content
+        assert_equal '', content
       end
 
       should "raise an error if an invalid file is given" do

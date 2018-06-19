@@ -28,11 +28,13 @@ module Tenji
       dir.is_a! Pathname
 
       galleries.each do |g|
-        source = Pathname.new site.source
-        gg = Tenji::Generator::Gallery.new g, site, source, dir
+        base = Pathname.new site.source
+        gallery_dir = (dir + g.dirname) - site.source
+        gg = Tenji::Generator::Gallery.new g, site, base, gallery_dir 
         gg.generate_index site.pages
         gg.generate_photos site.static_files
         gg.generate_thumbs site.static_files
+        gg.generate_singles site.pages
       end
     end
 
@@ -49,9 +51,12 @@ module Tenji
       galleries.is_a! Array
 
       galleries.each do |g|
+        prefix_dir = Pathname.new(GALLERIES_DIR) + g.dirname
         g.images.each do |i|
-          output_dir = Pathname.new site.dest
-          Tenji::Writer::Thumbs.write i.thumbs, output_dir, g.metadata['sizes']
+          source = Pathname.new(site.source) + prefix_dir + i.name
+          output_dir = Pathname.new(site.source) + '_thumbs' + g.dirname
+          output_dir.mkpath unless output_dir.exist?
+          Tenji::Writer::Thumbs.write i.thumbs, source, output_dir, g.metadata['sizes']
         end
       end
     end

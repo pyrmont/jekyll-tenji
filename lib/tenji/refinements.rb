@@ -10,6 +10,10 @@ module Tenji
     end
 
     refine Pathname do
+      def -(p2)
+        self.sub(p2.to_s, '')
+      end
+
       def exist!()
         msg = "File #{self} does not exist"
         raise StandardError.new msg unless self.exist?

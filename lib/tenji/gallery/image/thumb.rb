@@ -7,14 +7,10 @@ module Tenji
       class Thumb
         using Tenji::Refinements
 
-        attr_reader :files, :source
+        attr_reader :files
 
-        def initialize(source)
-          source.is_a! Pathname
-          source.exist!
-
+        def initialize()
           @files = Hash.new
-          @source = source
         end
 
         def [](k)

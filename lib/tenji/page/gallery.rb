@@ -10,8 +10,8 @@ module Tenji
       def initialize(gallery, site, base, dir, name)
         gallery.is_a! Tenji::Gallery
         site.is_a! Jekyll::Site
-        base.is_a! Pathname
-        dir.is_a! Pathname
+        base.is_a! String
+        dir.is_a! String
         name.is_a! String
 
         @site = site

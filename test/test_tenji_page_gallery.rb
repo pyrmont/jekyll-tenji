@@ -10,8 +10,9 @@ class TenjiPageGalleryTest < Minitest::Test
         dir = Pathname.new 'test/data/gallery1'
         gallery = Tenji::Gallery.new dir: dir
         site = TestSite.site source: 'test/data', dest: 'tmp'
-        base = Pathname.new site.source
-        obj = Tenji::Page::Gallery.new gallery, site, base, dir, 'index.html' 
+        base = site.source
+        prefix_path = dir.to_s
+        obj = Tenji::Page::Gallery.new gallery, site, base, prefix_path, 'index.html' 
         assert_equal 'Tenji::Page::Gallery', obj.class.name
       end
     end

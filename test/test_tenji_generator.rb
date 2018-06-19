@@ -22,10 +22,16 @@ class TenjiGeneratorTest < Minitest::Test
         generator = Tenji::Generator.new
         assert_equal [], @site.pages
         generator.generate @site
-        page_types = @site.pages.map { |p| p.class.name }.uniq
-        assert_equal [ 'Tenji::Page::Gallery' ], page_types
-        file_types = @site.static_files.map { |s| s.class.name }.uniq
-        assert_equal [ 'Tenji::StaticFile' ], file_types 
+        pages = @site.pages
+        assert_equal [ 'Tenji::Page::Gallery', 'Tenji::Page::Single' ], 
+                     pages.map { |p| p.class.name }.uniq
+        assert_equal [ 'index.html', '01-castle.jpg.html' ], 
+                     pages.map { |p| p.name }
+        files = @site.static_files
+        assert_equal [ 'Tenji::StaticFile' ], 
+                     files.map { |f| f.class.name }.uniq
+        assert_equal [ '01-castle.jpg', '01-castle-small.jpg' ], 
+                     files.map { |f| f.name }
       end
     end
   end
