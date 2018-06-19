@@ -1,10 +1,10 @@
 require 'test_helper'
 require 'jekyll'
 require 'pathname'
-require 'tenji/static_file'
+require 'tenji/file/image'
 
-class TenjiStaticFileTest < Minitest::Test
-  context "Tenji::StaticFile" do
+class TenjiFileImageTest < Minitest::Test
+  context "Tenji::File::Image" do
     context "has a method #initialize that" do
       setup do
         Jekyll.logger.log_level = :error
@@ -18,9 +18,9 @@ class TenjiStaticFileTest < Minitest::Test
 
       should "return an object" do
         path = Pathname.new 'test/data/_albums/gallery1/photo1.jpg'
-        obj = Tenji::StaticFile.new @site, @site.source, path.parent.to_s,
+        obj = Tenji::File::Image.new @site, @site.source, path.parent.to_s,
                                     path.basename.to_s
-        assert_equal 'Tenji::StaticFile', obj.class.name
+        assert_equal 'Tenji::File::Image', obj.class.name
       end
     end
   end

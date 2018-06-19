@@ -35,8 +35,8 @@ class TenjiTest < Minitest::Test
           @site.process
         end
         subs = @temp_dir.subdirectories
-        assert_equal '_albums', subs[0].basename.to_s
-        assert_equal '_thumbs', subs[1].basename.to_s
+        assert_equal 'albums', subs[0].basename.to_s
+        assert_equal 'thumbs', subs[1].basename.to_s
       end
     end
   end

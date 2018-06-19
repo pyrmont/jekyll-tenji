@@ -45,7 +45,7 @@ module Tenji
 
       filename = file.realpath.to_s
       begin
-        content = File.read filename
+        content = ::File.read filename
         if content =~ Jekyll::Document::YAML_FRONT_MATTER_REGEXP
           content = $POSTMATCH
           data = SafeYAML.load Regexp.last_match(1)

@@ -28,6 +28,15 @@ module Tenji
         Jekyll::Hooks.trigger :pages, :post_init, self
       end
 
+      def destination(dest)
+        path = site.in_dest_dir(dest, Jekyll::URL.unescape_path(url))
+        path = ::File.join(path, "index") if url.end_with?("/")
+        path << output_ext unless path.end_with? output_ext
+        input = Tenji::Config.dir(:galleries)
+        output = Tenji::Config.dir(:galleries, output: true)
+        path.gsub(input, output)
+      end
+
       private
 
       def process_name()

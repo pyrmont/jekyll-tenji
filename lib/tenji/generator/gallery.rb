@@ -1,8 +1,11 @@
+require 'jekyll'
 require 'pathname'
+require 'tenji/config'
+require 'tenji/file/image'
+require 'tenji/file/thumb'
 require 'tenji/page/gallery'
-require 'tenji/page/single'
+require 'tenji/page/image'
 require 'tenji/refinements'
-require 'tenji/static_file'
 
 module Tenji
   class Generator < Jekyll::Generator
@@ -32,7 +35,7 @@ module Tenji
       def generate_photos(files)
         files.is_a! Array
         @gallery.images.each do |i|
-          files << Tenji::StaticFile.new(@site, @base, @prefix_path, i.name)
+          files << Tenji::File::Image.new(@site, @base, @prefix_path, i.name)
         end
       end
 
@@ -40,8 +43,8 @@ module Tenji
         pages.is_a! Array
         return Array.new unless @gallery.metadata['singles']
         @gallery.images.each do |i|
-          pages << Tenji::Page::Single.new(i, @site, @base, @prefix_path, 
-                                           i.name)
+          pages << Tenji::Page::Image.new(i, @site, @base, @prefix_path, 
+                                          i.name)
         end
       end
 
@@ -52,7 +55,7 @@ module Tenji
           i.thumbs.files.map do |key,value|
             thumb_dir = Pathname.new Tenji::Config.dir(:thumbs)
             prefix_path = (thumb_dir + @gallery.dirname).to_s
-            files << Tenji::StaticFile.new(@site, @base, prefix_path, value)
+            files << Tenji::File::Thumb.new(@site, @base, prefix_path, value)
           end
         end
       end
