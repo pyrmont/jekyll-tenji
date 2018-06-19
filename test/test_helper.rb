@@ -9,6 +9,8 @@ require 'shoulda/context'
 # Minitest::Reporters.use!
 
 require 'jekyll'
+require 'pathname'
+require 'tenji'
 
 class TestSite
   def self.site(source:, dest:, log_level: :error)

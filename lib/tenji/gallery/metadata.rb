@@ -1,6 +1,3 @@
-require 'jekyll'
-require 'tenji/refinements'
-
 module Tenji
   class Gallery
     class Metadata < Hash

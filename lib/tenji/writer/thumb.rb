@@ -1,10 +1,6 @@
-require 'pathname'
-require 'rmagick'
-require 'tenji/refinements'
-
 module Tenji
   module Writer
-    class Thumbs
+    class Thumb
       using Tenji::Refinements
 
       def self.write(thumbs, source_file, output_dir, sizes)

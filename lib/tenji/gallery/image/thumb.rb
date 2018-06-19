@@ -1,6 +1,3 @@
-require 'pathname'
-require 'tenji/refinements'
-
 module Tenji
   class Gallery
     class Image

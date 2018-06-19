@@ -1,7 +1,4 @@
 require 'test_helper'
-require 'jekyll'
-require 'pathname'
-require 'tenji/generator'
 
 class TenjiGeneratorTest < Minitest::Test
   context "Tenji::Generator" do

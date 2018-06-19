@@ -1,7 +1,3 @@
-require 'jekyll'
-require 'pathname'
-require 'tenji/refinements'
-
 module Tenji
   module Page
     class Gallery < Jekyll::Page

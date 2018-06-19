@@ -1,7 +1,3 @@
-require 'tenji/gallery/image'
-require 'tenji/gallery/metadata'
-require 'tenji/refinements'
-
 module Tenji
   class Gallery
     using Tenji::Refinements

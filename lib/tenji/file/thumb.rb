@@ -1,5 +1,3 @@
-require 'jekyll'
-
 module Tenji
   module File
     class Thumb < Jekyll::StaticFile

@@ -1,9 +1,3 @@
-require 'jekyll'
-require 'pathname'
-require 'tenji/config'
-require 'tenji/gallery/image'
-require 'tenji/refinements'
-
 module Tenji
   module Page
     class Image < Jekyll::Page

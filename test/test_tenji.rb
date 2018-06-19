@@ -1,7 +1,4 @@
 require 'test_helper'
-require 'jekyll'
-require 'pathname'
-require 'tenji'
 
 class TenjiTest < Minitest::Test
   using Tenji::Refinements

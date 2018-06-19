@@ -1,8 +1,4 @@
 require 'test_helper'
-require 'jekyll'
-require 'pathname'
-require 'tenji/gallery'
-require 'tenji/generator/gallery'
 
 class TenjiGeneratorGalleryTest < Minitest::Test
   context "Tenji::Generator::Gallery" do

@@ -1,6 +1,4 @@
 require 'test_helper'
-require 'pathname'
-require 'tenji/gallery/image/thumb'
 
 class TenjiGalleryImageThumbTest < Minitest::Test
   context "Tenji::Gallery::Image::Thumb" do

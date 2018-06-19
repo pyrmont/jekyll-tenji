@@ -1,9 +1,7 @@
 require 'test_helper'
-require 'pathname'
-require 'tenji/writer/thumbs'
 
-class TenjiWriterThumbsTest < Minitest::Test
-  context "Tenji::Writer::Thumbs" do
+class TenjiWriterThumbTest < Minitest::Test
+  context "Tenji::Writer::Thumb" do
     setup do
       Tenji::Config.configure
       subdir = ('a'..'z').to_a.shuffle[0,8].join
@@ -21,7 +19,7 @@ class TenjiWriterThumbsTest < Minitest::Test
 
     context "has a class method #write that" do
       should "write thumbnails" do
-        Tenji::Writer::Thumbs.write @obj.thumbs, @file, @temp_dir, @sizes
+        Tenji::Writer::Thumb.write @obj.thumbs, @file, @temp_dir, @sizes
         input_name = @file.basename.sub_ext('')
         output_basename = "#{input_name}-small.jpg"
         output_file = Pathname.new(@temp_dir) + output_basename

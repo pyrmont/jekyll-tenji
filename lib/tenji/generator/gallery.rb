@@ -1,12 +1,3 @@
-require 'jekyll'
-require 'pathname'
-require 'tenji/config'
-require 'tenji/file/image'
-require 'tenji/file/thumb'
-require 'tenji/page/gallery'
-require 'tenji/page/image'
-require 'tenji/refinements'
-
 module Tenji
   class Generator < Jekyll::Generator
     class Gallery

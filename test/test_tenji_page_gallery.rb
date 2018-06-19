@@ -1,7 +1,4 @@
 require 'test_helper'
-require 'pathname'
-require 'tenji/gallery'
-require 'tenji/page/gallery'
 
 class TenjiPageGalleryTest < Minitest::Test
   context "Tenji::Page::Gallery" do

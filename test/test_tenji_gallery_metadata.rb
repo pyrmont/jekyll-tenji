@@ -1,6 +1,4 @@
 require 'test_helper'
-require 'pathname'
-require 'tenji/gallery/metadata'
 
 class TenjiGalleryMetadataTest < Minitest::Test
   context "Tenji::Gallery::Metadata" do

@@ -1,7 +1,3 @@
-require 'tenji/config'
-require 'tenji/gallery/image/thumb'
-require 'tenji/refinements'
-
 module Tenji
   class Gallery
     class Image

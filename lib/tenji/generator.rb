@@ -1,11 +1,3 @@
-require 'jekyll'
-require 'pathname'
-require 'tenji/config'
-require 'tenji/gallery'
-require 'tenji/generator/gallery'
-require 'tenji/refinements'
-require 'tenji/writer/thumbs'
-
 module Tenji
   class Generator < Jekyll::Generator
     using Tenji::Refinements
@@ -57,7 +49,7 @@ module Tenji
           source = base_dir + prefix_dir + i.name
           output_dir = base_dir + Tenji::Config.dir(:thumbs) + g.dirname
           output_dir.mkpath unless output_dir.exist?
-          Tenji::Writer::Thumbs.write i.thumbs, source, output_dir, g.metadata['sizes']
+          Tenji::Writer::Thumb.write i.thumbs, source, output_dir, g.metadata['sizes']
         end
       end
     end

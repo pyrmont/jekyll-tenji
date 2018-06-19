@@ -1,7 +1,4 @@
 require 'test_helper'
-require 'jekyll'
-require 'pathname'
-require 'tenji/file/image'
 
 class TenjiFileImageTest < Minitest::Test
   context "Tenji::File::Image" do
