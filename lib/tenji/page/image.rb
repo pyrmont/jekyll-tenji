@@ -31,7 +31,7 @@ module Tenji
         path << output_ext unless path.end_with? output_ext
         input = Tenji::Config.dir(:galleries)
         output = Tenji::Config.dir(:galleries, output: true)
-        path.gsub(input, output)
+        path.sub(input, output)
       end
 
       private def process_name()
