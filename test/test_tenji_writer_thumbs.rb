@@ -10,7 +10,8 @@ class TenjiWriterThumbsTest < Minitest::Test
       @temp_dir = Pathname.new('tmp/' + subdir)
       @temp_dir.mkpath
       @file = Pathname.new 'test/data/gallery2/01-castle.jpg'
-      @obj = Tenji::Gallery::Image.new @file, Hash.new
+      @sizes = { 'small' => { 'x' => 400, 'y' => 400 } }
+      @obj = Tenji::Gallery::Image.new @file, @sizes
     end
 
     teardown do
@@ -20,11 +21,11 @@ class TenjiWriterThumbsTest < Minitest::Test
 
     context "has a class method #write that" do
       should "write thumbnails" do
+        Tenji::Writer::Thumbs.write @obj.thumbs, @file, @temp_dir, @sizes
         input_name = @file.basename.sub_ext('')
         output_basename = "#{input_name}-small.jpg"
-        sizes = { 'small' => { 'x' => 400, 'y' => 400 } }
-        Tenji::Writer::Thumbs.write @obj.thumbs, @file, @temp_dir, sizes
-        assert_equal output_basename, @obj.thumbs['small']
+        output_file = Pathname.new(@temp_dir) + output_basename
+        assert output_file.exist?
       end
     end
   end
