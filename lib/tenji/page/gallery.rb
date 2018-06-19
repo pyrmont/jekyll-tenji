@@ -35,9 +35,7 @@ module Tenji
         path.gsub(input, output)
       end
 
-      private
-
-      def process_name()
+      private def process_name()
         process @name
       end
     end
