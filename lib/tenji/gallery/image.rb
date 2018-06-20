@@ -5,21 +5,31 @@ module Tenji
 
       attr_reader :metadata, :name, :text, :thumbs
 
-      def initialize(file, sizes)
+      DEFAULTS = { 'layout' => 'gallery_image',
+                   'title' => 'Photo' }
+
+      def initialize(file, sizes, options = {})
         file.is_a! Pathname
         file.exist!
         sizes.is_a! Hash
+        options.is_a! Hash
 
         @name = file.basename.to_s
         @thumbs = init_thumbs file.basename, sizes.keys
 
         co_file = file.sub_ext Tenji::Config.ext(:page)
         fm, text = Tenji::Utilities.read_yaml co_file
-        @metadata = fm
+        @metadata = init_metadata fm, options
         @text = text
       end
 
-      def init_thumbs(filename, keys)
+      private def init_metadata(frontmatter, options)
+        frontmatter.is_a! Hash
+        options.is_a! Hash
+        DEFAULTS.merge(options).merge(options)
+      end
+
+      private def init_thumbs(filename, keys)
         filename.is_a! Pathname
         keys.is_a! Array
 

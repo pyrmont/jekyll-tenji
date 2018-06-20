@@ -9,6 +9,7 @@ module Tenji
 
       galleries_dir = Pathname.new(site.source) + Tenji::Config.dir(:galleries)
       list = init_list galleries_dir
+
       write_thumbnails site, list.galleries
       generate_list site, list, galleries_dir
       generate_galleries site, list.galleries, galleries_dir
@@ -45,7 +46,7 @@ module Tenji
 
     private def init_list(dir)
       dir.is_a! Pathname
-      Tenji::List.new dir: dir
+      Tenji::List.new dir
     end
 
     private def write_thumbnails(site, galleries)

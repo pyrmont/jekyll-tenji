@@ -5,8 +5,8 @@ class TenjiGeneratorListTest < Minitest::Test
     setup do
       Tenji::Config.configure
       @site = TestSite.site source: 'test/data', dest: 'tmp'
-      path = Pathname.new 'test/data/gallery2'
-      @list = Tenji::List.new dir: path
+      dir = Pathname.new 'test/data/gallery2'
+      @list = Tenji::List.new dir
     end
 
     teardown do
