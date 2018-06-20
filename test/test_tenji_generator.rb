@@ -28,9 +28,9 @@ class TenjiGeneratorTest < Minitest::Test
         assert_equal [], @site.pages
         generator.generate @site
         pages = @site.pages
-        assert_equal [ 'Tenji::Page::Gallery', 'Tenji::Page::Image' ], 
+        assert_equal [ 'Tenji::Page::List', 'Tenji::Page::Gallery', 'Tenji::Page::Image' ], 
                      pages.map { |p| p.class.name }.uniq
-        assert_equal [ 'index.html', '01-castle.jpg.html' ], 
+        assert_equal [ 'index.html', 'index.html', '01-castle.jpg.html' ], 
                      pages.map { |p| p.name }
         files = @site.static_files
         assert_equal [ 'Tenji::File::Image', 'Tenji::File::Thumb' ], 

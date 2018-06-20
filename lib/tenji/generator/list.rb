@@ -1,0 +1,27 @@
+module Tenji
+  class Generator < Jekyll::Generator
+    class List
+      using Tenji::Refinements
+
+      attr_reader :galleries, :site, :base, :prefix_path
+
+      def initialize(galleries, site, base, prefix_path)
+        galleries.is_a! Array
+        site.is_a! Jekyll::Site
+        base.is_a! Pathname
+        prefix_path.is_a! Pathname
+
+        @galleries = galleries
+        @site = site
+        @base = base.to_s
+        @prefix_path = prefix_path.to_s
+      end
+
+      def generate_index(pages)
+        pages.is_a! Array
+        name = 'index' + Tenji::Config.ext(:page, output: true)
+        pages << Tenji::Page::List.new(@galleries, @site, @base, @prefix_path, name)
+      end
+    end
+  end
+end
