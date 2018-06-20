@@ -14,7 +14,7 @@ module Tenji
         @thumbs = init_thumbs file.basename, sizes.keys
 
         co_file = file.sub_ext Tenji::Config.ext(:page)
-        fm, text = Tenji::Gallery.read_yaml co_file
+        fm, text = Tenji::Utilities.read_yaml co_file
         @metadata = fm
         @text = text
       end

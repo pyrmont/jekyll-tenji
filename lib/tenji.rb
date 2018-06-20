@@ -15,9 +15,11 @@ require 'tenji/gallery/metadata'
 require 'tenji/generator'
 require 'tenji/generator/gallery'
 require 'tenji/generator/list'
+require 'tenji/list'
 require 'tenji/page/gallery'
 require 'tenji/page/image'
 require 'tenji/page/list'
+require 'tenji/utilities'
 require 'tenji/writer/thumb'
 
 module Tenji

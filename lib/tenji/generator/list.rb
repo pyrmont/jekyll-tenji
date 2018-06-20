@@ -5,13 +5,13 @@ module Tenji
 
       attr_reader :galleries, :site, :base, :prefix_path
 
-      def initialize(galleries, site, base, prefix_path)
-        galleries.is_a! Array
+      def initialize(list, site, base, prefix_path)
+        list.is_a! Tenji::List
         site.is_a! Jekyll::Site
         base.is_a! Pathname
         prefix_path.is_a! Pathname
 
-        @galleries = galleries
+        @galleries = list.galleries
         @site = site
         @base = base.to_s
         @prefix_path = prefix_path.to_s

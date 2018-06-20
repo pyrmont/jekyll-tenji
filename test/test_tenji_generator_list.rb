@@ -6,7 +6,7 @@ class TenjiGeneratorListTest < Minitest::Test
       Tenji::Config.configure
       @site = TestSite.site source: 'test/data', dest: 'tmp'
       path = Pathname.new 'test/data/gallery2'
-      @galleries = [ Tenji::Gallery.new(dir: path) ]
+      @list = Tenji::List.new dir: path
     end
 
     teardown do
@@ -18,8 +18,7 @@ class TenjiGeneratorListTest < Minitest::Test
       should "return an object" do
         base = Pathname.new @site.source
         prefix_path = Pathname.new ''
-        obj = Tenji::Generator::List.new @galleries, @site, base,
-                                            prefix_path
+        obj = Tenji::Generator::List.new @list, @site, base, prefix_path
         assert_equal 'Tenji::Generator::List', obj.class.name
       end
     end
@@ -28,12 +27,10 @@ class TenjiGeneratorListTest < Minitest::Test
       should "add to an array of Page objects" do
         base = Pathname.new @site.source
         prefix_path = Pathname.new ''
-        generator = Tenji::Generator::List.new @galleries, @site, base,
-                                                  prefix_path
+        generator = Tenji::Generator::List.new @list, @site, base, prefix_path
         pages = Array.new
         generator.generate_index pages
-        assert_equal [ 'Tenji::Page::List' ],
-                     pages.map { |p| p.class.name }.uniq
+        assert_equal [ 'Tenji::Page::List' ], pages.map { |p| p.class.name }.uniq
       end
     end
   end
