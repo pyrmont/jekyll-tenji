@@ -15,7 +15,7 @@ class TenjiGalleryTest < Minitest::Test
         dir = Pathname.new 'test/data/gallery1/'
         obj = Tenji::Gallery.new dir: dir
         assert_equal 'Tenji::Gallery', obj.class.name
-        assert_equal 'Tenji::Gallery::Metadata', obj.metadata.class.name
+        assert_equal 'Hash', obj.metadata.class.name
         assert_equal [ 'Tenji::Image' ], obj.images.map { |i| i.class.name }
       end
 

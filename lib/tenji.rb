@@ -17,7 +17,6 @@ require 'tenji/thumb'
 
 require 'tenji/file/image'
 require 'tenji/file/thumb'
-require 'tenji/gallery/metadata'
 require 'tenji/generator/gallery'
 require 'tenji/generator/list'
 require 'tenji/page/gallery'

@@ -1,6 +1,13 @@
 module Tenji
   module Utilities
     using Tenji::Refinements
+    
+    def self.parse_period(period)
+      period.is_a! String
+
+      components = period.split '-'
+      components.map { |c| Date.parse(c) }
+    end
 
     def self.read_yaml(file, config = {})
       file.is_a! Pathname
@@ -24,6 +31,8 @@ module Tenji
         Jekyll.logger.warn "Error reading file #{filename}: #{e.message}"
         raise e if config["strict_front_matter"]
       end
+
+      data['period'] = data['period'] ? parse_period(data['period']) : nil
 
       [ data, content ]
     end

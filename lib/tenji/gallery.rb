@@ -4,6 +4,14 @@ module Tenji
 
     attr_reader :dirname, :images, :metadata, :text
 
+    DEFAULTS = { 'description' => '',
+                 'layout' => 'gallery_index',
+                 'listed' => true,
+                 'paginate' => 25,
+                 'singles' => false,
+                 'sizes' => { 'small' => { 'x' => 400, 'y' => 400 } }
+               }
+
     def initialize(dir:)
       dir.is_a! Pathname
       dir.exist!
@@ -25,10 +33,13 @@ module Tenji
       end
     end
 
-    private def init_metadata(frontmatter, dir)
+    private def init_metadata(frontmatter, dir, options = {})
       frontmatter.is_a! Hash
       dir.is_a! Pathname
-      Tenji::Gallery::Metadata.new frontmatter, dir.basename.to_s
+      options.is_a! Hash
+      
+      frontmatter['name'] ||= dir.basename.to_s
+      DEFAULTS.merge(options).merge(frontmatter)
     end
   end
 end
