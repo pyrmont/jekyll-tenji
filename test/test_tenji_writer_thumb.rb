@@ -9,7 +9,7 @@ class TenjiWriterThumbTest < Minitest::Test
       @temp_dir.mkpath
       @file = Pathname.new 'test/data/gallery2/01-castle.jpg'
       @sizes = { 'small' => { 'x' => 400, 'y' => 400 } }
-      @obj = Tenji::Image.new @file, @sizes
+      @obj = Tenji::Image.new @file, @sizes, AnyType.new
     end
 
     teardown do

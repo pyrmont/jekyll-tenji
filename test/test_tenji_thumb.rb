@@ -3,8 +3,9 @@ require 'test_helper'
 class TenjiThumbTest < Minitest::Test
   context "Tenji::Thumb" do
     setup do
-      @file = Pathname.new 'test/data/gallery2/01-castle.jpg'
-      @obj = Tenji::Thumb.new Hash.new
+      dir = Pathname.new 'test/data/gallery2'
+      @file = dir + '01-castle.jpg'
+      @obj = Tenji::Thumb.new Hash.new, AnyType.new
     end
 
     context "has a method #initialize that" do

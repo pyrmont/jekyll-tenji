@@ -3,7 +3,7 @@ module Tenji
     class List
       using Tenji::Refinements
 
-      attr_reader :galleries, :site, :base, :prefix_path
+      attr_reader :list, :site, :base, :prefix_path
 
       def initialize(list, site, base, prefix_path)
         list.is_a! Tenji::List
@@ -11,7 +11,7 @@ module Tenji
         base.is_a! Pathname
         prefix_path.is_a! Pathname
 
-        @galleries = list.galleries
+        @list = list
         @site = site
         @base = base.to_s
         @prefix_path = prefix_path.to_s
@@ -20,7 +20,7 @@ module Tenji
       def generate_index(pages)
         pages.is_a! Array
         name = 'index' + Tenji::Config.ext(:page, output: true)
-        pages << Tenji::Page::List.new(@galleries, @site, @base, @prefix_path, name)
+        pages << Tenji::Page::List.new(@list, @site, @base, @prefix_path, name)
       end
     end
   end

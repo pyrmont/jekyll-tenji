@@ -15,26 +15,36 @@ module Tenji
     end
 
     def self.config
-      raise StandardError, 'Configuration not set' unless @config
+      is_set!
       @config
     end
 
     def self.dir(name, output: false)
-      raise StandardError, 'Configuration not set' unless @config
+      is_set!
       key = name.to_s + '_dir'
       (output) ? @config[key].delete_prefix('_') : @config[key]
     end
 
     def self.ext(name, output: false)
-      raise StandardError, 'Configuration not set' unless @config
+      is_set!
       key = (output) ? 'output_' + name.to_s + '_ext' :
                        'input_' + name.to_s + '_ext'
       @config[key]
     end
 
     def self.file(name)
-      raise StandardError, 'Configuration not set' unless @config
+      is_set!
       key = name.to_s + '_file'
+      @config[key]
+    end
+
+    def self.is_set!()
+      raise StandardError, 'Configuration not set' unless @config
+    end
+
+    def self.settings(name)
+      is_set!
+      key = name.to_s + '_settings'
       @config[key]
     end
   end

@@ -13,7 +13,7 @@ class TenjiGalleryTest < Minitest::Test
     context "has a method #initialize that" do
       should "return an object if the directory exists" do
         dir = Pathname.new 'test/data/gallery1/'
-        obj = Tenji::Gallery.new dir: dir
+        obj = Tenji::Gallery.new dir, AnyType.new
         assert_equal 'Tenji::Gallery', obj.class.name
         assert_equal 'Hash', obj.metadata.class.name
         assert_equal [ 'Tenji::Image' ], obj.images.map { |i| i.class.name }

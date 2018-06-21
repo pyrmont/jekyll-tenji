@@ -3,8 +3,8 @@ module Tenji
     class List < Jekyll::Page
       using Tenji::Refinements
 
-      def initialize(galleries, site, base, dir, name)
-        galleries.is_a! Array
+      def initialize(list, site, base, dir, name)
+        list.is_a! Tenji::List
         site.is_a! Jekyll::Site
         base.is_a! String
         dir.is_a! String
@@ -17,8 +17,8 @@ module Tenji
 
         process_name 
         
-        @data = Hash.new
-        @content = ''
+        @data = list.metadata 
+        @content = list.text
 
         Jekyll::Hooks.trigger :pages, :post_init, self
       end

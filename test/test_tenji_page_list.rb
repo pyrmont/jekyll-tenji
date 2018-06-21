@@ -13,11 +13,11 @@ class TenjiPageListTest < Minitest::Test
     context "has a method #initialize that" do
       should "return an object" do
         dir = Pathname.new 'test/data/gallery1'
-        galleries = [ Tenji::Gallery.new(dir: dir) ]
+        list = Tenji::List.new dir
         site = TestSite.site source: 'test/data', dest: 'tmp'
         base = site.source
         prefix_path = ''
-        obj = Tenji::Page::List.new galleries, site, base, prefix_path, 'index.html' 
+        obj = Tenji::Page::List.new list, site, base, prefix_path, 'index.html' 
         assert_equal 'Tenji::Page::List', obj.class.name
       end
     end

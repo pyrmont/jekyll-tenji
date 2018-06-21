@@ -23,3 +23,11 @@ class TestSite
     Jekyll::Site.new config
   end
 end
+
+class AnyType
+  using Tenji::Refinements
+
+  def is_a?(type)
+    true
+  end
+end
