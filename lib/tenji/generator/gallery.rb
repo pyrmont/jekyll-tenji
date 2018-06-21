@@ -17,17 +17,17 @@ module Tenji
         @prefix_path = prefix_path.to_s
       end
 
-      def generate_index(pages)
-        pages.is_a! Array
-        name = 'index' + Tenji::Config.ext(:page, output: true)
-        pages << Tenji::Page::Gallery.new(@gallery, @site, @base, @prefix_path, name)
-      end
-
-      def generate_photos(files)
+      def generate_images(files)
         files.is_a! Array
         @gallery.images.each do |i|
           files << Tenji::File::Image.new(@site, @base, @prefix_path, i.name)
         end
+      end
+
+      def generate_index(pages)
+        pages.is_a! Array
+        name = 'index' + Tenji::Config.ext(:page, output: true)
+        pages << Tenji::Page::Gallery.new(@gallery, @site, @base, @prefix_path, name)
       end
 
       def generate_singles(pages)
