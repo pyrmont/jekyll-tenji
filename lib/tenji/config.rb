@@ -1,7 +1,7 @@
 module Tenji
   module Config
-    DEFAULTS = { 'galleries_dir' => 'albums',
-                 'thumbs_dir' => 'thumbs',
+    DEFAULTS = { 'galleries_dir' => '_albums',
+                 'thumbs_dir' => '_thumbs',
                  'metadata_file' => 'index.md',
                  'input_page_ext' => '.md',
                  'output_page_ext' => '.html' }
@@ -22,7 +22,7 @@ module Tenji
     def self.dir(name, output: false)
       raise StandardError, 'Configuration not set' unless @config
       key = name.to_s + '_dir'
-      (output) ? @config[key] : '_' + @config[key]
+      (output) ? @config[key].delete_prefix('_') : @config[key]
     end
 
     def self.ext(name, output: false)
