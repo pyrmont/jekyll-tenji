@@ -4,7 +4,7 @@ module Tenji
       using Tenji::Refinements
 
       def self.write(thumbs, source_file, output_dir, sizes)
-        thumbs.is_a! Tenji::Gallery::Image::Thumb
+        thumbs.is_a! Tenji::Thumb
         source_file.is_a! Pathname
         output_dir.is_a! Pathname
         sizes.is_a! Hash

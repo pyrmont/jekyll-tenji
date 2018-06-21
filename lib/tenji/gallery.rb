@@ -21,7 +21,7 @@ module Tenji
       dir.is_a! Pathname
 
       dir.images.map do |i|
-        Tenji::Gallery::Image.new i, @metadata['sizes']
+        Tenji::Image.new i, @metadata['sizes']
       end
     end
 

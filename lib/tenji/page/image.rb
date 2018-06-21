@@ -4,7 +4,7 @@ module Tenji
       using Tenji::Refinements
 
       def initialize(image, site, base, dir, name)
-        image.is_a! Tenji::Gallery::Image
+        image.is_a! Tenji::Image
         site.is_a! Jekyll::Site
         base.is_a! String
         dir.is_a! String
