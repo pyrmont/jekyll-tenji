@@ -1,12 +1,13 @@
 module Tenji
   module Config
-    def self.configure(options = nil)
-      options ||= { 'galleries_dir' => 'albums',
-                    'thumbs_dir' => 'thumbs',
-                    'metadata_file' => '_gallery.md',
-                    'input_page_ext' => '.md',
-                    'output_page_ext' => '.html' }
-      @config = options
+    DEFAULTS = { 'galleries_dir' => 'albums',
+                 'thumbs_dir' => 'thumbs',
+                 'metadata_file' => 'index.md',
+                 'input_page_ext' => '.md',
+                 'output_page_ext' => '.html' }
+
+    def self.configure(options = {})
+      @config = DEFAULTS.merge options
     end
     
     def self.reset()
