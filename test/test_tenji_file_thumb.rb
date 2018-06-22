@@ -1,7 +1,7 @@
 require 'test_helper'
 
-class TenjiFileImageTest < Minitest::Test
-  context "Tenji::File::Image" do
+class TenjiFileThumbTest < Minitest::Test
+  context "Tenji::File::Thumb" do
     setup do
       Jekyll.logger.log_level = :error
       source_dir = Pathname.new('test/data').realpath.to_s
@@ -17,19 +17,19 @@ class TenjiFileImageTest < Minitest::Test
     end
 
     context "has a method #initialize that" do
-      should "initialize a File::Image object" do
+      should "initialize a File::Thumb object" do
         path = Pathname.new 'test/data/_albums/gallery1/photo1.jpg'
-        obj = Tenji::File::Image.new @site, @site.source, path.parent.to_s,
+        obj = Tenji::File::Thumb.new @site, @site.source, path.parent.to_s,
                                     path.basename.to_s
-        assert_equal 'Tenji::File::Image', obj.class.name
+        assert_equal 'Tenji::File::Thumb', obj.class.name
       end
     end
 
     context "has a method #destination that" do
       setup do
         Tenji::Config.configure
-        @path = Pathname.new 'test/data/_albums/gallery1/photo.jpg'
-        @obj = Tenji::File::Image.new @site, @site.source, @path.parent.to_s,
+        @path = Pathname.new 'test/data/_thumbs/gallery1/photo-small.jpg'
+        @obj = Tenji::File::Thumb.new @site, @site.source, @path.parent.to_s,
                                       @path.basename.to_s
       end
 
@@ -38,7 +38,7 @@ class TenjiFileImageTest < Minitest::Test
       end
 
       should "return the a directory path" do
-        dest = File.join(@site.dest, @path.to_s).sub('_albums', 'albums')
+        dest = File.join(@site.dest, @path.to_s).sub('_thumbs', 'thumbs')
         assert_equal dest, @obj.destination(@site.dest)
       end
 
