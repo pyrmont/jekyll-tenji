@@ -15,22 +15,40 @@ class TenjiGeneratorListTest < Minitest::Test
     end
 
     context "has a method #initialize that" do
-      should "return an object" do
-        base = Pathname.new @site.source
-        prefix_path = Pathname.new ''
-        obj = Tenji::Generator::List.new @list, @site, base, prefix_path
+      setup do
+        @base = Pathname.new @site.source
+        @prefix_path = Pathname.new ''
+      end
+
+      should "initilaize a Generator::List object" do
+        obj = Tenji::Generator::List.new @list, @site, @base, @prefix_path
         assert_equal 'Tenji::Generator::List', obj.class.name
+      end
+
+      should "raise an error if the arguments are invalid" do
+        gl = Tenji::Generator::List
+        assert_raises(StandardError) { gl.new nil, @site, @base, @prefix_path }
+        assert_raises(StandardError) { gl.new @list, nil, @base, @prefix_path }
+        assert_raises(StandardError) { gl.new @list, @site, nil, @prefix_path }
+        assert_raises(StandardError) { gl.new @list, @site, @base, nil }
       end
     end
 
     context "has a method #generate_index that" do
-      should "add to an array of Page objects" do
+      setup do
         base = Pathname.new @site.source
         prefix_path = Pathname.new ''
-        generator = Tenji::Generator::List.new @list, @site, base, prefix_path
+        @obj = Tenji::Generator::List.new @list, @site, base, prefix_path
+      end
+
+      should "add to an array of Page objects" do
         pages = Array.new
-        generator.generate_index pages
+        @obj.generate_index pages
         assert_equal [ 'Tenji::Page::List' ], pages.map { |p| p.class.name }.uniq
+      end
+      
+      should "raise an error with invalid arguments" do
+        assert_raises(StandardError) { @obj.generate_index nil }
       end
     end
   end
