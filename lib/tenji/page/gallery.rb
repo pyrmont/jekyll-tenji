@@ -27,12 +27,11 @@ module Tenji
       def destination(dest)
         dest.is_a! String
 
-        path = site.in_dest_dir(dest, Jekyll::URL.unescape_path(url))
-        path = ::File.join(path, "index") if url.end_with?("/")
-        path << output_ext unless path.end_with? output_ext
-        input = Tenji::Config.dir(:galleries)
-        output = Tenji::Config.dir(:galleries, output: true)
-        path.sub(input, output)
+        input_path = Tenji::Config.dir(:galleries)
+        output_path = Tenji::Config.dir(:galleries, output: true)
+        
+        path = super dest
+        path.sub input_path, output_path
       end
 
       private def process_name()
