@@ -11,7 +11,7 @@ class TenjiImageTest < Minitest::Test
     end
 
     context "has a method #initialize that" do
-      should "return an object if the file exists" do
+      should "initialise a Image object" do
         file = Pathname.new 'test/data/gallery1/photo1.jpg'
         obj = Tenji::Image.new file, Hash.new, AnyType.new
         assert_equal 'Tenji::Image', obj.class.name
@@ -23,6 +23,14 @@ class TenjiImageTest < Minitest::Test
         assert_raises(StandardError) { Tenji::Image.new(file, 
                                                         Hash.new, 
                                                         AnyType.new) }
+      end
+
+      should "raise an error if the arguments are invalid" do
+        i = Tenji::Image
+        any = AnyType.new
+        assert_raises(StandardError) { i.new(nil, any, any) }
+        assert_raises(StandardError) { i.new(any, nil, any) }
+        assert_raises(StandardError) { i.new(any, any, nil) }
       end
     end
   end
