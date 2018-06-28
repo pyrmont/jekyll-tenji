@@ -18,12 +18,34 @@ class TenjiWriterThumbTest < Minitest::Test
     end
 
     context "has a class method #write that" do
-      should "write thumbnails" do
+      setup do
+        @input_name = @file.basename.sub_ext('')
+        @output_basename = "#{@input_name}-small.jpg"
+        @output_file = Pathname.new(@temp_dir) + @output_basename
+      end
+
+      teardown do
+        @output_file.delete if @output_file.exist?
+      end
+
+      should "write a thumbnail to disk if the source is newer" do
         Tenji::Writer::Thumb.write @obj.thumbs, @file, @temp_dir, @sizes
-        input_name = @file.basename.sub_ext('')
-        output_basename = "#{input_name}-small.jpg"
-        output_file = Pathname.new(@temp_dir) + output_basename
-        assert output_file.exist?
+        assert @output_file.exist?
+      end
+
+      should "do nothing if the source is older" do
+        @output_file.write 'Test File'
+        mtime = @output_file.mtime
+        Tenji::Writer::Thumb.write @obj.thumbs, @file, @temp_dir, @sizes
+        assert_equal mtime, @output_file.mtime
+      end
+
+      should "raise an error if given invalid arguments" do
+        wt = Tenji::Writer::Thumb
+        assert_raises(StandardError) { wt.write nil, @file, @temp_dir, @sizes }
+        assert_raises(StandardError) { wt.write @obj.thumbs, nil, @temp_dir, @sizes }
+        assert_raises(StandardError) { wt.write @obj.thumbs, @file, nil, @sizes }
+        assert_raises(StandardError) { wt.write @obj.thumbs, @file, @temp_dir, nil }
       end
     end
   end
