@@ -43,10 +43,10 @@ module Tenji
         files.is_a! Array
 
         @gallery.images.each do |i|
-          i.thumbs.files.map do |key,value|
+          i.thumbs.each do |t|
             thumb_dir = Pathname.new Tenji::Config.dir(:thumbs)
             prefix_path = (thumb_dir + @gallery.dirname).to_s
-            files << Tenji::File::Thumb.new(@site, @base, prefix_path, value)
+            files << Tenji::File::Thumb.new(@site, @base, prefix_path, t.name)
           end
         end
       end

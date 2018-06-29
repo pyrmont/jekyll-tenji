@@ -15,7 +15,7 @@ module Tenji
 
       @gallery = gallery
       @name = file.basename.to_s
-      @thumbs = init_thumbs file.basename, sizes.keys
+      @thumbs = init_thumbs sizes
 
       co_file = file.sub_ext Tenji::Config.ext(:page)
       fm, text = Tenji::Utilities.read_yaml co_file
@@ -31,17 +31,10 @@ module Tenji
       DEFAULTS.merge(attributes).merge(global).merge(frontmatter)
     end
 
-    private def init_thumbs(filename, keys)
-      filename.is_a! Pathname
-      keys.is_a! Array
+    private def init_thumbs(sizes)
+      sizes.is_a! Hash
 
-      name = filename.sub_ext('')
-      ext = '.jpg'
-      sizes = Hash.new
-      keys.each do |k|
-        sizes[k] = name.to_s + '-' + k + ext
-      end
-      Tenji::Thumb.new sizes, self 
+      sizes.keys.map { |s| Tenji::Thumb.new s, sizes[s], self }
     end
   end
 end

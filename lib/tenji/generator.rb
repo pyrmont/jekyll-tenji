@@ -56,12 +56,12 @@ module Tenji
       base_dir = Pathname.new(site.source)
 
       galleries.each do |g|
-        prefix_dir = Pathname.new(Tenji::Config.dir(:galleries)) + g.dirname
+        input_dir = base_dir + Tenji::Config.dir(:galleries) + g.dirname
+        output_dir = base_dir + Tenji::Config.dir(:thumbs) + g.dirname
+        output_dir.mkpath unless output_dir.exist?
         g.images.each do |i|
-          source = base_dir + prefix_dir + i.name
-          output_dir = base_dir + Tenji::Config.dir(:thumbs) + g.dirname
-          output_dir.mkpath unless output_dir.exist?
-          Tenji::Writer::Thumb.write i.thumbs, source, output_dir, g.metadata['sizes']
+          source = input_dir + i.name
+          i.thumbs.each { |t| Tenji::Writer::Thumb.write t, source, output_dir }
         end
       end
     end
