@@ -60,8 +60,10 @@ module Tenji
         output_dir = base_dir + Tenji::Config.dir(:thumbs) + g.dirname
         output_dir.mkpath unless output_dir.exist?
         g.images.each do |i|
-          source = input_dir + i.name
-          i.thumbs.each { |t| Tenji::Writer::Thumb.write t, source, output_dir }
+          source_file = input_dir + i.name
+          i.thumbs.each do |t|
+            Tenji::Writer::Thumb.write t, source_file, output_dir
+          end
         end
       end
     end
