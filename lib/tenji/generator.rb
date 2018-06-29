@@ -53,7 +53,7 @@ module Tenji
       site.is_a! Jekyll::Site
       galleries.is_a! Array
 
-      base_dir = Pathname.new(site.source)
+      base_dir = Pathname.new site.source
 
       galleries.each do |g|
         input_dir = base_dir + Tenji::Config.dir(:galleries) + g.dirname
