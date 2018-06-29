@@ -6,10 +6,11 @@ module Tenji
       def destination(dest)
         dest.is_a! String
 
-        input = Tenji::Config.dir(:galleries)
-        output = Tenji::Config.dir(:galleries, output: true)
-        rel_dir = (destination_rel_dir).sub(input, output)
-        @site.in_dest_dir(*[dest, rel_dir, @name].compact)
+        input_path = Tenji::Config.dir(:galleries)
+        output_path = Tenji::Config.dir(:galleries, output: true)
+
+        path = super dest
+        path.sub input_path, output_path
       end
     end
   end
