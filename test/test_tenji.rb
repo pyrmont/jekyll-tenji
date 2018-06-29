@@ -31,9 +31,11 @@ class TenjiTest < Minitest::Test
         capture_io do
           @site.process
         end
-        subs = @temp_dir.subdirectories.sort
-        assert_equal 'albums', subs[0].basename.to_s
-        assert_equal 'thumbs', subs[1].basename.to_s
+        album_dir = @temp_dir.subdirectories[0]
+        assert_equal 'albums', album_dir.basename.to_s
+        gallery_dir = album_dir.subdirectories[0]
+        thumb_dir = gallery_dir.subdirectories[0]
+        assert_equal 'thumbs', thumb_dir.basename.to_s
       end
     end
   end

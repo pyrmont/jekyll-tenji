@@ -4,11 +4,17 @@ module Tenji
 
     safe true
 
+    def initialize(*args)
+      super *args
+      Tenji::Config.configure
+    end
+ 
     def generate(site)
       site.is_a! Jekyll::Site
 
-      galleries_dir = Pathname.new(site.source) + Tenji::Config.dir(:galleries)
-      list = Tenji::List.new galleries_dir
+      site_dir = Pathname.new site.source
+      galleries_dir = Pathname.new Tenji::Config.dir(:galleries)
+      list = Tenji::List.new(site_dir + galleries_dir)
 
       write_thumbnails site, list.galleries
       generate_list site, list, galleries_dir
@@ -20,11 +26,11 @@ module Tenji
       galleries.is_a! Array
       dir.is_a! Pathname
 
-      base = Pathname.new site.source
-
+      base_dir = Pathname.new site.source
+      
       galleries.each do |g|
-        gallery_dir = (dir + g.dirname) - site.source
-        gg = Tenji::Generator::Gallery.new g, site, base, gallery_dir
+        gallery_dir = dir + g.dirname
+        gg = Tenji::Generator::Gallery.new g, site, base_dir, gallery_dir 
         gg.generate_index site.pages
         gg.generate_images site.static_files
         gg.generate_thumbs site.static_files
@@ -32,15 +38,14 @@ module Tenji
       end
     end
 
-    private def generate_list(site, list, dir)
+    private def generate_list(site, list, prefix_dir)
       site.is_a! Jekyll::Site
       list.is_a! Tenji::List
-      dir.is_a! Pathname
+      prefix_dir.is_a! Pathname
 
-      base = Pathname.new site.source
-      prefix_dir = dir - site.source
+      base_dir = Pathname.new site.source
 
-      gl = Tenji::Generator::List.new list, site, base, prefix_dir
+      gl = Tenji::Generator::List.new list, site, base_dir, prefix_dir
       gl.generate_index site.pages
     end
 

@@ -38,8 +38,9 @@ class TenjiFileThumbTest < Minitest::Test
       end
 
       should "return the a directory path" do
-        dest = File.join(@site.dest, @path.to_s).sub('_thumbs', 'thumbs')
-        assert_equal dest, @obj.destination(@site.dest)
+        temp = Pathname.new(@site.dest) + @path.sub('_thumbs', 'albums')
+        dest = temp.parent + 'thumbs' + temp.basename
+        assert_equal dest.to_s, @obj.destination(@site.dest)
       end
 
       should "raise an error if the path is not a String" do

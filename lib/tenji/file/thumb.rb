@@ -6,11 +6,13 @@ module Tenji
       def destination(dest)
         dest.is_a! String
 
-        input_path = Tenji::Config.dir(:thumbs)
-        output_path = Tenji::Config.dir(:thumbs, output: true)
+        t_int = Tenji::Config.dir(:thumbs)
+        t_ext = Tenji::Config.dir(:thumbs, output: true)
+        g_ext = Tenji::Config.dir(:galleries, output: true)
 
-        path = super dest
-        path.sub input_path, output_path
+        file = Pathname.new super(dest)
+        file = file.sub t_int, g_ext
+        (file.parent + t_ext + file.basename).to_s
       end
     end
   end
