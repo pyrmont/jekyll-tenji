@@ -7,8 +7,9 @@ module Tenji
     DEFAULTS = { 'description' => '',
                  'layout' => 'gallery_index',
                  'listed' => true,
+                 'originals' => true,
                  'paginate' => 25,
-                 'singles' => false,
+                 'individual_pages' => false,
                  'sizes' => { 'small' => { 'x' => 400, 'y' => 400 } }
                }
 
@@ -19,11 +20,11 @@ module Tenji
 
       @list = list
       @dirname = dir.basename.to_s
-      
+
       fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file(:metadata))
       @metadata = init_metadata fm
       @text = text
-      
+
       @images = init_images dir
       @metadata['images'] = @images
     end
@@ -38,7 +39,7 @@ module Tenji
 
     private def init_metadata(frontmatter)
       frontmatter.is_a! Hash
-      
+
       global = Tenji::Config.settings('gallery') || Hash.new
       attributes = { 'images' => @images, 'list' => @list, 'name' => @dirname }
       DEFAULTS.merge(attributes).merge(global).merge(frontmatter)

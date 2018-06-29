@@ -38,10 +38,10 @@ class TenjiUtilitiesTest < Minitest::Test
         metadata = { 'title' => 'Test Gallery',
                      'description' => 'An example of a gallery.',
                      'period' => period,
-                     'singles' => true,
+                     'individual_pages' => true,
                      'paginate' => 15 }
         dir = Pathname.new 'test/data/gallery2'
-        file = dir + Tenji::Config.file(:metadata) 
+        file = dir + Tenji::Config.file(:metadata)
         data, content = Tenji::Utilities.read_yaml file
         assert_equal 'Hash', data.class.name
         assert_equal metadata, data
@@ -72,6 +72,6 @@ class TenjiUtilitiesTest < Minitest::Test
         assert_raises(StandardError) { u.read_yaml file, nil }
         assert_raises(StandardError) { u.read_yaml nil, Hash.new }
       end
-    end  
+    end
   end
 end

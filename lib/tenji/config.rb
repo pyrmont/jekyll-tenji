@@ -5,6 +5,8 @@ module Tenji
     DEFAULTS = { 'galleries_dir' => '_albums',
                  'thumbs_dir' => '_thumbs',
                  'metadata_file' => 'index.md',
+                 'retina_images' => true,
+                 'retina_suffix_2x' => '-2x',
                  'input_page_ext' => '.md',
                  'output_page_ext' => '.html' }
 
@@ -12,7 +14,7 @@ module Tenji
       options.is_a! Hash
       @config = DEFAULTS.merge options
     end
-    
+
     def self.reset()
       @config = nil
     end
@@ -41,12 +43,17 @@ module Tenji
       @config[key]
     end
 
+    def self.option(name)
+      is_set!
+      @config[name]
+    end
+
     def self.settings(name)
       is_set!
       key = name.to_s + '_settings'
       @config[key]
     end
-    
+
     private_class_method def self.is_set!()
       raise StandardError, 'Configuration not set' unless @config
     end

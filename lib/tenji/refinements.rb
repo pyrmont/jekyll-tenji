@@ -14,11 +14,17 @@ module Tenji
         self.sub(p2.to_s, '')
       end
 
+      def append_to_base(str)
+        ext = self.extname
+        base = self.sub_ext('').to_s
+        Pathname.new(base + str + ext)
+      end
+
       def exist!()
         msg = "File #{self} does not exist"
         raise StandardError.new msg unless self.exist?
       end
-      
+
       def images()
         self.children.select do |c|
           c.extname == '.jpg'

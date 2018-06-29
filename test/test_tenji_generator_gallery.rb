@@ -38,7 +38,7 @@ class TenjiGeneratorGalleryTest < Minitest::Test
       should "update a provided object" do
         files = Array.new
         @generator.generate_images files
-        assert_equal [ 'Tenji::File::Image' ], 
+        assert_equal [ 'Tenji::File::Image' ],
                      files.map { |f| f.class.name }.uniq
       end
 
@@ -60,10 +60,10 @@ class TenjiGeneratorGalleryTest < Minitest::Test
       end
     end
 
-    context "has a method #generate_singles that" do
+    context "has a method #generate_individual_pages that" do
       should "add to an array of Page objects" do
         pages = Array.new
-        @generator.generate_singles pages
+        @generator.generate_individual_pages pages
         assert_equal [ 'Tenji::Page::Image' ],
                      pages.map { |p| p.class.name }.uniq
       end

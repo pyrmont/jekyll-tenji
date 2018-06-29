@@ -8,15 +8,11 @@ module Tenji
       size.is_a! String
       dimensions.is_a! Hash
       source.is_a! Tenji::Image
-     
-      @name = init_name size, Pathname.new(source.name)
+
+      @name = Pathname.new(source.name).append_to_base("-#{size}").to_s
       @size = size
       @dimensions = dimensions
       @source = source
-    end
-
-    private def init_name(size, basename)
-      basename.sub_ext('').to_s + "-#{size}.jpg"
     end
   end
 end

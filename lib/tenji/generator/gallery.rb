@@ -30,12 +30,11 @@ module Tenji
         pages << Tenji::Page::Gallery.new(@gallery, @site, @base, @prefix_path, name)
       end
 
-      def generate_singles(pages)
+      def generate_individual_pages(pages)
         pages.is_a! Array
-        return Array.new unless @gallery.metadata['singles']
+        return unless @gallery.metadata['individual_pages']
         @gallery.images.each do |i|
-          pages << Tenji::Page::Image.new(i, @site, @base, @prefix_path, 
-                                          i.name)
+          pages << Tenji::Page::Image.new(i, @site, @base, @prefix_path, i.name)
         end
       end
 
@@ -47,6 +46,11 @@ module Tenji
             thumb_dir = Pathname.new Tenji::Config.dir(:thumbs)
             prefix_path = (thumb_dir + @gallery.dirname).to_s
             files << Tenji::File::Thumb.new(@site, @base, prefix_path, t.name)
+            if Tenji::Config.option('retina_images')
+              suffix = Tenji::Config.option('retina_suffix_2x')
+              name = Pathname.new(t.name).append_to_base(suffix).to_s
+              files << Tenji::File::Thumb.new(@site, @base, prefix_path, name)
+            end
           end
         end
       end

@@ -21,14 +21,14 @@ module Tenji
       dir.is_a! Pathname
 
       base = Pathname.new site.source
-      
+
       galleries.each do |g|
         gallery_dir = (dir + g.dirname) - site.source
-        gg = Tenji::Generator::Gallery.new g, site, base, gallery_dir 
+        gg = Tenji::Generator::Gallery.new g, site, base, gallery_dir
         gg.generate_index site.pages
         gg.generate_images site.static_files
         gg.generate_thumbs site.static_files
-        gg.generate_singles site.pages
+        gg.generate_individual_pages site.pages
       end
     end
 
