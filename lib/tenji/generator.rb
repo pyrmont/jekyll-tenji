@@ -4,13 +4,11 @@ module Tenji
 
     safe true
 
-    def initialize(*args)
-      super *args
-      Tenji::Config.configure
-    end
- 
     def generate(site)
       site.is_a! Jekyll::Site
+
+      site_config = site.config['galleries'] || Hash.new 
+      Tenji::Config.configure site_config
 
       site_dir = Pathname.new site.source
       galleries_dir = Pathname.new Tenji::Config.dir(:galleries)
