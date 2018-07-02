@@ -59,7 +59,7 @@ module Tenji
         output_dir.mkpath unless output_dir.exist?
         g.images.each do |i|
           source_file = input_dir + i.name
-          i.thumbs.each do |t|
+          i.thumbs.each_value do |t|
             Tenji::Writer::Thumb.write t, source_file, output_dir
           end
         end

@@ -6,7 +6,7 @@ module Tenji
       period.is_a! String
 
       components = period.split '-'
-      components.map { |c| Date.parse(c) }
+      components.map { |c| Date.parse(c.strip) }
     end
 
     def self.read_yaml(file, config = {})

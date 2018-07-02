@@ -1,3 +1,4 @@
+require 'exifr/jpeg'
 require 'jekyll'
 require 'pathname'
 require 'rmagick'
@@ -23,6 +24,8 @@ require 'tenji/page/gallery'
 require 'tenji/page/image'
 require 'tenji/page/list'
 require 'tenji/writer/thumb'
+
+require 'tenji/filters'
 
 module Tenji
 end

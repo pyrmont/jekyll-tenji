@@ -9,32 +9,50 @@ module Tenji
 
     def initialize(file, sizes, gallery)
       file.is_a! Pathname
-      file.exist!
       sizes.is_a! Hash
       gallery.is_a! Tenji::Gallery
 
+      file.exist!
+
       @gallery = gallery
       @name = file.basename.to_s
-      @thumbs = init_thumbs sizes
 
       co_file = file.sub_ext Tenji::Config.ext(:page)
       fm, text = Tenji::Utilities.read_yaml co_file
       @metadata = init_metadata fm
       @text = text
+
+      @thumbs = init_thumbs sizes
+    end
+
+    def <=>(other)
+      other.is_a! Tenji::Image
+      @name <=> other.name
+    end
+
+    def to_liquid()
+      attrs = { 'name' => name, 'content' => text, 'thumbs' => thumbs }
+      attrs.merge metadata
     end
 
     private def init_metadata(frontmatter)
       frontmatter.is_a! Hash
 
       global = Tenji::Config.settings('image') || Hash.new
-      attributes = { 'gallery' => @gallery, 'thumbs' => @thumbs }
-      DEFAULTS.merge(attributes).merge(global).merge(frontmatter)
+      attrs = { 'title' => title_from_name }
+      DEFAULTS.merge(global).merge(attrs).merge(frontmatter)
     end
 
     private def init_thumbs(sizes)
       sizes.is_a! Hash
 
-      sizes.keys.map { |s| Tenji::Thumb.new s, sizes[s], self }
+      sizes.keys.reduce(Hash.new) do |memo,s|
+        memo.update({ s => Tenji::Thumb.new(s, sizes[s], self) }) 
+      end
+    end
+
+    private def title_from_name()
+      @name.sub /^\d+-/, ''
     end
   end
 end

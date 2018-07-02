@@ -26,7 +26,6 @@ module Tenji
       @text = text
 
       @images = init_images dir
-      @metadata['images'] = @images
     end
 
     private def init_images(dir)
@@ -41,8 +40,7 @@ module Tenji
       frontmatter.is_a! Hash
 
       global = Tenji::Config.settings('gallery') || Hash.new
-      attributes = { 'images' => @images, 'list' => @list, 'name' => @dirname }
-      DEFAULTS.merge(attributes).merge(global).merge(frontmatter)
+      DEFAULTS.merge(global).merge(frontmatter)
     end
   end
 end

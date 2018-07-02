@@ -29,6 +29,7 @@ module Tenji
         image.auto_orient!
         image.resize_to_fit! dimensions['x'], dimensions['y']
         image.write output.to_s
+        image.destroy!
       end
     end
   end

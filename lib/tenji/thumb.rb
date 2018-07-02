@@ -14,5 +14,13 @@ module Tenji
       @dimensions = dimensions
       @source = source
     end
+
+    def to_liquid()
+      { 'name' => @name,
+        'size' => @size,
+        'dimensions' => @dimensions,
+        'source' => @source
+      }
+    end
   end
 end
