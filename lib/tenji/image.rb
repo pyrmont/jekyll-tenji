@@ -13,15 +13,11 @@ module Tenji
       gallery.is_a! Tenji::Gallery
 
       file.exist!
+      file.file!
 
       @gallery = gallery
       @name = file.basename.to_s
-
-      co_file = file.sub_ext Tenji::Config.ext(:page)
-      fm, text = Tenji::Utilities.read_yaml co_file
-      @metadata = init_metadata fm
-      @text = text
-
+      @text, @metadata = init_text_and_data file
       @thumbs = init_thumbs sizes
     end
 
@@ -41,6 +37,14 @@ module Tenji
       global = Tenji::Config.settings('image') || Hash.new
       attrs = { 'title' => title_from_name }
       DEFAULTS.merge(global).merge(attrs).merge(frontmatter)
+    end
+
+    private def init_text_and_data(file)
+      file.is_a! Pathname
+      co_file = file.sub_ext Tenji::Config.ext(:page)
+      fm, text = Tenji::Utilities.read_yaml co_file
+      metadata = init_metadata fm
+      [ text, metadata ]
     end
 
     private def init_thumbs(sizes)

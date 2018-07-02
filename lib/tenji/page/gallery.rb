@@ -19,7 +19,7 @@ module Tenji
         
         @data = gallery.metadata
         @content = gallery.text
-        @data['images'] = gallery.images.reverse
+        @data['images'] = gallery.images.sort
 
         Jekyll::Hooks.trigger :pages, :post_init, self
       end

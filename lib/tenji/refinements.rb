@@ -25,6 +25,11 @@ module Tenji
         raise StandardError.new msg unless self.exist?
       end
 
+      def file!()
+        msg = "File #{self} is not a file"
+        raise StandardError.new msg if self.directory?
+      end
+
       def images()
         self.children.select do |c|
           c.extname == '.jpg'
