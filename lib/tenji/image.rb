@@ -2,7 +2,7 @@ module Tenji
   class Image
     using Tenji::Refinements
 
-    attr_reader :gallery, :metadata, :name, :text, :thumbs
+    attr_reader :exif, :gallery, :metadata, :name, :text, :thumbs
 
     DEFAULTS = { 'layout' => 'gallery_image',
                  'title' => 'Image' }
@@ -18,6 +18,7 @@ module Tenji
       @gallery = gallery
       @name = file.basename.to_s
       @text, @metadata = init_text_and_data file
+      @exif = init_exif file
       @thumbs = init_thumbs sizes
     end
 
@@ -27,8 +28,20 @@ module Tenji
     end
 
     def to_liquid()
-      attrs = { 'name' => name, 'content' => text, 'thumbs' => thumbs }
+      attrs = { 'name' => name, 'content' => text, 'exif' => exif, 'thumbs' => thumbs }
       attrs.merge metadata
+    end
+
+    private def init_exif(file)
+      file.is_a! Pathname
+      path = file.realpath.to_s
+      begin
+        data = EXIFR::JPEG.new(::File.open(path)).to_hash
+        data.transform_keys &:to_s
+      rescue EXIFR::MalformedJPEG => e
+        Jekyll.logger.warn "EXIFR Exception reading #{path}: #{e.message}"
+        Hash.new
+      end
     end
 
     private def init_metadata(frontmatter)

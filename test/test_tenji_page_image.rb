@@ -6,7 +6,9 @@ class TenjiPageImageTest < Minitest::Test
       Tenji::Config.configure
       dir = Pathname.new 'test/data/gallery1'
       file = dir + 'photo1.jpg'
-      @image = Tenji::Image.new file, Hash.new, AnyType.new
+      capture_io do
+        @image = Tenji::Image.new file, Hash.new, AnyType.new
+      end
       @site = TestSite.site source: 'test/data', dest: 'tmp'
       @base = @site.source
       @prefix_path = dir.to_s
