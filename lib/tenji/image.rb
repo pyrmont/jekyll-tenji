@@ -33,7 +33,10 @@ module Tenji
     end
 
     def to_liquid()
-      attrs = { 'name' => name, 'content' => text, 'exif' => exif, 'thumbs' => thumbs }
+      attrs = { 'name' => name,
+                'content' => text,
+                'exif' => exif,
+                'thumbs' => thumbs }
       attrs.merge metadata
     end
 
@@ -59,7 +62,7 @@ module Tenji
       sizes.is_a! Hash
 
       sizes.keys.reduce(Hash.new) do |memo,s|
-        memo.update({ s => Tenji::Thumb.new(s, sizes[s], self) }) 
+        memo.update({ s => Tenji::Thumb.new(s, sizes[s], self) })
       end
     end
 

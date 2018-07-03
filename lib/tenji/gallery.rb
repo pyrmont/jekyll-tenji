@@ -18,7 +18,7 @@ module Tenji
       dir.is_a! Pathname
       dir.exist!
       list.is_a! Tenji::List
-      
+
       @global = Tenji::Config.settings('gallery') || Hash.new
 
       fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file(:metadata))
@@ -51,7 +51,9 @@ module Tenji
     end
 
     def to_liquid()
-      attrs = { 'dirname' => @dirname, 'content' => @text, 'cover' => @images.first }
+      attrs = { 'dirname' => @dirname,
+                'content' => @text,
+                'cover' => @images.first }
       attrs.merge @metadata
     end
 
