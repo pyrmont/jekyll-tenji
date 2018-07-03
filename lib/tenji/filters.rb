@@ -1,6 +1,7 @@
 module Tenji
   module Filters
     def period_format(date, fmt = '%e %b %Y', sep = '&ndash;')
+      return date unless date.is_a? Array
       case date.length
       when 2
         start = date[0].strftime(fmt).strip

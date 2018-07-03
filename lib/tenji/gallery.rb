@@ -31,6 +31,25 @@ module Tenji
       @text = text
     end
 
+    def <=>(other)
+      other.is_a! Tenji::Gallery
+
+      this_start = @metadata['period']&.first
+      other_start = other.metadata['period']&.first
+
+      if this_start.nil? && other_start.nil?
+        @dirname <=> other.dirname
+      elsif this_start.nil?
+        1
+      elsif other_start.nil?
+        -1
+      elsif this_start == other_start
+        @dirname <=> other.dirname
+      else
+        other_start <=> this_start
+      end
+    end
+
     def to_liquid()
       attrs = { 'dirname' => @dirname, 'content' => @text, 'cover' => @images.first }
       attrs.merge @metadata

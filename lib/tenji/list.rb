@@ -23,9 +23,10 @@ module Tenji
 
     private def init_galleries(dir)
       dir.is_a! Pathname
-      dir.subdirectories.map do |d|
-        Tenji::Gallery.new d, self
-      end
+      galleries = dir.subdirectories.map do |d|
+                    Tenji::Gallery.new d, self
+                  end
+      galleries.sort
     end
 
     private def init_metadata(frontmatter)
