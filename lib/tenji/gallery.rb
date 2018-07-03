@@ -4,7 +4,8 @@ module Tenji
 
     attr_reader :dirname, :images, :list, :metadata, :text
 
-    DEFAULTS = { 'description' => '',
+    DEFAULTS = { 'title' => 'A Gallery',
+                 'description' => '',
                  'layout' => 'gallery_index',
                  'listed' => true,
                  'originals' => true,
@@ -17,30 +18,42 @@ module Tenji
       dir.is_a! Pathname
       dir.exist!
       list.is_a! Tenji::List
-
-      @list = list
-      @dirname = dir.basename.to_s
+      
+      @global = Tenji::Config.settings('gallery') || Hash.new
 
       fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file(:metadata))
+      sizes = init_sizes fm
+
+      @list = list
+      @images = init_images dir, sizes
+      @dirname = dir.basename.to_s
       @metadata = init_metadata fm
       @text = text
-
-      @images = init_images dir
     end
 
-    private def init_images(dir)
+    def to_liquid()
+      attrs = { 'dirname' => @dirname, 'content' => @text, 'cover' => @images.first }
+      attrs.merge @metadata
+    end
+
+    private def init_images(dir, sizes)
       dir.is_a! Pathname
 
-      dir.images.map do |i|
-        Tenji::Image.new i, @metadata['sizes'], self
-      end
+      images = dir.images.map do |i|
+                 Tenji::Image.new i, sizes, self
+               end
+      images.sort
     end
 
     private def init_metadata(frontmatter)
       frontmatter.is_a! Hash
+      attrs = { 'images' => @images }
+      DEFAULTS.merge(@global).merge(attrs).merge(frontmatter)
+    end
 
-      global = Tenji::Config.settings('gallery') || Hash.new
-      DEFAULTS.merge(global).merge(frontmatter)
+    private def init_sizes(frontmatter)
+      frontmatter.is_a! Hash
+      frontmatter['sizes'] || @global['sizes'] || DEFAULTS['sizes']
     end
   end
 end

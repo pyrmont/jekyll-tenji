@@ -4,17 +4,19 @@ module Tenji
 
     attr_reader :dirname, :galleries, :metadata, :text
 
-    DEFAULTS = { 'layout' => 'gallery_list', 
-                 'title' => 'Photo Albums' } 
+    DEFAULTS = { 'title' => 'Photo Albums',
+                 'layout' => 'gallery_list' }
 
     def initialize(dir)
       dir.is_a! Pathname
       dir.exist!
 
-      @dirname = dir.basename.to_s
-      @galleries = init_galleries dir
+      @global = Tenji::Config.settings('list') || Hash.new
 
       fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file(:metadata))
+
+      @galleries = init_galleries dir
+      @dirname = dir.basename.to_s
       @metadata = init_metadata fm
       @text = text
     end
@@ -28,10 +30,8 @@ module Tenji
 
     private def init_metadata(frontmatter)
       frontmatter.is_a! Hash
-
-      global = Tenji::Config.settings('list') || Hash.new
-      attributes = { 'galleries' => @galleries }
-      DEFAULTS.merge(attributes).merge(global).merge(frontmatter)
+      attrs = { 'galleries' => @galleries }
+      DEFAULTS.merge(@global).merge(attrs).merge(frontmatter)
     end
   end
 end

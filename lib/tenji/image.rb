@@ -4,8 +4,7 @@ module Tenji
 
     attr_reader :exif, :gallery, :metadata, :name, :text, :thumbs
 
-    DEFAULTS = { 'layout' => 'gallery_image',
-                 'title' => 'Image' }
+    DEFAULTS = { 'layout' => 'gallery_image' }
 
     def initialize(file, sizes, gallery)
       file.is_a! Pathname
@@ -15,9 +14,15 @@ module Tenji
       file.exist!
       file.file!
 
+      @global = Tenji::Config.settings('image') || Hash.new
+
+      co_file = file.sub_ext Tenji::Config.ext(:page)
+      fm, text = Tenji::Utilities.read_yaml co_file
+
       @gallery = gallery
       @name = file.basename.to_s
-      @text, @metadata = init_text_and_data file
+      @metadata = init_metadata fm
+      @text = text
       @exif = init_exif file
       @thumbs = init_thumbs sizes
     end
@@ -46,18 +51,8 @@ module Tenji
 
     private def init_metadata(frontmatter)
       frontmatter.is_a! Hash
-
-      global = Tenji::Config.settings('image') || Hash.new
       attrs = { 'title' => title_from_name }
-      DEFAULTS.merge(global).merge(attrs).merge(frontmatter)
-    end
-
-    private def init_text_and_data(file)
-      file.is_a! Pathname
-      co_file = file.sub_ext Tenji::Config.ext(:page)
-      fm, text = Tenji::Utilities.read_yaml co_file
-      metadata = init_metadata fm
-      [ text, metadata ]
+      DEFAULTS.merge(@global).merge(attrs).merge(frontmatter)
     end
 
     private def init_thumbs(sizes)
