@@ -15,10 +15,11 @@ module Tenji
 
       fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file(:metadata))
 
-      @galleries = init_galleries dir
       @dirname = dir.basename.to_s
-      @metadata = init_metadata fm
+      @galleries = init_galleries dir
+
       @text = text
+      @metadata = init_metadata fm
     end
 
     private def init_galleries(dir)

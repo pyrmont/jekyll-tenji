@@ -19,12 +19,13 @@ module Tenji
       co_file = file.sub_ext Tenji::Config.ext(:page)
       fm, text = Tenji::Utilities.read_yaml co_file
 
-      @gallery = gallery
       @name = file.basename.to_s
-      @metadata = init_metadata fm
-      @text = text
+      @gallery = gallery
       @exif = init_exif file
       @thumbs = init_thumbs sizes
+
+      @text = text
+      @metadata = init_metadata fm
     end
 
     def <=>(other)
@@ -37,7 +38,7 @@ module Tenji
                 'content' => text,
                 'exif' => exif,
                 'thumbs' => thumbs }
-      attrs.merge metadata
+      @metadata.merge attrs
     end
 
     private def init_exif(file)
@@ -54,7 +55,9 @@ module Tenji
 
     private def init_metadata(frontmatter)
       frontmatter.is_a! Hash
-      attrs = { 'title' => title_from_name }
+      attrs = { 'exif' => @exif, 
+                'gallery' => @gallery, 
+                'title' => title_from_name }
       DEFAULTS.merge(@global).merge(attrs).merge(frontmatter)
     end
 

@@ -2,11 +2,12 @@ module Tenji
   class Gallery
     using Tenji::Refinements
 
-    attr_reader :dirname, :images, :list, :metadata, :text
+    attr_reader :cover, :dirname, :images, :list, :metadata, :text
 
     DEFAULTS = { 'title' => 'A Gallery',
                  'description' => '',
                  'layout' => 'gallery_index',
+                 'cover' => nil,
                  'listed' => true,
                  'originals' => true,
                  'paginate' => 25,
@@ -16,19 +17,22 @@ module Tenji
 
     def initialize(dir, list)
       dir.is_a! Pathname
-      dir.exist!
       list.is_a! Tenji::List
+
+      dir.exist!
 
       @global = Tenji::Config.settings('gallery') || Hash.new
 
       fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file(:metadata))
       sizes = init_sizes fm
 
+      @dirname = dir.basename.to_s
       @list = list
       @images = init_images dir, sizes
-      @dirname = dir.basename.to_s
-      @metadata = init_metadata fm
+      @cover = init_cover fm
+      
       @text = text
+      @metadata = init_metadata fm
     end
 
     def <=>(other)
@@ -53,8 +57,23 @@ module Tenji
     def to_liquid()
       attrs = { 'dirname' => @dirname,
                 'content' => @text,
-                'cover' => @images.first }
-      attrs.merge @metadata
+                'cover' => @cover }
+      @metadata.merge attrs
+    end
+
+    private def init_cover(frontmatter)
+      frontmatter.is_a! Hash
+
+      if cover = frontmatter['cover']
+        begin
+          @images.at(@images.find_index { |i| i.name == cover }) 
+        rescue TypeError => e
+          Jekyll.logger.warn "Cover image #{cover} doesn't exist"
+          nil
+        end
+      else
+        @images.first
+      end
     end
 
     private def init_images(dir, sizes)
