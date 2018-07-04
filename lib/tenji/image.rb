@@ -2,13 +2,14 @@ module Tenji
   class Image
     using Tenji::Refinements
 
-    attr_reader :exif, :gallery, :metadata, :name, :text, :thumbs
+    attr_reader :exif, :gallery, :metadata, :name, :quality, :text, :thumbs
 
-    DEFAULTS = { 'layout' => 'gallery_image' }
+    DEFAULTS = { 'layout' => 'gallery_image', 'quality' => 'original' }
 
-    def initialize(file, sizes, gallery)
+    def initialize(file, sizes, quality, gallery)
       file.is_a! Pathname
       sizes.is_a! Hash
+      quality.is_a! String
       gallery.is_a! Tenji::Gallery
 
       file.exist!
@@ -20,6 +21,7 @@ module Tenji
       fm, text = Tenji::Utilities.read_yaml co_file
 
       @name = file.basename.to_s
+      @quality = quality
       @gallery = gallery
       @exif = init_exif file
       @thumbs = init_thumbs sizes
@@ -31,6 +33,11 @@ module Tenji
     def <=>(other)
       other.is_a! Tenji::Image
       @name <=> other.name
+    end
+
+    def input_name()
+      return @name if @metadata['quality'] == 'original'
+      Pathname.new(@name).append_to_base("-#{@metadata['quality']}").to_s
     end
 
     def to_liquid()
@@ -57,6 +64,7 @@ module Tenji
       frontmatter.is_a! Hash
       attrs = { 'exif' => @exif, 
                 'gallery' => @gallery, 
+                'quality' => @quality,
                 'title' => title_from_name }
       DEFAULTS.merge(@global).merge(attrs).merge(frontmatter)
     end

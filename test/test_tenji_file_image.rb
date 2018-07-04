@@ -3,7 +3,7 @@ require 'test_helper'
 class TenjiFileImageTest < Minitest::Test
   context "Tenji::File::Image" do
     setup do
-      Jekyll.logger.log_level = :error
+      @any = AnyType.new
       source_dir = Pathname.new('test/data').realpath.to_s
       dest_dir = Pathname.new('tmp').realpath.to_s
       config = Jekyll.configuration({ 'source' => source_dir,
@@ -19,8 +19,8 @@ class TenjiFileImageTest < Minitest::Test
     context "has a method #initialize that" do
       should "initialize a File::Image object" do
         path = Pathname.new 'test/data/_albums/gallery1/photo1.jpg'
-        obj = Tenji::File::Image.new @site, @site.source, path.parent.to_s,
-                                    path.basename.to_s
+        obj = Tenji::File::Image.new @any, @site, @site.source, path.parent.to_s,
+                                     path.basename.to_s
         assert_equal 'Tenji::File::Image', obj.class.name
       end
     end
@@ -29,7 +29,7 @@ class TenjiFileImageTest < Minitest::Test
       setup do
         Tenji::Config.configure
         @path = Pathname.new 'test/data/_albums/gallery1/photo.jpg'
-        @obj = Tenji::File::Image.new @site, @site.source, @path.parent.to_s,
+        @obj = Tenji::File::Image.new @any, @site, @site.source, @path.parent.to_s,
                                       @path.basename.to_s
       end
 

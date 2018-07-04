@@ -20,7 +20,7 @@ module Tenji
       def generate_images(files)
         files.is_a! Array
         @gallery.images.each do |i|
-          files << Tenji::File::Image.new(@site, @base, @prefix_path, i.name)
+          files << Tenji::File::Image.new(i, @site, @base, @prefix_path, i.name)
         end
       end
 

@@ -7,7 +7,7 @@ class TenjiPageImageTest < Minitest::Test
       dir = Pathname.new 'test/data/gallery1'
       file = dir + 'photo1.jpg'
       capture_io do
-        @image = Tenji::Image.new file, Hash.new, AnyType.new
+        @image = Tenji::Image.new file, Hash.new, '', AnyType.new
       end
       @site = TestSite.site source: 'test/data', dest: 'tmp'
       @base = @site.source

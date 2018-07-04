@@ -9,8 +9,8 @@ module Tenji
                  'layout' => 'gallery_index',
                  'cover' => nil,
                  'listed' => true,
-                 'originals' => true,
                  'paginate' => 25,
+                 'quality' => 'original',
                  'individual_pages' => false,
                  'sizes' => { 'small' => { 'x' => 400, 'y' => 400 } }
                }
@@ -25,10 +25,11 @@ module Tenji
 
       fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file(:metadata))
       sizes = init_sizes fm
+      quality = init_quality fm
 
       @dirname = dir.basename.to_s
       @list = list
-      @images = init_images dir, sizes
+      @images = init_images dir, sizes, quality
       @cover = init_cover fm
       
       @text = text
@@ -76,11 +77,11 @@ module Tenji
       end
     end
 
-    private def init_images(dir, sizes)
+    private def init_images(dir, sizes, quality)
       dir.is_a! Pathname
 
       images = dir.images.map do |i|
-                 Tenji::Image.new i, sizes, self
+                 Tenji::Image.new i, sizes, quality, self
                end
       images.sort
     end
@@ -89,6 +90,11 @@ module Tenji
       frontmatter.is_a! Hash
       attrs = { 'images' => @images }
       DEFAULTS.merge(@global).merge(attrs).merge(frontmatter)
+    end
+
+    private def init_quality(frontmatter)
+      frontmatter.is_a! Hash
+      frontmatter['quality'] || @global['quality'] || DEFAULTS['quality']
     end
 
     private def init_sizes(frontmatter)

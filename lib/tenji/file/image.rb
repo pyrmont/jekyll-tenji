@@ -3,6 +3,12 @@ module Tenji
     class Image < Jekyll::StaticFile
       using Tenji::Refinements
 
+      def initialize(image, *args)
+        image.is_a! Tenji::Image
+        @image = image
+        super *args
+      end
+
       def destination(dest)
         dest.is_a! String
 
@@ -11,6 +17,16 @@ module Tenji
 
         path = super dest
         path.sub input_path, output_path
+      end
+
+      def path
+        unless @image.metadata['quality'] == 'original'
+          galleries_dir = Tenji::Config.dir 'galleries'
+          thumbs_dir = Tenji::Config.dir 'thumbs'
+          super().sub(galleries_dir, thumbs_dir).sub(@name, @image.input_name)
+        else
+          super
+        end
       end
     end
   end
