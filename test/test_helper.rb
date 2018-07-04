@@ -12,9 +12,10 @@ require 'pathname'
 require 'jekyll'
 require 'jekyll-tenji'
 
+Jekyll.logger.log_level = :error
+
 class TestSite
-  def self.site(source:, dest:, log_level: :error)
-    Jekyll.logger.log_level = log_level
+  def self.site(source:, dest:)
     source_dir = Pathname.new(source).realpath.to_s
     dest_dir = Pathname.new(dest).realpath.to_s
     config = Jekyll.configuration({ 'source' => source_dir,
