@@ -81,7 +81,7 @@ module Tenji
       dir.is_a! Pathname
 
       images = dir.images.map do |i|
-                 Tenji::Image.new i, sizes, quality, self
+                 Tenji::Image.new i, sizes, self
                end
       images.sort
     end

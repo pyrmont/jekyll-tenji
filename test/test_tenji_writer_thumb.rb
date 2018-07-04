@@ -17,7 +17,7 @@ class TenjiWriterThumbTest < Minitest::Test
     context "has a class method #write that" do
       setup do
         file = Pathname.new 'test/data/gallery2/01-castle.jpg'
-        source = Tenji::Image.new file, Hash.new, '', AnyType.new 
+        source = Tenji::Image.new file, Hash.new, AnyType.new 
         dimensions = { 'x' => 400, 'y' => 400 }
         @obj = Tenji::Thumb.new 'small', dimensions, source
         @input_file = file

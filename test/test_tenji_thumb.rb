@@ -14,9 +14,9 @@ class TenjiThumbTest < Minitest::Test
       setup do
         dir = Pathname.new 'test/data/gallery2'
         file = dir + '01-castle.jpg'
-        @image = Tenji::Image.new file, Hash.new, '', AnyType.new
+        @image = Tenji::Image.new file, Hash.new, AnyType.new
         @dimensions = { 'x' => 400, 'y' => 400 }
-        @obj = Tenji::Thumb.new 'small', @dimensions , @image
+        @obj = Tenji::Thumb.new 'small', @dimensions, @image
       end
 
       should "initialise a Thumb object" do
