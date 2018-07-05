@@ -53,8 +53,8 @@ module Tenji
             prefix_path = (thumb_dir + @gallery.dirname).to_s
             pos = t.name.rindex '.'
             factors.each do |f|
-              suffix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
-              name = t.name[0...pos] + suffix + t.name[pos..-1]
+              fix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
+              name = t.name.infix(pos, fix)
               files << Tenji::File::Thumb.new(@site, @base, prefix_path, name)
             end
           end

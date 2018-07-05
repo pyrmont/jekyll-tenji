@@ -10,10 +10,6 @@ module Tenji
     end
 
     refine Pathname do
-      def -(p2)
-        self.sub(p2.to_s, '')
-      end
-
       def append_to_base(str)
         ext = self.extname
         base = self.sub_ext('').to_s
@@ -40,6 +36,12 @@ module Tenji
         self.children.select do |c|
           c.directory?
         end
+      end
+    end
+
+    refine String do
+      def infix(pos, str)
+        self[0...pos] + str + self[pos..-1]
       end
     end
   end

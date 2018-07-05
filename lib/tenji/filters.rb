@@ -24,8 +24,8 @@ module Tenji
       factors = 1..Tenji::Config.option('scale_max')
 
       links = factors.map do |f|
-                suffix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
-                "#{link[0...pos] + suffix + link[pos..-1]} #{f}x"
+                fix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
+                "#{link.infix(pos, fix)} #{f}x"
               end
       links.join ', '
     end
