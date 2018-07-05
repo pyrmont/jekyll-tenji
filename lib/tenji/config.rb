@@ -5,8 +5,8 @@ module Tenji
     DEFAULTS = { 'galleries_dir' => '_albums',
                  'thumbs_dir' => '_thumbs',
                  'metadata_file' => 'index.md',
-                 'dpi_density' => 2,
-                 'dpi_suffix_format' => '-#x',
+                 'scale_max' => 2,
+                 'scale_suffix_format' => '-#x',
                  'input_page_ext' => '.md',
                  'output_page_ext' => '.html' }
 
@@ -56,7 +56,7 @@ module Tenji
 
     def self.suffix(type, factor: nil)
       is_set!
-      if type.to_s == 'dpi'
+      if type.to_s == 'scale'
         key = type.to_s + '_suffix_format'
         @config[key].sub('#', factor.to_s)
       else

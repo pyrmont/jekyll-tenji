@@ -11,15 +11,14 @@ module Tenji
         source_file.exist!
         output_dir.exist!
 
-        output_file = (output_dir + thumb.name).expand_path
+        base_file = (output_dir + thumb.name).expand_path
+        factors = 1..Tenji::Config.option('scale_max')
 
-        write_file source_file, output_file, thumb.dimensions
-
-        (2..Tenji::Config.option('dpi_density')).each do |i|
-          suffix = Tenji::Config.suffix 'dpi', factor: i
-          hidpi_file = output_file.append_to_base suffix
-          dimensions = thumb.dimensions.transform_values { |v| v * i }
-          write_file source_file, hidpi_file, dimensions
+        factors.each do |f|
+          suffix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
+          output_file = base_file.append_to_base suffix
+          dimensions = thumb.dimensions.transform_values { |v| v * f }
+          write_file source_file, output_file, dimensions
         end
       end
 

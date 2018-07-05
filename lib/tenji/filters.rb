@@ -21,12 +21,13 @@ module Tenji
       return link unless link.is_a?(String)
 
       pos = link.rindex '.'
-      density = Tenji::Config.option 'dpi_density'
-      
-      (1..density).map do |i|
-        suffix = (i == 1) ? '' : Tenji::Config.suffix('dpi', factor: i)
-        %Q[#{link.insert(pos, suffix)} #{i}x]
-      end
+      factors = 1..Tenji::Config.option('scale_max')
+
+      links = factors.map do |f|
+                suffix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
+                "#{link[0...pos] + suffix + link[pos..-1]} #{f}x"
+              end
+      links.join ', '
     end
   end
 end

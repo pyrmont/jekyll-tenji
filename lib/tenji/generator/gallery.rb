@@ -45,14 +45,16 @@ module Tenji
       def generate_thumbs(files)
         files.is_a! Array
 
+        factors = 1..Tenji::Config.option('scale_max')
+
         @gallery.images.each do |i|
           i.thumbs.each_value do |t|
             thumb_dir = Pathname.new Tenji::Config.dir(:thumbs)
             prefix_path = (thumb_dir + @gallery.dirname).to_s
-            files << Tenji::File::Thumb.new(@site, @base, prefix_path, t.name)
-            (2..Tenji::Config.option('dpi_density')).each do |i|
-              suffix = Tenji::Config.suffix 'dpi', factor: i
-              name = Pathname.new(t.name).append_to_base(suffix).to_s
+            pos = t.name.rindex '.'
+            factors.each do |f|
+              suffix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
+              name = t.name[0...pos] + suffix + t.name[pos..-1]
               files << Tenji::File::Thumb.new(@site, @base, prefix_path, name)
             end
           end
