@@ -17,7 +17,7 @@ module Tenji
 
         process_name 
 
-        @data = image.metadata
+        @data = image.data
         @content = image.text
 
         Jekyll::Hooks.trigger :pages, :post_init, self

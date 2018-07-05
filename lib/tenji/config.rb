@@ -5,8 +5,8 @@ module Tenji
     DEFAULTS = { 'galleries_dir' => '_albums',
                  'thumbs_dir' => '_thumbs',
                  'metadata_file' => 'index.md',
-                 'retina_images' => true,
-                 'retina_suffix_2x' => '-2x',
+                 'dpi_density' => 2,
+                 'dpi_suffix_format' => '-#x',
                  'input_page_ext' => '.md',
                  'output_page_ext' => '.html' }
 
@@ -52,6 +52,16 @@ module Tenji
       is_set!
       key = name.to_s + '_settings'
       @config[key]
+    end
+
+    def self.suffix(type, factor: nil)
+      is_set!
+      if type.to_s == 'dpi'
+        key = type.to_s + '_suffix_format'
+        @config[key].sub('#', factor.to_s)
+      else
+        nil
+      end
     end
 
     private_class_method def self.is_set!()

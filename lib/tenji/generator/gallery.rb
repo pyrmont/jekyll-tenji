@@ -50,8 +50,8 @@ module Tenji
             thumb_dir = Pathname.new Tenji::Config.dir(:thumbs)
             prefix_path = (thumb_dir + @gallery.dirname).to_s
             files << Tenji::File::Thumb.new(@site, @base, prefix_path, t.name)
-            if Tenji::Config.option('retina_images')
-              suffix = Tenji::Config.option('retina_suffix_2x')
+            (2..Tenji::Config.option('dpi_density')).each do |i|
+              suffix = Tenji::Config.suffix 'dpi', factor: i
               name = Pathname.new(t.name).append_to_base(suffix).to_s
               files << Tenji::File::Thumb.new(@site, @base, prefix_path, name)
             end

@@ -27,8 +27,19 @@ end
 
 class AnyType
   using Tenji::Refinements
+  def initialize(methods: {})
+    @methods = Hash.new
+    methods.each do |k,v|
+      @methods[k] = v
+    end
+  end
 
   def is_a?(type)
     true
+  end
+
+  def method_missing(name, *args, &block)
+    return @methods[name.to_s] if @methods.key? name.to_s
+    super(name, *args, &block)
   end
 end

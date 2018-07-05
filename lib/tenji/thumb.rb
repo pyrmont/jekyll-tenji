@@ -17,10 +17,19 @@ module Tenji
 
     def to_liquid()
       { 'name' => @name,
+        'link' => link,
+        'x' => @dimensions['x'],
+        'y' => @dimensions['y'],
         'size' => @size,
-        'dimensions' => @dimensions,
-        'source' => @source
-      }
+        'source' => @source }
     end
+
+    private def link()
+      galleries = Tenji::Config.dir 'galleries', output: true
+      thumbs = Tenji::Config.dir 'thumbs', output: true
+      album = @source.gallery.dirname
+      "/#{galleries}/#{album}/#{thumbs}/#{@name}"
+    end
+
   end
 end

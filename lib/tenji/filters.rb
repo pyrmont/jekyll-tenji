@@ -1,6 +1,8 @@
 module Tenji
   module Filters
-    def period_format(date, fmt = '%e %b %Y', sep = '&ndash;')
+    using Tenji::Refinements
+
+    def format_period(date, fmt = '%e %b %Y', sep = '&ndash;')
       return date unless date.is_a? Array
       case date.length
       when 2
@@ -12,6 +14,18 @@ module Tenji
         "#{date}"
       else
         raise StandardError
+      end
+    end
+    
+    def to_srcset(link)
+      return link unless link.is_a?(String)
+
+      pos = link.rindex '.'
+      density = Tenji::Config.option 'dpi_density'
+      
+      (1..density).map do |i|
+        suffix = (i == 1) ? '' : Tenji::Config.suffix('dpi', factor: i)
+        %Q[#{link.insert(pos, suffix)} #{i}x]
       end
     end
   end

@@ -6,13 +6,14 @@ class TenjiPageImageTest < Minitest::Test
       Tenji::Config.configure
       dir = Pathname.new 'test/data/gallery1'
       file = dir + 'photo1.jpg'
+      gallery = AnyType.new methods: { 'dirname' => dir.basename.to_s }
       capture_io do
-        @image = Tenji::Image.new file, Hash.new, AnyType.new
+        @image = Tenji::Image.new file, Hash.new, gallery
       end
       @site = TestSite.site source: 'test/data', dest: 'tmp'
       @base = @site.source
       @prefix_path = dir.to_s
-      @name = 'photo1.jpg'
+      @name = file.basename.to_s
     end
 
     teardown do

@@ -15,11 +15,11 @@ module Tenji
 
         write_file source_file, output_file, thumb.dimensions
 
-        if Tenji::Config.option('retina_images')
-          suffix = Tenji::Config.option('retina_suffix_2x')
-          output_file = output_file.append_to_base suffix
-          dimensions = thumb.dimensions.transform_values { |v| v * 2 }
-          write_file source_file, output_file, dimensions
+        (2..Tenji::Config.option('dpi_density')).each do |i|
+          suffix = Tenji::Config.suffix 'dpi', factor: i
+          hidpi_file = output_file.append_to_base suffix
+          dimensions = thumb.dimensions.transform_values { |v| v * i }
+          write_file source_file, hidpi_file, dimensions
         end
       end
 

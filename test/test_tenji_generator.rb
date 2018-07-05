@@ -24,8 +24,10 @@ class TenjiGeneratorTest < Minitest::Test
       end
 
       should "add Gallery pages to a site object" do
-        generator = Tenji::Generator.new
         assert_equal [], @site.pages
+        assert_equal [], @site.static_files
+
+        generator = Tenji::Generator.new
         generator.generate @site
 
         pages = @site.pages

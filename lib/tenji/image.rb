@@ -33,6 +33,19 @@ module Tenji
       @name <=> other.name
     end
 
+    def data()
+      attrs = { 'image' => image }
+      @metadata.merge attrs
+    end
+
+    def image()
+      attrs = { 'name' => @name,
+                'link' => link,
+                'x' => @exif['width'],
+                'y' => @exif['height'] }
+      attrs.merge @thumbs
+    end
+
     def input_name()
       quality = @gallery.metadata['quality']
       if quality == 'original'
@@ -43,11 +56,8 @@ module Tenji
     end
 
     def to_liquid()
-      attrs = { 'name' => name,
-                'content' => text,
-                'exif' => exif,
-                'thumbs' => thumbs }
-      @metadata.merge attrs
+      attrs = { 'content' => @text }
+      @metadata.merge(image).merge(attrs)
     end
 
     private def init_exif(file)
@@ -64,18 +74,23 @@ module Tenji
 
     private def init_metadata(frontmatter)
       frontmatter.is_a! Hash
-      attrs = { 'exif' => @exif, 
-                'gallery' => @gallery, 
-                'title' => title_from_name }
+      attrs = { 'title' => title_from_name,
+                'gallery' => @gallery,
+                'exif' => @exif }
       DEFAULTS.merge(@global).merge(attrs).merge(frontmatter)
     end
 
     private def init_thumbs(sizes)
       sizes.is_a! Hash
-
       sizes.keys.reduce(Hash.new) do |memo,s|
         memo.update({ s => Tenji::Thumb.new(s, sizes[s], self) })
       end
+    end
+
+    private def link()
+      galleries = Tenji::Config.dir 'galleries', output: true
+      album = @gallery.dirname
+      "/#{galleries}/#{album}/#{@name}"
     end
 
     private def title_from_name()

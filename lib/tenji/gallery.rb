@@ -12,8 +12,7 @@ module Tenji
                  'paginate' => 25,
                  'quality' => 'original',
                  'individual_pages' => false,
-                 'sizes' => { 'small' => { 'x' => 400, 'y' => 400 } }
-               }
+                 'sizes' => { 'small' => { 'x' => 400, 'y' => 400 } } }
 
     def initialize(dir, list)
       dir.is_a! Pathname
