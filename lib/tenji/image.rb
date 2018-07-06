@@ -43,6 +43,7 @@ module Tenji
     def image()
       attrs = { 'name' => @name,
                 'link' => link,
+                'page_link' => page_link,
                 'x' => @exif['width'],
                 'y' => @exif['height'] }
       attrs.merge @thumbs
@@ -94,6 +95,13 @@ module Tenji
       album = @gallery.dirname
       "/#{galleries}/#{album}/#{@name}"
     end
+
+    private def page_link()
+      galleries = Tenji::Config.dir 'galleries', output: true
+      album = @gallery.dirname
+      name = Pathname.new(@name).sub_ext(Tenji::Config.ext('page', output: true))
+      "/#{galleries}/#{album}/#{name}"
+    end 
 
     private def title_from_name()
       @name.sub /^\d+-/, ''
