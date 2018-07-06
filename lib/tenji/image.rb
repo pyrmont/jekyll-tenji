@@ -34,7 +34,9 @@ module Tenji
     end
 
     def data()
-      attrs = { 'image' => image }
+      attrs = { 'image' => image,
+                'next' => @gallery.next_image(self),
+                'prev' => @gallery.prev_image(self) }
       @metadata.merge attrs
     end
 

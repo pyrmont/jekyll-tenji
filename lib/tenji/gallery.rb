@@ -54,6 +54,16 @@ module Tenji
       end
     end
 
+    def next_image(current)
+      index = @images.find_index { |i| i.name == current.name } + 1
+      (index < @images.length) ? @images[index] : nil
+    end
+
+    def prev_image(current)
+      index = @images.find_index { |i| i.name == current.name } - 1
+      (index < 0) ? nil : @images[index]
+    end
+
     def to_liquid()
       attrs = { 'dirname' => @dirname,
                 'content' => @text,
