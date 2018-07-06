@@ -56,9 +56,11 @@ module Tenji
 
     def self.suffix(type, factor: nil)
       is_set!
+
       if type.to_s == 'scale'
+        raise StandardError unless factor.is_a? Integer
         key = type.to_s + '_suffix_format'
-        @config[key].sub('#', factor.to_s)
+        @config[key]&.sub('#', factor.to_s)
       else
         nil
       end

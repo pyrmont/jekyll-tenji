@@ -132,6 +132,32 @@ class TenjiConfigTest < Minitest::Test
       end
     end
 
+    context "has a class method .option that" do
+      setup do
+        @obj = Tenji::Config
+        @obj.configure
+      end
+
+      teardown do
+        @obj.reset
+      end
+
+      should "return the option for a valid key" do
+        key = 'galleries_dir'
+        default_value = @defaults[key]
+        assert_equal default_value, @obj.option(key)
+      end
+
+      should "return nil for a non-existent key" do
+        assert_nil @obj.option('Does not exist')
+      end
+
+      should "raise an error if the state object has not been set" do
+        @obj.reset
+        assert_raises(StandardError) { @obj.option('something') }
+      end
+    end
+
     context "has a class method .settings that" do
       setup do
         @settings = { 'gallery_settings' => { 'originals' => false } }
@@ -156,6 +182,37 @@ class TenjiConfigTest < Minitest::Test
       should "raise an error if the state object has not been set" do
         @obj.reset
         assert_raises(StandardError) { @obj.settings('something') }
+      end
+    end
+    
+    context "has a class method .suffix that" do
+      setup do
+        @obj = Tenji::Config
+        @obj.configure
+      end
+
+      teardown do
+        @obj.reset
+      end
+
+      should "return a suffix if key is 'scale' and factor is valid" do
+        suffix = 'scale'
+        factor = 2
+        assert_equal @defaults['scale_suffix_format'].sub('#', factor.to_s),
+                     @obj.suffix('scale', factor: factor)
+      end
+
+      should "raise an error if key is 'scale' and factor is invalid" do
+        assert_raises(StandardError) { @obj.suffix('scale', 'a') }
+      end
+
+      should "return nil for a non-existent key" do
+        assert_nil @obj.suffix('Does not exist')
+      end
+
+      should "raise an error if the state object has not been set" do
+        @obj.reset
+        assert_raises(StandardError) { @obj.suffix('something') }
       end
     end
   end
