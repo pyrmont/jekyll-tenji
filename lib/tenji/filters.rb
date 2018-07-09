@@ -2,12 +2,35 @@ module Tenji
   module Filters
     using Tenji::Refinements
 
-    def format_coords(coords)
-      return coords unless coords.is_a?(Array) && coords.length == 3
-      degrees = coords[0].to_i
-      minutes = coords[1].floor.to_i
-      seconds = ((coords[1] - coords[1].floor) * 60).round.to_i
-      %Q[#{degrees}&deg; #{minutes}&prime; #{seconds}&Prime;]
+    def format_coord(coord, type = 'lat')
+      return coord unless coord.is_a?(Array) && coord.length == 3
+      
+      d, m, s = coord
+      hemisphere = case type
+                   when 'lat'
+                     (d < 0) ? 'S' : 'N'
+                   when 'long'
+                     (d < 0) ? 'W' : 'E'
+                   else
+                     raise StandardError
+                   end
+     
+      d = d.abs
+      if s == 0 && m == 0
+        degrees = d.floor.to_i
+        minutes = (d.modulo(1) * 60).floor.to_i
+        seconds = (((d.modulo(1) * 60) - minutes) * 60).round.to_i
+      elsif s == 0
+        degrees = d.to_i
+        minutes = m.floor.to_i
+        seconds = (m.modulo(1) * 60).round.to_i
+      else
+        degrees = d.to_i
+        minutes = m.to_i
+        seconds = s.to_i
+      end
+
+      %Q[#{degrees}&deg; #{minutes}&prime; #{seconds}&Prime; #{hemisphere}]
     end
 
     def format_datetime(datetime, fmt = '%e %B %Y')
@@ -15,16 +38,15 @@ module Tenji
       datetime.strftime(fmt).strip
     end
 
-    def format_period(date, fmt = '%e %b %Y', sep = '&ndash;')
-      return date unless date.is_a? Array
-      case date.length
+    def format_period(period, fmt = '%e %B %Y', sep = '&ndash;')
+      return period unless period.is_a? Array
+      case period.length
       when 2
-        start = date[0].strftime(fmt).strip
-        finish = date[1].strftime(fmt).strip
+        start = period[0].strftime(fmt).strip
+        finish = period[1].strftime(fmt).strip
         "#{start}#{sep}#{finish}"
       when 1
-        date = date[0].strftime(fmt).strip
-        "#{date}"
+        period[0].strftime(fmt).strip
       else
         raise StandardError
       end

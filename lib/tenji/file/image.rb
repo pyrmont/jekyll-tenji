@@ -18,16 +18,6 @@ module Tenji
         path = super dest
         path.sub input_path, output_path
       end
-
-      def path
-        unless @image.gallery.metadata['quality'] == 'original'
-          galleries_dir = Tenji::Config.dir 'galleries'
-          thumbs_dir = Tenji::Config.dir 'thumbs'
-          super().sub(galleries_dir, thumbs_dir).sub(@name, @image.input_name)
-        else
-          super
-        end
-      end
     end
   end
 end

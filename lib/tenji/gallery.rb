@@ -41,27 +41,15 @@ module Tenji
       this_start = @metadata['period']&.first
       other_start = other.metadata['period']&.first
 
-      if this_start.nil? && other_start.nil?
+      if this_start == other_start
         @dirname <=> other.dirname
       elsif this_start.nil?
         1
       elsif other_start.nil?
         -1
-      elsif this_start == other_start
-        @dirname <=> other.dirname
       else
         other_start <=> this_start
       end
-    end
-
-    def next_image(current)
-      index = @images.find_index { |i| i.name == current.name } + 1
-      (index < @images.length) ? @images[index] : nil
-    end
-
-    def prev_image(current)
-      index = @images.find_index { |i| i.name == current.name } - 1
-      (index < 0) ? nil : @images[index]
     end
 
     def to_liquid()
@@ -92,7 +80,9 @@ module Tenji
       images = dir.images.map do |i|
                  Tenji::Image.new i, sizes, self
                end
-      images.sort
+      images.sort.each.with_index do |i,index|
+        i.position = index
+      end
     end
 
     private def init_metadata(frontmatter)

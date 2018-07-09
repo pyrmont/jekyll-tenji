@@ -43,10 +43,8 @@ class TenjiUtilitiesTest < Minitest::Test
         dir = Pathname.new 'test/data/gallery2'
         file = dir + Tenji::Config.file(:metadata)
         data, content = Tenji::Utilities.read_yaml file
-        assert_equal 'Hash', data.class.name
         assert_equal metadata, data
-        assert_equal 'String', content.class.name
-        assert_equal '', content
+        assert_equal "This is a gallery.\n", content
       end
 
       should "return {} and '' if a metadata file doesn't exist" do

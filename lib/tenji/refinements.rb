@@ -40,8 +40,18 @@ module Tenji
     end
 
     refine String do
+      def append_to_base(str)
+        pos = self.rindex('.') || self.length - 1
+        infix pos, str
+      end
+
       def infix(pos, str)
         self[0...pos] + str + self[pos..-1]
+      end
+
+      def sub_ext(str)
+        pos = self.rindex('.') || self.length - 1
+        self[0...pos] + str
       end
     end
   end

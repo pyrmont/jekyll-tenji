@@ -7,8 +7,7 @@ class TenjiPageImageTest < Minitest::Test
       dir = Pathname.new 'test/data/gallery1'
       file = dir + 'photo1.jpg'
       gallery = AnyType.new methods: { 'dirname' => dir.basename.to_s,
-                                       'next_image' => nil, 
-                                       'prev_image' => nil }
+                                       'images' => Array.new }
       capture_io do
         @image = Tenji::Image.new file, Hash.new, gallery
       end

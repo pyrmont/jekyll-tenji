@@ -3,6 +3,7 @@ module Tenji
     using Tenji::Refinements
 
     attr_reader :exif, :gallery, :metadata, :name, :text, :thumbs
+    attr_accessor :position
 
     DEFAULTS = { 'layout' => 'gallery_image' }
 
@@ -23,6 +24,7 @@ module Tenji
       @gallery = gallery
       @exif = init_exif file
       @thumbs = init_thumbs sizes
+      @position = nil
 
       @text = text
       @metadata = init_metadata fm
@@ -35,27 +37,9 @@ module Tenji
 
     def data()
       attrs = { 'image' => image,
-                'next' => @gallery.next_image(self),
-                'prev' => @gallery.prev_image(self) }
+                'next' => next_pos,
+                'prev' => prev_pos }
       @metadata.merge attrs
-    end
-
-    def image()
-      attrs = { 'name' => @name,
-                'link' => link,
-                'page_link' => page_link,
-                'x' => @exif['width'],
-                'y' => @exif['height'] }
-      attrs.merge @thumbs
-    end
-
-    def input_name()
-      quality = @gallery.metadata['quality']
-      if quality == 'original'
-        @name
-      else
-        Pathname.new(@name).append_to_base("-#{quality}").to_s
-      end
     end
 
     def to_liquid()
@@ -63,16 +47,20 @@ module Tenji
       @metadata.merge(image).merge(attrs)
     end
 
+    private def image()
+      attrs = { 'name' => @name,
+                'position' => @position,
+                'link' => link,
+                'page_link' => page_link,
+                'x' => @exif['width'],
+                'y' => @exif['height'] }
+      attrs.merge @thumbs
+    end
+
     private def init_exif(file)
       file.is_a! Pathname
       path = file.realpath.to_s
-      begin
-        data = EXIFR::JPEG.new(::File.open(path)).to_hash
-        data.transform_keys &:to_s
-      rescue EXIFR::MalformedJPEG => e
-        Jekyll.logger.warn "EXIFR Exception reading #{path}: #{e.message}"
-        Hash.new
-      end
+      data = Tenji::Utilities.read_exif path
     end
 
     private def init_metadata(frontmatter)
@@ -96,12 +84,32 @@ module Tenji
       "/#{galleries}/#{album}/#{@name}"
     end
 
+    private def next_pos()
+      if @position.nil?
+        nil
+      elsif @position + 1 == @gallery.images.length
+        nil
+      else
+        @position + 1
+      end
+    end
+
     private def page_link()
       galleries = Tenji::Config.dir 'galleries', output: true
       album = @gallery.dirname
-      name = Pathname.new(@name).sub_ext(Tenji::Config.ext('page', output: true))
+      name = @name.sub_ext(Tenji::Config.ext('page', output: true))
       "/#{galleries}/#{album}/#{name}"
     end 
+
+    private def prev_pos()
+      if @position.nil?
+        nil
+      elsif @position == 0
+        nil
+      else
+        @position - 1
+      end
+    end
 
     private def title_from_name()
       @name.sub /^\d+-/, ''
