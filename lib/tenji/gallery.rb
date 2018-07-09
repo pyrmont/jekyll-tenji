@@ -30,7 +30,7 @@ module Tenji
       @list = list
       @images = init_images dir, sizes, quality
       @cover = init_cover fm
-      
+
       @text = text
       @metadata = init_metadata fm
     end
@@ -63,9 +63,9 @@ module Tenji
       frontmatter.is_a! Hash
 
       if cover = frontmatter['cover']
-        begin
-          @images.at(@images.find_index { |i| i.name == cover }) 
-        rescue TypeError => e
+        if index = @images.find_index { |i| i.name == cover }
+          @images.at(index)
+        else
           Jekyll.logger.warn "Cover image #{cover} doesn't exist"
           nil
         end
