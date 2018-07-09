@@ -28,11 +28,8 @@ module Tenji
       def generate_index(pages)
         pages.is_a! Array
         name = 'index' + Tenji::Config.ext(:page, output: true)
-        pages << Tenji::Page::Gallery.new(@gallery,
-                                          @site,
-                                          @base,
-                                          @prefix_path,
-                                          name)
+        params = [ @gallery, @site, @base, @prefix_path, name ]
+        pages << Tenji::Page::Gallery.new(*params)
       end
 
       def generate_individual_pages(pages)
