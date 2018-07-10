@@ -41,16 +41,17 @@ module Tenji
 
     refine String do
       def append_to_base(str)
-        pos = self.rindex('.') || self.length - 1
+        pos = self.rindex('.') || self.length
         infix pos, str
       end
 
       def infix(pos, str)
+        return nil if pos.abs > length 
         self[0...pos] + str + self[pos..-1]
       end
 
       def sub_ext(str)
-        pos = self.rindex('.') || self.length - 1
+        pos = self.rindex('.') || self.length
         self[0...pos] + str
       end
     end
