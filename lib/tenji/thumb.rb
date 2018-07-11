@@ -9,7 +9,7 @@ module Tenji
       dimensions.is_a! Hash
       source.is_a! Tenji::Image
 
-      @name = Pathname.new(source.name).append_to_base("-#{size}").to_s
+      @name = source.name.append_to_base "-#{size}" 
       @size = size
       @dimensions = dimensions
       @source = source
