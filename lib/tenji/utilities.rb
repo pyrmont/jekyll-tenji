@@ -1,7 +1,7 @@
 module Tenji
   module Utilities
     using Tenji::Refinements
-    
+
     def self.parse_period(period)
       period.is_a! String
 
@@ -9,16 +9,24 @@ module Tenji
       components.map { |c| Date.parse(c.strip) }
     end
 
-    def self.read_exif(path)
+    def self.read_exif(file)
+      file.is_a! Pathname
+
+      return Hash.new unless file.exist?
+
+      filename = file.realpath.to_s
       begin
-        data = EXIFR::JPEG.new(::File.open(path)).to_hash
+        data = EXIFR::JPEG.new(::File.open(filename)).to_hash
         if data[:gps_latitude] && data[:gps_longitude]
-          data[:gps_latitude][0] *= (data[:gps_latitude_ref] == 'N') ? 1 : -1 
+          data[:gps_latitude][0] *= (data[:gps_latitude_ref] == 'N') ? 1 : -1
           data[:gps_longitude][0] *= (data[:gps_longitude_ref] == 'E') ? 1 : -1
         end
         data.transform_keys &:to_s
       rescue EXIFR::MalformedJPEG => e
-        Jekyll.logger.warn "EXIFR Exception reading #{path}: #{e.message}"
+        Jekyll.logger.warn "EXIFR Exception reading #{filename}: #{e.message}"
+        Hash.new
+      rescue StandardError => e
+        Jekyll.logger.warn "Error reading #{filename}: #{e.message}"
         Hash.new
       end
     end
@@ -27,9 +35,7 @@ module Tenji
       file.is_a! Pathname
       config.is_a! Hash
 
-      data = Hash.new
-      content = ''
-      return [ data, content ] unless file.exist?
+      return [ Hash.new, '' ] unless file.exist?
 
       filename = file.realpath.to_s
       begin
@@ -37,16 +43,18 @@ module Tenji
         if content =~ Jekyll::Document::YAML_FRONT_MATTER_REGEXP
           content = $POSTMATCH
           data = SafeYAML.load(Regexp.last_match(1)) || Hash.new
+          data['period'] = parse_period(data['period'] || '')
         end
       rescue Psych::SyntaxError => e
         Jekyll.logger.warn "YAML Exception reading #{filename}: #{e.message}"
         raise e if config["strict_front_matter"]
       rescue StandardError => e
-        Jekyll.logger.warn "Error reading file #{filename}: #{e.message}"
+        Jekyll.logger.warn "Error reading #{filename}: #{e.message}"
         raise e if config["strict_front_matter"]
+      ensure
+        data ||= Hash.new
+        content ||= ''
       end
-
-      data['period'] = data['period'] ? parse_period(data['period']) : nil
 
       [ data, content ]
     end

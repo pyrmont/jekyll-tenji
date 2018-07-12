@@ -31,6 +31,33 @@ class TenjiUtilitiesTest < Minitest::Test
       end
     end
 
+    context "has a class method .read_exif that" do
+      should "return a Hash object of EXIF data" do
+        file = Pathname.new 'test/data/gallery4/03-with-exif.jpg'
+        res = Tenji::Utilities.read_exif file
+        assert_equal Hash, res.class
+        assert_equal res['gps_latitude_ref'], 'N'
+        assert (res['gps_latitude'][0] > 0)
+        assert_equal res['gps_longitude_ref'], 'E'
+        assert (res['gps_longitude'][0] > 0)
+
+        file = Pathname.new 'test/data/gallery4/04-other-exif.jpg'
+        res = Tenji::Utilities.read_exif file
+        assert_equal Hash, res.class
+        assert_equal res['gps_latitude_ref'], 'S'
+        assert (res['gps_latitude'][0] < 0)
+        assert_equal res['gps_longitude_ref'], 'E'
+        assert (res['gps_longitude'][0] > 0)
+      end
+
+      should "return an empty Hash object if the file doesn't exist" do
+        file = Pathname.new 'test/not/a/file'
+        res = Tenji::Utilities.read_exif file
+        assert_equal Hash, res.class
+        assert res.empty?
+      end
+    end
+
     context "has a class method .read_yaml that" do
       should "return frontmatter and text if a metadata file exists" do
         period_string = '1 January 2018 - 5 January 2018'
@@ -47,7 +74,7 @@ class TenjiUtilitiesTest < Minitest::Test
         assert_equal "This is a gallery.\n", content
       end
 
-      should "return {} and '' if a metadata file doesn't exist" do
+      should "return empty objects if a metadata file doesn't exist" do
         dir = Pathname.new 'not/a/real/path'
         file = dir + Tenji::Config.file(:metadata)
         data, content = Tenji::Utilities.read_yaml file

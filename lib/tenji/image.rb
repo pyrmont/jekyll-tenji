@@ -59,8 +59,7 @@ module Tenji
 
     private def init_exif(file)
       file.is_a! Pathname
-      path = file.realpath.to_s
-      data = Tenji::Utilities.read_exif path
+      data = Tenji::Utilities.read_exif file
     end
 
     private def init_metadata(frontmatter)
@@ -99,7 +98,7 @@ module Tenji
       album = @gallery.dirname
       name = @name.sub_ext(Tenji::Config.ext('page', output: true))
       "/#{galleries}/#{album}/#{name}"
-    end 
+    end
 
     private def prev_pos()
       if @position.nil?
