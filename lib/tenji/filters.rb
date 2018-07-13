@@ -47,6 +47,8 @@ module Tenji
         "#{start}#{sep}#{finish}"
       when 1
         period[0].strftime(fmt).strip
+      when 0
+        period
       else
         raise StandardError
       end
