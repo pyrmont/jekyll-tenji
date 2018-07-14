@@ -19,10 +19,10 @@ module Tenji
       filename = file.realpath.to_s
       begin
         data = EXIFR::JPEG.new(::File.open(filename)).to_hash
-        if data[:gps_latitude] && data[:gps_longitude]
-          data[:gps_latitude][0] *= (data[:gps_latitude_ref] == 'N') ? 1 : -1
-          data[:gps_longitude][0] *= (data[:gps_longitude_ref] == 'E') ? 1 : -1
-        end
+        southern_hemisphere = data[:gps_latitude_ref] == 'S'
+        western_hemisphere = data[:gps_longitude_ref] == 'W'
+        data[:gps_latitude][0] *= -1 if southern_hemisphere
+        data[:gps_longitude][0] *= -1 if western_hemisphere
         data.transform_keys &:to_s
       rescue EXIFR::MalformedJPEG => e
         Jekyll.logger.warn "EXIFR Exception reading #{filename}: #{e.message}"
