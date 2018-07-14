@@ -16,6 +16,7 @@ class TenjiGeneratorTest < Minitest::Test
         @temp_dir = Pathname.new('tmp/' + subdir)
         @temp_dir.mkpath
         @site = TestSite.site source: 'test/data/site', dest: @temp_dir.to_s
+        @generator = Tenji::Generator.new
       end
 
       teardown do
@@ -27,8 +28,7 @@ class TenjiGeneratorTest < Minitest::Test
         assert_equal [], @site.pages
         assert_equal [], @site.static_files
 
-        generator = Tenji::Generator.new
-        generator.generate @site
+        @generator.generate @site
 
         pages = @site.pages
         assert_equal [ 'Tenji::Page::List', 'Tenji::Page::Gallery', 'Tenji::Page::Image' ],
@@ -41,6 +41,10 @@ class TenjiGeneratorTest < Minitest::Test
                      files.map { |f| f.class.name }.uniq
         filenames = [ '01-castle.jpg', '01-castle-small.jpg', '01-castle-small-2x.jpg' ]
         assert_equal filenames, files.map { |f| f.name }
+      end
+
+      should "raise an error with invalid arguments" do
+        assert_raises(Tenji::TypeError) { @generator.generate nil }
       end
     end
   end

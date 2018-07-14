@@ -6,6 +6,7 @@ require 'pathname'
 require 'rmagick'
 
 require 'tenji/version'
+require 'tenji/exceptions'
 require 'tenji/refinements'
 
 require 'tenji/config'

@@ -25,12 +25,14 @@ class TenjiGalleryTest < Minitest::Test
 
       should "raise an error if the file doesn't exist" do
         dir = Pathname.new 'not/a/real/directory'
-        assert_raises(StandardError) { Tenji::Gallery.new dir, AnyType.new }
+        assert_raises(Tenji::NotFoundError) do
+          Tenji::Gallery.new dir, AnyType.new
+        end
       end
 
       should "raise an error if the list does not exist" do
         dir = Pathname.new 'test/data/gallery1/'
-        assert_raises(StandardError) { Tenji::Gallery.new dir, nil }
+        assert_raises(Tenji::TypeError) { Tenji::Gallery.new dir, nil }
       end
     end
 
@@ -77,7 +79,7 @@ class TenjiGalleryTest < Minitest::Test
       end
 
       should "raise an error if the comparator is not a Tenji::Image" do
-        assert_raises(StandardError) { @obj <=> nil }
+        assert_raises(Tenji::TypeError) { @obj <=> nil }
       end
     end
 

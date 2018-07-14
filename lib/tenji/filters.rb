@@ -14,7 +14,8 @@ module Tenji
                    when 'long'
                      (d < 0) ? 'W' : 'E'
                    else
-                     raise StandardError
+                     msg = "Parameter `type` must be either 'lat' or 'long'"
+                     raise ::ArgumentError, msg
                    end
 
       d = d.abs

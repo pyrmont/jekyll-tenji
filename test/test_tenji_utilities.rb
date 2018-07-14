@@ -27,7 +27,7 @@ class TenjiUtilitiesTest < Minitest::Test
       end
 
       should "raise an error if argument is invalid" do
-        assert_raises(StandardError) { Tenji::Utilities.parse_period nil }
+        assert_raises(Tenji::TypeError) { Tenji::Utilities.parse_period nil }
       end
     end
 
@@ -94,8 +94,8 @@ class TenjiUtilitiesTest < Minitest::Test
       should "raise an error for invalid arguments" do
         u = Tenji::Utilities
         file = Pathname.new('test/data/gallery1') + Tenji::Config.file(:metadata)
-        assert_raises(StandardError) { u.read_yaml file, nil }
-        assert_raises(StandardError) { u.read_yaml nil, Hash.new }
+        assert_raises(Tenji::TypeError) { u.read_yaml file, nil }
+        assert_raises(Tenji::TypeError) { u.read_yaml nil, Hash.new }
       end
     end
   end

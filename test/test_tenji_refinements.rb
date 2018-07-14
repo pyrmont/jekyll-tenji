@@ -16,10 +16,10 @@ class TenjiRefinementsTest < Minitest::Test
 
       should "raise an error if the type doesn't match" do
         obj = 10
-        assert_raises(TypeError) { obj.is_a!(String) }
+        assert_raises(Tenji::TypeError) { obj.is_a!(String) }
 
         obj = 'String'
-        assert_raises(TypeError) { obj.is_a!(Integer) }
+        assert_raises(Tenji::TypeError) { obj.is_a!(Integer) }
       end
     end
 
@@ -42,7 +42,7 @@ class TenjiRefinementsTest < Minitest::Test
 
       should "raise an error if the path doesn't exist" do
         obj = Pathname.new '/does/not/exist/'
-        assert_raises(StandardError) { obj.exist! }
+        assert_raises(Tenji::NotFoundError) { obj.exist! }
       end
     end
 
@@ -54,7 +54,7 @@ class TenjiRefinementsTest < Minitest::Test
 
       should "raise an error if the file doesn't exist" do
         obj = Pathname.new 'test/data/gallery1'
-        assert_raises(StandardError) { obj.file! }
+        assert_raises(Tenji::NotAFileError) { obj.file! }
       end
     end
 

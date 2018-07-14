@@ -7,7 +7,7 @@ module Tenji
         return if self.is_a? type
         val = self.to_s.empty? ? 'NIL' : self
         msg = "Value #{val} is of type #{self.class.name}, expected #{type}"
-        raise TypeError.new msg
+        raise Tenji::TypeError.new msg
       end
     end
 
@@ -20,14 +20,14 @@ module Tenji
 
       def exist!()
         return if self.exist?
-        msg = "File #{self} does not exist"
-        raise StandardError.new msg
+        msg = "#{self} does not exist"
+        raise Tenji::NotFoundError, msg
       end
 
       def file!()
         return unless self.directory?
-        msg = "File #{self} is not a file"
-        raise StandardError.new msg
+        msg = "#{self} is not a file"
+        raise Tenji::NotAFileError, msg
       end
 
       def images()

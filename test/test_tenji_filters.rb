@@ -9,7 +9,7 @@ class TenjiFiltersTest < Minitest::Test
 
     context "has a method #format_coord that" do
       should "format a coordinate into a String written in DMS notation" do
-        format = "%s&deg; %s&prime; %s&Prime; %s"  
+        format = "%s&deg; %s&prime; %s&Prime; %s"
         coord = [ 0, 0, 0 ]
         res = @obj.format_coord coord, 'long'
         assert_equal (format % [0, 0, 0, 'E']), res
@@ -20,11 +20,11 @@ class TenjiFiltersTest < Minitest::Test
 
         coord = [ -33, 52.071, 0 ]
         res = @obj.format_coord coord, 'lat'
-        assert_equal (format % [33, 52, 4, 'S']), res 
+        assert_equal (format % [33, 52, 4, 'S']), res
 
         coord = [ -33, 52, 4 ]
         res = @obj.format_coord coord, 'lat'
-        assert_equal (format % [33, 52, 4, 'S']), res 
+        assert_equal (format % [33, 52, 4, 'S']), res
       end
 
       should "return the first argument if not an array of length 3" do
@@ -33,14 +33,14 @@ class TenjiFiltersTest < Minitest::Test
       end
 
       should "raise an error if the arguments are invalid" do
-        assert_raises(StandardError) { @obj.format_coord([ 0, 0, 0 ], 'not') }
+        assert_raises(::ArgumentError) { @obj.format_coord([ 0, 0, 0 ], 'not') }
       end
     end
 
     context "has a method #format_datetime that" do
       should "return a formatted String" do
         date = Time.parse '26 January 1788'
-        
+
         res = @obj.format_datetime date
         assert_equal '26 January 1788', res
 
@@ -53,11 +53,11 @@ class TenjiFiltersTest < Minitest::Test
         assert_equal date, @obj.format_datetime(date)
       end
     end
-    
+
     context "has a method #format_period that" do
       should "return a formatted String for a period with two dates" do
         period = [ DateTime.parse('5 July 1989'), DateTime.parse('14 May 1998') ]
-        
+
         res = @obj.format_period period
         assert_equal '5 July 1989&ndash;14 May 1998', res
 
@@ -84,7 +84,7 @@ class TenjiFiltersTest < Minitest::Test
         assert_raises(StandardError) { @obj.format_period([ 0, 0, 0 ]) }
       end
     end
-    
+
     context "has a method #to_float that" do
       should "return a float" do
         assert_equal 1.0, @obj.to_float(1)
@@ -97,12 +97,12 @@ class TenjiFiltersTest < Minitest::Test
         assert_equal num, @obj.to_float(num)
       end
     end
-    
+
     context "has a method #to_srcset that" do
       setup do
         Tenji::Config.configure
       end
-    
+
       teardown do
         Tenji::Config.reset
       end

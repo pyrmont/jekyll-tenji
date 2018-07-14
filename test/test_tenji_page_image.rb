@@ -23,20 +23,20 @@ class TenjiPageImageTest < Minitest::Test
 
     context "has a method #initialize that" do
       should "initialise a Page::Image object" do
-        obj = Tenji::Page::Image.new @image, @site, @base, @prefix_path, @name 
+        obj = Tenji::Page::Image.new @image, @site, @base, @prefix_path, @name
         assert_equal 'Tenji::Page::Image', obj.class.name
       end
 
       should "raise an error with invalid arguments" do
         pi = Tenji::Page::Image
-        assert_raises(StandardError) { pi.new nil, @site, @base, @prefix_path, @name }
-        assert_raises(StandardError) { pi.new @image,  nil, @base, @prefix_path, @name }
-        assert_raises(StandardError) { pi.new @image, @site, nil, @prefix_path, @name }
-        assert_raises(StandardError) { pi.new @image, @site, @base, nil, @name }
-        assert_raises(StandardError) { pi.new @image, @site, @base, @prefix_path, nil }
+        assert_raises(Tenji::TypeError) { pi.new nil, @site, @base, @prefix_path, @name }
+        assert_raises(Tenji::TypeError) { pi.new @image,  nil, @base, @prefix_path, @name }
+        assert_raises(Tenji::TypeError) { pi.new @image, @site, nil, @prefix_path, @name }
+        assert_raises(Tenji::TypeError) { pi.new @image, @site, @base, nil, @name }
+        assert_raises(Tenji::TypeError) { pi.new @image, @site, @base, @prefix_path, nil }
       end
     end
-  
+
     context "has a method #destination that" do
       setup do
         @fake_path = 'not/a/real/path/_albums/gallery'
@@ -51,7 +51,7 @@ class TenjiPageImageTest < Minitest::Test
       end
 
       should "raise an error for an invalid argument" do
-        assert_raises(StandardError) { @obj.destination nil }
+        assert_raises(Tenji::TypeError) { @obj.destination nil }
       end
     end
   end

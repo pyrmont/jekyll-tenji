@@ -27,10 +27,10 @@ class TenjiGeneratorGalleryTest < Minitest::Test
 
       should "raise an error if the arguments are invalid" do
         gg = Tenji::Generator::Gallery
-        assert_raises(StandardError) { gg.new nil, @site, @base, @prefix_path }
-        assert_raises(StandardError) { gg.new @gallery, nil, @base, @prefix_path }
-        assert_raises(StandardError) { gg.new @gallery, @site, nil, @prefix_path }
-        assert_raises(StandardError) { gg.new @gallery, @site, @base, nil }
+        assert_raises(Tenji::TypeError) { gg.new nil, @site, @base, @prefix_path }
+        assert_raises(Tenji::TypeError) { gg.new @gallery, nil, @base, @prefix_path }
+        assert_raises(Tenji::TypeError) { gg.new @gallery, @site, nil, @prefix_path }
+        assert_raises(Tenji::TypeError) { gg.new @gallery, @site, @base, nil }
       end
     end
 
@@ -43,7 +43,7 @@ class TenjiGeneratorGalleryTest < Minitest::Test
       end
 
       should "raise an error if an invalid object is provided" do
-        assert_raises(StandardError) { @generator.generate_images nil }
+        assert_raises(Tenji::TypeError) { @generator.generate_images nil }
       end
     end
 
@@ -56,7 +56,7 @@ class TenjiGeneratorGalleryTest < Minitest::Test
       end
 
       should "raise an error if an invalid object is provided" do
-        assert_raises(StandardError) { @generator.generate_index nil }
+        assert_raises(Tenji::TypeError) { @generator.generate_index nil }
       end
     end
 
@@ -69,7 +69,9 @@ class TenjiGeneratorGalleryTest < Minitest::Test
       end
 
       should "raise an error if an invalid object is provided" do
-        assert_raises(StandardError) { @generator.generate_singles nil }
+        assert_raises(Tenji::TypeError) do
+          @generator.generate_individual_pages nil
+        end
       end
     end
 
@@ -82,7 +84,7 @@ class TenjiGeneratorGalleryTest < Minitest::Test
       end
 
       should "raise an error if an invalid object is provided" do
-        assert_raises(StandardError) { @generator.generate_thumbs nil }
+        assert_raises(Tenji::TypeError) { @generator.generate_thumbs nil }
       end
     end
   end

@@ -23,7 +23,7 @@ class TenjiConfigTest < Minitest::Test
       end
 
       should "raise an error if an invalid argument is passed" do
-        assert_raises(StandardError) { Tenji::Config.configure nil }
+        assert_raises(Tenji::TypeError) { Tenji::Config.configure nil }
       end
     end
 
@@ -46,7 +46,7 @@ class TenjiConfigTest < Minitest::Test
       end
 
       should "raise an error if the state object has not been set" do
-        assert_raises(StandardError) { Tenji::Config.config }
+        assert_raises(Tenji::ConfigurationNotSetError) { Tenji::Config.config }
       end
     end
 
@@ -64,7 +64,7 @@ class TenjiConfigTest < Minitest::Test
         dirname = 'galleries'
         default_dir = @defaults[dirname + '_dir']
         assert_equal default_dir, @obj.dir(dirname)
-        assert_equal default_dir.delete_prefix('_'), 
+        assert_equal default_dir.delete_prefix('_'),
                      @obj.dir(dirname, output: true)
       end
 
@@ -74,7 +74,7 @@ class TenjiConfigTest < Minitest::Test
 
       should "raise an error if the state object has not been set" do
         @obj.reset
-        assert_raises(StandardError) { @obj.dir('something') }
+        assert_raises(Tenji::ConfigurationNotSetError) { @obj.dir 'something' }
       end
     end
 
@@ -102,7 +102,7 @@ class TenjiConfigTest < Minitest::Test
 
       should "raise an error if the state object has not been set" do
         @obj.reset
-        assert_raises(StandardError) { @obj.ext('something') }
+        assert_raises(Tenji::ConfigurationNotSetError) { @obj.ext 'something' }
       end
     end
 
@@ -128,7 +128,7 @@ class TenjiConfigTest < Minitest::Test
 
       should "raise an error if the state object has not been set" do
         @obj.reset
-        assert_raises(StandardError) { @obj.file('something') }
+        assert_raises(Tenji::ConfigurationNotSetError) { @obj.file 'something' }
       end
     end
 
@@ -154,7 +154,9 @@ class TenjiConfigTest < Minitest::Test
 
       should "raise an error if the state object has not been set" do
         @obj.reset
-        assert_raises(StandardError) { @obj.option('something') }
+        assert_raises(Tenji::ConfigurationNotSetError) do
+          @obj.option 'something'
+        end
       end
     end
 
@@ -171,7 +173,7 @@ class TenjiConfigTest < Minitest::Test
 
       should "return a file name for a valid key" do
         setting_name = 'gallery'
-        assert_equal @settings[setting_name + '_settings'], 
+        assert_equal @settings[setting_name + '_settings'],
                      @obj.settings(setting_name)
       end
 
@@ -181,10 +183,12 @@ class TenjiConfigTest < Minitest::Test
 
       should "raise an error if the state object has not been set" do
         @obj.reset
-        assert_raises(StandardError) { @obj.settings('something') }
+        assert_raises(Tenji::ConfigurationNotSetError) do
+          @obj.settings 'something'
+        end
       end
     end
-    
+
     context "has a class method .suffix that" do
       setup do
         @obj = Tenji::Config
@@ -203,7 +207,7 @@ class TenjiConfigTest < Minitest::Test
       end
 
       should "raise an error if key is 'scale' and factor is invalid" do
-        assert_raises(StandardError) { @obj.suffix('scale', 'a') }
+        assert_raises(::ArgumentError) { @obj.suffix('scale', 'a') }
       end
 
       should "return nil for a non-existent key" do
@@ -212,7 +216,9 @@ class TenjiConfigTest < Minitest::Test
 
       should "raise an error if the state object has not been set" do
         @obj.reset
-        assert_raises(StandardError) { @obj.suffix('something') }
+        assert_raises(Tenji::ConfigurationNotSetError) do
+          @obj.suffix('something')
+        end
       end
     end
   end

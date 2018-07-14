@@ -60,7 +60,8 @@ module Tenji
       is_set!
 
       if type.to_s == 'scale'
-        raise StandardError unless factor.is_a? Integer
+        msg = 'Scale must be an Integer'
+        raise ::ArgumentError, msg unless factor.is_a? Integer
         key = type.to_s + '_suffix_format'
         @config[key]&.sub('#', factor.to_s)
       else
@@ -69,7 +70,7 @@ module Tenji
     end
 
     private_class_method def self.is_set!()
-      raise StandardError, 'Configuration not set' unless @config
+      raise Tenji::ConfigurationNotSetError unless @config
     end
   end
 end

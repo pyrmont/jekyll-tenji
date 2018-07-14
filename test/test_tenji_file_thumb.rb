@@ -44,7 +44,7 @@ class TenjiFileThumbTest < Minitest::Test
       end
 
       should "raise an error if the path is not a String" do
-        assert_raises(StandardError) { @obj.destination(nil) }
+        assert_raises(Tenji::TypeError) { @obj.destination(nil) }
       end
     end
   end

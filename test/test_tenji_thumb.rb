@@ -26,13 +26,13 @@ class TenjiThumbTest < Minitest::Test
         assert_equal @dimensions, @obj.dimensions
         assert_equal @image, @obj.source
       end
-      
+
       should "raise an error if the arguments are invalid" do
         any = AnyType.new
         t = Tenji::Thumb
-        assert_raises(StandardError) { t.new nil, any, any }
-        assert_raises(StandardError) { t.new any, nil, any }
-        assert_raises(StandardError) { t.new any, any, nil }
+        assert_raises(Tenji::TypeError) { t.new nil, any, any }
+        assert_raises(Tenji::TypeError) { t.new any, nil, any }
+        assert_raises(Tenji::TypeError) { t.new any, any, nil }
       end
     end
 

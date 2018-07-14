@@ -27,10 +27,10 @@ class TenjiGeneratorListTest < Minitest::Test
 
       should "raise an error if the arguments are invalid" do
         gl = Tenji::Generator::List
-        assert_raises(StandardError) { gl.new nil, @site, @base, @prefix_path }
-        assert_raises(StandardError) { gl.new @list, nil, @base, @prefix_path }
-        assert_raises(StandardError) { gl.new @list, @site, nil, @prefix_path }
-        assert_raises(StandardError) { gl.new @list, @site, @base, nil }
+        assert_raises(Tenji::TypeError) { gl.new nil, @site, @base, @prefix_path }
+        assert_raises(Tenji::TypeError) { gl.new @list, nil, @base, @prefix_path }
+        assert_raises(Tenji::TypeError) { gl.new @list, @site, nil, @prefix_path }
+        assert_raises(Tenji::TypeError) { gl.new @list, @site, @base, nil }
       end
     end
 
@@ -46,9 +46,9 @@ class TenjiGeneratorListTest < Minitest::Test
         @obj.generate_index pages
         assert_equal [ 'Tenji::Page::List' ], pages.map { |p| p.class.name }.uniq
       end
-      
+
       should "raise an error with invalid arguments" do
-        assert_raises(StandardError) { @obj.generate_index nil }
+        assert_raises(Tenji::TypeError) { @obj.generate_index nil }
       end
     end
   end

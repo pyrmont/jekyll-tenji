@@ -20,17 +20,17 @@ class TenjiImageTest < Minitest::Test
 
       should "raise an error if the file doesn't exist" do
         file = Pathname.new 'not/a/real/file'
-        assert_raises(StandardError) { Tenji::Image.new(file, 
-                                                        Hash.new,
-                                                        AnyType.new) }
+        assert_raises(Tenji::NotFoundError) do
+          Tenji::Image.new(file, Hash.new, AnyType.new)
+        end
       end
 
       should "raise an error if the arguments are invalid" do
         i = Tenji::Image
         any = AnyType.new
-        assert_raises(StandardError) { i.new(nil, any, any) }
-        assert_raises(StandardError) { i.new(any, nil, any) }
-        assert_raises(StandardError) { i.new(any, any, nil) }
+        assert_raises(Tenji::TypeError) { i.new(nil, any, any) }
+        assert_raises(Tenji::TypeError) { i.new(any, nil, any) }
+        assert_raises(Tenji::TypeError) { i.new(any, any, nil) }
       end
     end
 
@@ -50,7 +50,7 @@ class TenjiImageTest < Minitest::Test
       end
 
       should "raise an error if the comparison is not a Tenji::Image" do
-        assert_raises(StandardError) { @obj <=> nil }
+        assert_raises(Tenji::TypeError) { @obj <=> nil }
       end
     end
 
@@ -65,7 +65,7 @@ class TenjiImageTest < Minitest::Test
         res = @obj.data
         assert_equal Hash, res.class
         assert_equal Hash, res['image'].class
-        
+
         @obj.position = 0
         res = @obj.data
         assert_equal Hash, res.class
@@ -85,7 +85,7 @@ class TenjiImageTest < Minitest::Test
         assert_equal 1, res['prev']
       end
     end
-    
+
     context "has a method #to_liquid that" do
       setup do
         file = Pathname.new 'test/data/gallery2/01-castle.jpg'
@@ -113,13 +113,13 @@ class TenjiImageTest < Minitest::Test
         res = @obj.send :image
         assert_equal '01-castle.jpg', res['name']
         assert 1, res['position']
-        assert_equal '/albums/gallery2/01-castle.jpg', res['link'] 
+        assert_equal '/albums/gallery2/01-castle.jpg', res['link']
         assert_equal '/albums/gallery2/01-castle.html', res['page_link']
         assert_equal 2048, res['x']
         assert_equal 1536, res['y']
       end
     end
-    
+
     context "has a private method #title_from_name that" do
       setup do
         file = Pathname.new 'test/data/gallery2/01-castle.jpg'

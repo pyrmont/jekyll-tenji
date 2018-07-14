@@ -18,20 +18,20 @@ class TenjiPageListTest < Minitest::Test
 
     context "has a method #initialize that" do
       should "initialise a Page::List object" do
-        obj = Tenji::Page::List.new @list, @site, @base, @prefix_path, @name 
+        obj = Tenji::Page::List.new @list, @site, @base, @prefix_path, @name
         assert_equal 'Tenji::Page::List', obj.class.name
       end
 
       should "raise an error with invalid arguments" do
         pl = Tenji::Page::List
-        assert_raises(StandardError) { pl.new nil, @site, @base, @prefix_path, @name }
-        assert_raises(StandardError) { pl.new @list,  nil, @base, @prefix_path, @name }
-        assert_raises(StandardError) { pl.new @list, @site, nil, @prefix_path, @name }
-        assert_raises(StandardError) { pl.new @list, @site, @base, nil, @name }
-        assert_raises(StandardError) { pl.new @list, @site, @base, @prefix_path, nil }
+        assert_raises(Tenji::TypeError) { pl.new nil, @site, @base, @prefix_path, @name }
+        assert_raises(Tenji::TypeError) { pl.new @list,  nil, @base, @prefix_path, @name }
+        assert_raises(Tenji::TypeError) { pl.new @list, @site, nil, @prefix_path, @name }
+        assert_raises(Tenji::TypeError) { pl.new @list, @site, @base, nil, @name }
+        assert_raises(Tenji::TypeError) { pl.new @list, @site, @base, @prefix_path, nil }
       end
     end
-  
+
     context "has a method #destination that" do
       setup do
         @fake_path = 'not/a/real/path/_albums/'
@@ -46,7 +46,7 @@ class TenjiPageListTest < Minitest::Test
       end
 
       should "raise an error for an invalid argument" do
-        assert_raises(StandardError) { @obj.destination nil }
+        assert_raises(Tenji::TypeError) { @obj.destination nil }
       end
     end
   end

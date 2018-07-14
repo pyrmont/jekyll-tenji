@@ -23,8 +23,8 @@ class TenjiListTest < Minitest::Test
 
       should "raise an error if the file doesn't exist" do
         dir = Pathname.new 'not/a/real/directory'
-        assert_raises(StandardError) { Tenji::List.new dir }
-      end  
+        assert_raises(Tenji::NotFoundError) { Tenji::List.new dir }
+      end
     end
   end
 end

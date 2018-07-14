@@ -17,7 +17,7 @@ class TenjiWriterThumbTest < Minitest::Test
     context "has a class method #write that" do
       setup do
         file = Pathname.new 'test/data/gallery2/01-castle.jpg'
-        source = Tenji::Image.new file, Hash.new, AnyType.new 
+        source = Tenji::Image.new file, Hash.new, AnyType.new
         dimensions = { 'x' => 400, 'y' => 400 }
         @obj = Tenji::Thumb.new 'small', dimensions, source
         @input_file = file
@@ -42,9 +42,9 @@ class TenjiWriterThumbTest < Minitest::Test
 
       should "raise an error if given invalid arguments" do
         wt = Tenji::Writer::Thumb
-        assert_raises(StandardError) { wt.write nil, @input_file, @temp_dir }
-        assert_raises(StandardError) { wt.write @obj, nil, @temp_dir }
-        assert_raises(StandardError) { wt.write @obj, @input_file, nil }
+        assert_raises(Tenji::TypeError) { wt.write nil, @input_file, @temp_dir }
+        assert_raises(Tenji::TypeError) { wt.write @obj, nil, @temp_dir }
+        assert_raises(Tenji::TypeError) { wt.write @obj, @input_file, nil }
       end
     end
   end
