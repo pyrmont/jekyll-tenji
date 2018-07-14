@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tenji
   module Page
     class Image < Jekyll::Page
@@ -15,7 +17,7 @@ module Tenji
         @dir = dir
         @name = ::File.basename(name, '.*') + '.html'
 
-        process_name 
+        process_name
 
         @data = image.data
         @content = image.text

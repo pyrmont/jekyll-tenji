@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tenji
   module Page
     class Gallery < Jekyll::Page
@@ -15,8 +17,8 @@ module Tenji
         @dir = dir
         @name = name
 
-        process_name 
-        
+        process_name
+
         @data = gallery.metadata
         @content = gallery.text
 
@@ -28,7 +30,7 @@ module Tenji
 
         input_path = Tenji::Config.dir(:galleries)
         output_path = Tenji::Config.dir(:galleries, output: true)
-        
+
         path = super dest
         path.sub input_path, output_path
       end

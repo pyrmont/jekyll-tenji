@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tenji
   class Generator < Jekyll::Generator
     class List

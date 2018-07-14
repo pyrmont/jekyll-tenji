@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tenji
   module File
     class Image < Jekyll::StaticFile

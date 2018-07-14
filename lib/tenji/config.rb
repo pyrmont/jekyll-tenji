@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tenji
   module Config
     using Tenji::Refinements

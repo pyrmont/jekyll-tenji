@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Tenji
   module Filters
     using Tenji::Refinements
 
     def format_coord(coord, type = 'lat')
       return coord unless coord.is_a?(Array) && coord.length == 3
-      
+
       d, m, s = coord
       hemisphere = case type
                    when 'lat'
@@ -14,7 +16,7 @@ module Tenji
                    else
                      raise StandardError
                    end
-     
+
       d = d.abs
       if s == 0 && m == 0
         degrees = d.floor.to_i
@@ -58,7 +60,7 @@ module Tenji
       return num unless num.is_a? Numeric
       num.to_f
     end
-    
+
     def to_srcset(link)
       return link unless link.is_a?(String)
 

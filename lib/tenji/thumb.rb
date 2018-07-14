@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tenji
   class Thumb
     using Tenji::Refinements
@@ -9,7 +11,7 @@ module Tenji
       dimensions.is_a! Hash
       source.is_a! Tenji::Image
 
-      @name = source.name.append_to_base "-#{size}" 
+      @name = source.name.append_to_base "-#{size}"
       @size = size
       @dimensions = dimensions
       @source = source

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tenji
   module Page
     class List < Jekyll::Page
@@ -15,9 +17,9 @@ module Tenji
         @dir = dir
         @name = name
 
-        process_name 
-        
-        @data = list.metadata 
+        process_name
+
+        @data = list.metadata
         @content = list.text
 
         Jekyll::Hooks.trigger :pages, :post_init, self

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tenji
   module Refinements
     refine Object do
@@ -46,7 +48,7 @@ module Tenji
       end
 
       def infix(pos, str)
-        return nil if pos.abs > length 
+        return nil if pos.abs > length
         self[0...pos] + str + self[pos..-1]
       end
 
