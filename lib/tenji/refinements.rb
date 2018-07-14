@@ -2,10 +2,10 @@ module Tenji
   module Refinements
     refine Object do
       def is_a!(type)
+        return self if is_a? type
         val = self.to_s.empty? ? 'NIL' : self
         msg = "Value #{val} is of type #{self.class.name}, expected #{type}"
-        raise TypeError.new msg unless is_a? type
-        self
+        raise TypeError.new msg
       end
     end
 
