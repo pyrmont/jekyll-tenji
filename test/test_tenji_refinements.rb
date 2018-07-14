@@ -5,13 +5,13 @@ class TenjiRefinementsTest < Minitest::Test
 
   context "Tenji::Refinements" do
     context "refines Object with a method #is_a! that" do
-      should "return self if the type matches" do
+      should "return nil if the type matches" do
         obj = 10
-        assert_equal obj, obj.is_a!(Integer) 
-        assert_equal obj, obj.is_a!(Numeric)
+        assert_nil obj.is_a!(Integer)
+        assert_nil obj.is_a!(Numeric)
 
         obj = 'String'
-        assert_equal obj, obj.is_a!(String)
+        assert_nil obj.is_a!(String)
       end
 
       should "raise an error if the type doesn't match" do

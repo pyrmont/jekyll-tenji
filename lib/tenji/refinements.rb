@@ -4,7 +4,7 @@ module Tenji
   module Refinements
     refine Object do
       def is_a!(type)
-        return self if is_a? type
+        return if self.is_a? type
         val = self.to_s.empty? ? 'NIL' : self
         msg = "Value #{val} is of type #{self.class.name}, expected #{type}"
         raise TypeError.new msg
@@ -19,13 +19,15 @@ module Tenji
       end
 
       def exist!()
+        return if self.exist?
         msg = "File #{self} does not exist"
-        raise StandardError.new msg unless self.exist?
+        raise StandardError.new msg
       end
 
       def file!()
+        return unless self.directory?
         msg = "File #{self} is not a file"
-        raise StandardError.new msg if self.directory?
+        raise StandardError.new msg
       end
 
       def images()
