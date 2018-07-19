@@ -50,7 +50,7 @@ class TenjiThumbTest < Minitest::Test
         res = @obj.to_liquid()
         assert_equal Hash, res.class
         assert_equal '01-castle-small.jpg', res['name']
-        assert_equal '/albums/gallery2/thumbs/01-castle-small.jpg', res['link']
+        assert_equal '/albums/gallery2/thumbs/01-castle-small.jpg', res['url']
         assert_equal 400, res['x']
         assert_equal 400, res['y']
         assert_equal 'small', res['size']

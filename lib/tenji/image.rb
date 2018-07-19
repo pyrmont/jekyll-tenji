@@ -39,8 +39,8 @@ module Tenji
 
     def data()
       attrs = { 'image' => image,
-                'next' => next_pos,
-                'prev' => prev_pos }
+                'next' => image_next,
+                'prev' => image_prev }
       @metadata.merge attrs
     end
 
@@ -52,11 +52,25 @@ module Tenji
     private def image()
       attrs = { 'name' => @name,
                 'position' => @position,
-                'link' => link,
-                'page_link' => page_link,
+                'url' => url,
+                'page_url' => page_url,
                 'x' => @exif['width'],
                 'y' => @exif['height'] }
       attrs.merge @thumbs
+    end
+
+    private def image_next()
+      return nil if @position.nil?
+      return nil if @position + 1 == @gallery.images.length
+      
+      @gallery.images[@position + 1]
+    end
+
+    private def image_prev()
+      return nil if @position.nil?
+      return nil if @position == 0
+      
+      @gallery.images[@position - 1]
     end
 
     private def init_exif(file)
@@ -79,41 +93,22 @@ module Tenji
       end
     end
 
-    private def link()
-      galleries = Tenji::Config.dir 'galleries', output: true
-      album = @gallery.dirname
-      "/#{galleries}/#{album}/#{@name}"
-    end
-
-    private def next_pos()
-      if @position.nil?
-        nil
-      elsif @position + 1 == @gallery.images.length
-        nil
-      else
-        @position + 1
-      end
-    end
-
-    private def page_link()
+    private def page_url()
       galleries = Tenji::Config.dir 'galleries', output: true
       album = @gallery.dirname
       name = @name.sub_ext(Tenji::Config.ext('page', output: true))
       "/#{galleries}/#{album}/#{name}"
     end
 
-    private def prev_pos()
-      if @position.nil?
-        nil
-      elsif @position == 0
-        nil
-      else
-        @position - 1
-      end
-    end
-
     private def title_from_name()
       @name.sub /^\d+-/, ''
     end
+    
+    private def url()
+      galleries = Tenji::Config.dir 'galleries', output: true
+      album = @gallery.dirname
+      "/#{galleries}/#{album}/#{@name}"
+    end
+
   end
 end

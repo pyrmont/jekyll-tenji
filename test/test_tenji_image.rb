@@ -57,7 +57,10 @@ class TenjiImageTest < Minitest::Test
     context "has a method #data that" do
       setup do
         file = Pathname.new 'test/data/gallery1/photo1.jpg'
-        gallery = AnyType.new(methods: { 'dirname' => 'gallery1', 'images' => Array.new(3) })
+        el_0 = AnyType.new(methods: { 'position' => 0 })
+        el_1 = AnyType.new(methods: { 'position' => 1 })
+        el_2 = AnyType.new(methods: { 'position' => 2 })
+        gallery = AnyType.new(methods: { 'dirname' => 'gallery1', 'images' => [ el_0, el_1, el_2 ]  })
         @obj = Tenji::Image.new file, Hash.new, gallery
       end
 
@@ -69,20 +72,20 @@ class TenjiImageTest < Minitest::Test
         @obj.position = 0
         res = @obj.data
         assert_equal Hash, res.class
-        assert_equal 1, res['next']
+        assert_equal 1, res['next'].position
         assert_nil res['prev']
 
         @obj.position = 1
         res = @obj.data
         assert_equal Hash, res.class
-        assert_equal 2, res['next']
-        assert_equal 0, res['prev']
+        assert_equal 2, res['next'].position
+        assert_equal 0, res['prev'].position
 
         @obj.position = 2
         res = @obj.data
         assert_equal Hash, res.class
         assert_nil res['next']
-        assert_equal 1, res['prev']
+        assert_equal 1, res['prev'].position
       end
     end
 
@@ -113,8 +116,8 @@ class TenjiImageTest < Minitest::Test
         res = @obj.send :image
         assert_equal '01-castle.jpg', res['name']
         assert 1, res['position']
-        assert_equal '/albums/gallery2/01-castle.jpg', res['link']
-        assert_equal '/albums/gallery2/01-castle.html', res['page_link']
+        assert_equal '/albums/gallery2/01-castle.jpg', res['url']
+        assert_equal '/albums/gallery2/01-castle.html', res['page_url']
         assert_equal 2048, res['x']
         assert_equal 1536, res['y']
       end
