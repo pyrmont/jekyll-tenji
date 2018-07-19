@@ -10,6 +10,8 @@ class TenjiFileImageTest < Minitest::Test
                                       'destination' => dest_dir,
                                       'url' => 'http://localhost' })
       @site = Jekyll::Site.new config
+      @obj = Tenji::File::Image.new @site, @site.source, 'albums/gallery1',
+                                    'photo1.jpg', 'gallery1'
     end
 
     teardown do
@@ -18,32 +20,21 @@ class TenjiFileImageTest < Minitest::Test
 
     context "has a method #initialize that" do
       should "initialize a File::Image object" do
-        path = Pathname.new 'test/data/_albums/gallery1/photo1.jpg'
-        obj = Tenji::File::Image.new @any, @site, @site.source, path.parent.to_s,
-                                     path.basename.to_s
-        assert_equal 'Tenji::File::Image', obj.class.name
+        assert_equal 'Tenji::File::Image', @obj.class.name
       end
     end
 
-    context "has a method #destination that" do
+    context "has a method #path that" do
       setup do
         Tenji::Config.configure
-        @path = Pathname.new 'test/data/_albums/gallery1/photo.jpg'
-        @obj = Tenji::File::Image.new @any, @site, @site.source, @path.parent.to_s,
-                                      @path.basename.to_s
       end
 
       teardown do
         Tenji::Config.reset
       end
 
-      should "return the a directory path" do
-        dest = File.join(@site.dest, @path.to_s).sub('_albums', 'albums')
-        assert_equal dest, @obj.destination(@site.dest)
-      end
-
-      should "raise an error if the path is not a String" do
-        assert_raises(Tenji::TypeError) { @obj.destination(nil) }
+      should "return a directory path" do
+        assert_equal @site.source + '/_albums/gallery1/photo1.jpg', @obj.path
       end
     end
   end

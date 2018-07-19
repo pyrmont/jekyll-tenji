@@ -4,16 +4,16 @@ class TenjiPageImageTest < Minitest::Test
   context "Tenji::Image::Gallery" do
     setup do
       Tenji::Config.configure
-      dir = Pathname.new 'test/data/gallery1'
-      file = dir + 'photo1.jpg'
-      gallery = AnyType.new methods: { 'dirname' => dir.basename.to_s,
+      gallery_dir = Pathname.new 'test/data/gallery1'
+      file = gallery_dir + 'photo1.jpg'
+      @gallery = AnyType.new methods: { 'dirname' => gallery_dir.basename.to_s,
                                        'images' => Array.new }
       capture_io do
-        @image = Tenji::Image.new file, Hash.new, gallery
+        @image = Tenji::Image.new file, Hash.new, @gallery
       end
       @site = TestSite.site source: 'test/data', dest: 'tmp'
       @base = @site.source
-      @prefix_path = dir.to_s
+      @dir = gallery_dir.to_s
       @name = file.basename.to_s
     end
 
@@ -23,35 +23,34 @@ class TenjiPageImageTest < Minitest::Test
 
     context "has a method #initialize that" do
       should "initialise a Page::Image object" do
-        obj = Tenji::Page::Image.new @image, @site, @base, @prefix_path, @name
+        obj = Tenji::Page::Image.new @image, @site, @base, @dir, @name, @gallery.dirname
         assert_equal 'Tenji::Page::Image', obj.class.name
       end
 
       should "raise an error with invalid arguments" do
         pi = Tenji::Page::Image
-        assert_raises(Tenji::TypeError) { pi.new nil, @site, @base, @prefix_path, @name }
-        assert_raises(Tenji::TypeError) { pi.new @image,  nil, @base, @prefix_path, @name }
-        assert_raises(Tenji::TypeError) { pi.new @image, @site, nil, @prefix_path, @name }
-        assert_raises(Tenji::TypeError) { pi.new @image, @site, @base, nil, @name }
-        assert_raises(Tenji::TypeError) { pi.new @image, @site, @base, @prefix_path, nil }
+        assert_raises(Tenji::TypeError) { pi.new nil, @site, @base, @dir, @name, @gallery.dirname }
+        assert_raises(Tenji::TypeError) { pi.new @image, nil, @base, @dir, @name, @gallery.dirname }
+        assert_raises(Tenji::TypeError) { pi.new @image, @site, nil, @dir, @name, @gallery.dirname }
+        assert_raises(Tenji::TypeError) { pi.new @image, @site, @base, nil, @name, @gallery.dirname }
+        assert_raises(Tenji::TypeError) { pi.new @image, @site, @base, @dir, nil, @gallery.dirname }
+        assert_raises(Tenji::TypeError) { pi.new @image, @site, @base, @dir, @name, nil }
       end
     end
 
-    context "has a method #destination that" do
+    context "has a method #path that" do
       setup do
-        @fake_path = 'not/a/real/path/_albums/gallery'
-        @obj = Tenji::Page::Image.new @image, @site, @base, @fake_path, @name
+        Tenji::Config.configure
       end
 
-      should "return a modified path" do
-        local_path = 'tmp/not/a/real/path/albums/gallery/photo1.html'
-        dest_expected = Pathname.new(local_path).expand_path.to_s
-        dest_actual = @obj.destination @site.dest
-        assert_equal dest_expected, dest_actual
+      teardown do
+        Tenji::Config.reset
       end
 
-      should "raise an error for an invalid argument" do
-        assert_raises(Tenji::TypeError) { @obj.destination nil }
+      should "return a directory path" do
+        fake_path = 'albums/gallery1'
+        obj = Tenji::Page::Image.new @image, @site, @base, fake_path, @name, @gallery.dirname
+        assert_equal '_albums/gallery1/photo1.html', obj.path
       end
     end
   end

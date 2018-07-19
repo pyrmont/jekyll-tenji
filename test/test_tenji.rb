@@ -17,9 +17,7 @@ class TenjiTest < Minitest::Test
         subdir = ('a'..'z').to_a.shuffle[0,8].join
         @temp_dir = Pathname.new('tmp/' + subdir)
         @temp_dir.mkpath
-        capture_io do
-          @site = TestSite.site source: 'test/data/site', dest: @temp_dir.to_s
-        end
+        @site = TestSite.site source: 'test/data/site', dest: @temp_dir.to_s
       end
 
       teardown do
@@ -28,9 +26,7 @@ class TenjiTest < Minitest::Test
       end
 
       should "render a photo gallery" do
-        capture_io do
-          @site.process
-        end
+        @site.process
         album_dir = @temp_dir.subdirectories[0]
         assert_equal 'albums', album_dir.basename.to_s
         gallery_dir = album_dir.subdirectories[0]

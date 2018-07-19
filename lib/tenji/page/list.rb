@@ -25,14 +25,8 @@ module Tenji
         Jekyll::Hooks.trigger :pages, :post_init, self
       end
 
-      def destination(dest)
-        dest.is_a! String
-
-        input = Tenji::Config.dir(:galleries)
-        output = Tenji::Config.dir(:galleries, output: true)
-
-        path = super dest
-        path.sub input, output
+      def path
+        ::File.join(Tenji::Config.dir('galleries'), @name)
       end
 
       private def process_name()

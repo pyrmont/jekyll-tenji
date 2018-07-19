@@ -4,11 +4,11 @@ class TenjiPageListTest < Minitest::Test
   context "Tenji::Page::List" do
     setup do
       Tenji::Config.configure
-      dir = Pathname.new 'test/data/gallery1'
-      @list = Tenji::List.new dir
+      galleries_dir = Pathname.new 'test/data/_albums'
+      @list = Tenji::List.new galleries_dir
       @site = TestSite.site source: 'test/data', dest: 'tmp'
       @base = @site.source
-      @prefix_path = dir.to_s
+      @dir = galleries_dir.to_s
       @name = 'index.html'
     end
 
@@ -18,35 +18,32 @@ class TenjiPageListTest < Minitest::Test
 
     context "has a method #initialize that" do
       should "initialise a Page::List object" do
-        obj = Tenji::Page::List.new @list, @site, @base, @prefix_path, @name
+        obj = Tenji::Page::List.new @list, @site, @base, @dir, @name
         assert_equal 'Tenji::Page::List', obj.class.name
       end
 
       should "raise an error with invalid arguments" do
         pl = Tenji::Page::List
-        assert_raises(Tenji::TypeError) { pl.new nil, @site, @base, @prefix_path, @name }
-        assert_raises(Tenji::TypeError) { pl.new @list,  nil, @base, @prefix_path, @name }
-        assert_raises(Tenji::TypeError) { pl.new @list, @site, nil, @prefix_path, @name }
+        assert_raises(Tenji::TypeError) { pl.new nil, @site, @base, @dir, @name }
+        assert_raises(Tenji::TypeError) { pl.new @list,  nil, @base, @dir, @name }
+        assert_raises(Tenji::TypeError) { pl.new @list, @site, nil, @dir, @name }
         assert_raises(Tenji::TypeError) { pl.new @list, @site, @base, nil, @name }
-        assert_raises(Tenji::TypeError) { pl.new @list, @site, @base, @prefix_path, nil }
+        assert_raises(Tenji::TypeError) { pl.new @list, @site, @base, @dir, nil }
       end
     end
 
-    context "has a method #destination that" do
+    context "has a method #path that" do
       setup do
-        @fake_path = 'not/a/real/path/_albums/'
-        @obj = Tenji::Page::List.new @list, @site, @base, @fake_path, @name
+        Tenji::Config.configure
       end
 
-      should "return a modified path" do
-        local_path = 'tmp/not/a/real/path/albums/index.html'
-        dest_expected = Pathname.new(local_path).expand_path.to_s
-        dest_actual = @obj.destination @site.dest
-        assert_equal dest_expected, dest_actual
+      teardown do
+        Tenji::Config.reset
       end
 
-      should "raise an error for an invalid argument" do
-        assert_raises(Tenji::TypeError) { @obj.destination nil }
+      should "return a directory path" do
+        obj = Tenji::Page::List.new @list, @site, @base, @dir, @name
+        assert_equal '_albums/index.html', obj.path
       end
     end
   end

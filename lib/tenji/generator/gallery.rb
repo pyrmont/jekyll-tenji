@@ -7,30 +7,31 @@ module Tenji
 
       attr_reader :gallery, :site, :base, :prefix_path
 
-      def initialize(gallery, site, base, prefix_path)
+      def initialize(gallery, site, base_dir, gallery_dir)
         gallery.is_a! Tenji::Gallery
         site.is_a! Jekyll::Site
-        base.is_a! Pathname
-        prefix_path.is_a! Pathname
+        base_dir.is_a! Pathname
+        gallery_dir.is_a! Pathname
 
         @gallery = gallery
         @site = site
-        @base = base.to_s
-        @prefix_path = prefix_path.to_s
+        @base = base_dir.to_s
+        @dir = gallery_dir.to_s
       end
 
       def generate_images(files)
         files.is_a! Array
-        return files unless @gallery.metadata['quality'] == 'original'
+        return unless @gallery.metadata['quality'] == 'original'
         @gallery.images.each do |i|
-          files << Tenji::File::Image.new(i, @site, @base, @prefix_path, i.name)
+          params = [ @site, @base, @dir, i.name, @gallery.dirname ]
+          files << Tenji::File::Image.new(*params)
         end
       end
 
       def generate_index(pages)
         pages.is_a! Array
         name = 'index' + Tenji::Config.ext(:page, output: true)
-        params = [ @gallery, @site, @base, @prefix_path, name ]
+        params = [ @gallery, @site, @base, @dir, name, @gallery.dirname ]
         pages << Tenji::Page::Gallery.new(*params)
       end
 
@@ -38,7 +39,8 @@ module Tenji
         pages.is_a! Array
         return unless @gallery.metadata['individual_pages']
         @gallery.images.each do |i|
-          pages << Tenji::Page::Image.new(i, @site, @base, @prefix_path, i.name)
+          params = [ i, @site, @base, @dir, i.name, @gallery.dirname ]
+          pages << Tenji::Page::Image.new(*params)
         end
       end
 
@@ -47,15 +49,15 @@ module Tenji
 
         factors = 1..Tenji::Config.option('scale_max')
 
+        dir = ::File.join(@dir, Tenji::Config.dir('thumbs', output: true))
         @gallery.images.each do |i|
           i.thumbs.each_value do |t|
-            thumb_dir = Pathname.new Tenji::Config.dir(:thumbs)
-            prefix_path = (thumb_dir + @gallery.dirname).to_s
             pos = t.name.rindex '.'
             factors.each do |f|
               fix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
               name = t.name.infix(pos, fix)
-              files << Tenji::File::Thumb.new(@site, @base, prefix_path, name)
+              params = [ @site, @base, dir, name, @gallery.dirname ]
+              files << Tenji::File::Thumb.new(*params)
             end
           end
         end

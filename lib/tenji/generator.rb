@@ -17,8 +17,10 @@ module Tenji
       list = Tenji::List.new(site_dir + galleries_dir)
 
       write_thumbnails site, list.galleries
-      generate_list site, list, galleries_dir
-      generate_galleries site, list.galleries, galleries_dir
+
+      output_dir = Pathname.new Tenji::Config.dir(:galleries, output: true)
+      generate_list site, list, output_dir
+      generate_galleries site, list.galleries, output_dir
     end
 
     private def generate_galleries(site, galleries, dir)
@@ -38,14 +40,14 @@ module Tenji
       end
     end
 
-    private def generate_list(site, list, prefix_dir)
+    private def generate_list(site, list, dir)
       site.is_a! Jekyll::Site
       list.is_a! Tenji::List
-      prefix_dir.is_a! Pathname
+      dir.is_a! Pathname
 
       base_dir = Pathname.new site.source
 
-      gl = Tenji::Generator::List.new list, site, base_dir, prefix_dir
+      gl = Tenji::Generator::List.new list, site, base_dir, dir
       gl.generate_index site.pages
     end
 
