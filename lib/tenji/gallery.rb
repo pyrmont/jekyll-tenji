@@ -55,10 +55,14 @@ module Tenji
     end
 
     def to_liquid()
-      attrs = { 'dirname' => @dirname,
-                'content' => @text,
-                'cover' => @cover }
-      @metadata.merge attrs
+      attrs = { 'content' => @text }
+      @metadata.merge(gallery).merge(attrs)
+    end
+
+    private def gallery()
+      { 'dirname' => @dirname,
+        'cover' => @cover,
+        'url' => url }
     end
 
     private def init_cover(frontmatter)
@@ -101,6 +105,13 @@ module Tenji
     private def init_sizes(frontmatter)
       frontmatter.is_a! Hash
       frontmatter['sizes'] || @global['sizes'] || DEFAULTS['sizes']
+    end
+
+    private def url()
+      galleries = Tenji::Config.dir 'galleries', output: true
+      album = @dirname
+      name = ""
+      "/#{galleries}/#{album}/#{name}"
     end
   end
 end
