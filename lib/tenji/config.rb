@@ -7,10 +7,11 @@ module Tenji
     DEFAULTS = { 'galleries_dir' => '_albums',
                  'thumbs_dir' => '_thumbs',
                  'metadata_file' => 'index.md',
+                 'input_page_ext' => '.md',
+                 'output_page_ext' => '.html',
                  'scale_max' => 2,
                  'scale_suffix_format' => '-#x',
-                 'input_page_ext' => '.md',
-                 'output_page_ext' => '.html' }
+                 'list_index' => true }
 
     def self.configure(options = {})
       options.is_a! Hash

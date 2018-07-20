@@ -21,6 +21,9 @@ module Tenji
 
       def generate_index(pages)
         pages.is_a! Array
+        
+        return pages unless Tenji::Config.option('list_index')
+        
         name = 'index' + Tenji::Config.ext(:page, output: true)
         pages << Tenji::Page::List.new(@list, @site, @base, @dir, name)
       end
