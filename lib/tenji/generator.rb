@@ -8,17 +8,16 @@ module Tenji
 
     def generate(site)
       site.is_a! Jekyll::Site
-
-      site_config = site.config['galleries'] || Hash.new
-      Tenji::Config.configure site_config
+ 
+      Tenji::Config.configure(site.config['galleries'] || Hash.new)
 
       site_dir = Pathname.new site.source
-      galleries_dir = Pathname.new Tenji::Config.dir(:galleries)
-      list = Tenji::List.new(site_dir + galleries_dir)
+      input_dir = Pathname.new Tenji::Config.dir(:galleries)
+      output_dir = Pathname.new Tenji::Config.dir(:galleries, output: true)
+      
+      list = Tenji::List.new(site_dir + input_dir)
 
       write_thumbnails site, list.galleries
-
-      output_dir = Pathname.new Tenji::Config.dir(:galleries, output: true)
       generate_list site, list, output_dir
       generate_galleries site, list.galleries, output_dir
       
