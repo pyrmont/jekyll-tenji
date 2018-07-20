@@ -24,6 +24,10 @@ module Tenji
       @metadata = init_metadata fm
     end
 
+    def to_liquid()
+      { 'galleries' => @galleries }
+    end
+
     private def init_galleries(dir)
       dir.is_a! Pathname
       galleries = dir.subdirectories.map do |d|

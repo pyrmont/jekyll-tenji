@@ -21,6 +21,9 @@ module Tenji
       output_dir = Pathname.new Tenji::Config.dir(:galleries, output: true)
       generate_list site, list, output_dir
       generate_galleries site, list.galleries, output_dir
+      
+      add_tenji = Proc.new { |site,payload| payload['tenji'] = list }
+      Jekyll::Hooks.register :site, :pre_render, &add_tenji
     end
 
     private def generate_galleries(site, galleries, dir)
