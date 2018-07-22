@@ -59,9 +59,9 @@ class TenjiGalleryTest < Minitest::Test
         higher_wp = AnyType.new(methods: { 'dirname' => 'gallery1',
                                            'metadata' => periods[2] })
 
-        assert_equal 1, @obj <=> lower_np
+        assert_equal -1, @obj <=> lower_np
         assert_equal 0, @obj <=> equal_np
-        assert_equal -1, @obj <=> higher_np
+        assert_equal 1, @obj <=> higher_np
 
         assert_equal 1, @obj <=> lower_wp
         assert_equal 1, @obj <=> equal_wp

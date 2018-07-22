@@ -44,7 +44,7 @@ module Tenji
       other_start = other.metadata['period']&.first
 
       if this_start == other_start
-        @dirname <=> other.dirname
+        other.dirname <=> @dirname
       elsif this_start.nil?
         1
       elsif other_start.nil?
