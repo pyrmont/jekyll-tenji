@@ -8,6 +8,9 @@ module Tenji
       return coord unless coord.is_a?(Array) && coord.length == 3
 
       d, m, s = coord
+
+      return (d.to_f + (m.to_f / 60) + (s.to_f / 3600)) if type == 'decimal'
+
       hemisphere = case type
                    when 'lat'
                      (d < 0) ? 'S' : 'N'
