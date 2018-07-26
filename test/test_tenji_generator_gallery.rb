@@ -8,9 +8,7 @@ class TenjiGeneratorGalleryTest < Minitest::Test
       @dir = Pathname.new 'test/data/gallery2'
       @gallery = Tenji::Gallery.new @dir, AnyType.new
       @base = Pathname.new @site.source
-      @prefix_path = Pathname.new 'gallery2'
-      @generator = Tenji::Generator::Gallery.new @gallery, @site, @base,
-                                                 @prefix_path
+      @generator = Tenji::Generator::Gallery.new @gallery, @site, @base
     end
 
     teardown do
@@ -20,17 +18,15 @@ class TenjiGeneratorGalleryTest < Minitest::Test
 
     context "has a method #initialize that" do
       should "initialize a Generator::Gallery object" do
-        obj = Tenji::Generator::Gallery.new @gallery, @site, @base,
-                                            @prefix_path
+        obj = Tenji::Generator::Gallery.new @gallery, @site, @base
         assert_equal 'Tenji::Generator::Gallery', obj.class.name
       end
 
       should "raise an error if the arguments are invalid" do
         gg = Tenji::Generator::Gallery
-        assert_raises(Tenji::TypeError) { gg.new nil, @site, @base, @prefix_path }
-        assert_raises(Tenji::TypeError) { gg.new @gallery, nil, @base, @prefix_path }
-        assert_raises(Tenji::TypeError) { gg.new @gallery, @site, nil, @prefix_path }
-        assert_raises(Tenji::TypeError) { gg.new @gallery, @site, @base, nil }
+        assert_raises(Tenji::TypeError) { gg.new nil, @site, @base }
+        assert_raises(Tenji::TypeError) { gg.new @gallery, nil, @base }
+        assert_raises(Tenji::TypeError) { gg.new @gallery, @site, nil }
       end
     end
 
@@ -38,8 +34,7 @@ class TenjiGeneratorGalleryTest < Minitest::Test
       should "update a provided object" do
         files = Array.new
         @generator.generate_images files
-        assert_equal [ 'Tenji::File::Image' ],
-                     files.map { |f| f.class.name }.uniq
+        assert_equal [ Tenji::File::Image ], files.map { |f| f.class }.uniq
       end
 
       should "raise an error if an invalid object is provided" do

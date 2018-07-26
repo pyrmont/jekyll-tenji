@@ -11,7 +11,7 @@ class TenjiFileThumbTest < Minitest::Test
                                       'url' => 'http://localhost' })
       @site = Jekyll::Site.new config
       @obj = Tenji::File::Thumb.new @site, @site.source, 'albums/gallery1/thumbs',
-                                    'photo1-small.jpg', 'gallery1'
+                                    'photo1-small.jpg', '_thumbs/gallery1'
     end
 
     teardown do
@@ -20,7 +20,7 @@ class TenjiFileThumbTest < Minitest::Test
 
     context "has a method #initialize that" do
       should "initialize a File::Thumb object" do
-        assert_equal 'Tenji::File::Thumb', @obj.class.name
+        assert_equal Tenji::File::Thumb, @obj.class
       end
     end
 
@@ -33,7 +33,7 @@ class TenjiFileThumbTest < Minitest::Test
         Tenji::Config.reset
       end
 
-      should "return a directory path" do
+      should "return a file path" do
         assert_equal @site.source + '/_thumbs/gallery1/photo1-small.jpg', @obj.path
       end
     end

@@ -4,7 +4,7 @@ module Tenji
   class Gallery
     using Tenji::Refinements
 
-    attr_reader :cover, :dirname, :images, :list, :metadata, :text
+    attr_reader :dirnames, :images, :list, :metadata, :text
 
     DEFAULTS = { 'title' => 'A Gallery',
                  'description' => '',
@@ -28,11 +28,9 @@ module Tenji
       sizes = init_sizes fm
       quality = init_quality fm
 
-      @dirname = dir.basename.to_s
+      @dirnames = init_dirnames dir
       @list = list
       @images = init_images dir, sizes, quality
-      @cover = init_cover fm
-
       @text = text
       @metadata = init_metadata fm
     end
@@ -44,7 +42,7 @@ module Tenji
       other_start = other.metadata['period']&.first
 
       if this_start == other_start
-        other.dirname <=> @dirname
+        other.dirnames['input'] <=> @dirnames['input']
       elsif this_start.nil?
         1
       elsif other_start.nil?
@@ -59,16 +57,8 @@ module Tenji
       @metadata.merge(gallery).merge(attrs)
     end
 
-    private def gallery()
-      { 'dirname' => @dirname,
-        'cover' => @cover,
-        'url' => url }
-    end
-
-    private def init_cover(frontmatter)
-      frontmatter.is_a! Hash
-
-      if cover = frontmatter['cover']
+    private def cover()
+      if cover = @metadata['cover']
         if index = @images.find_index { |i| i.name == cover }
           @images.at(index)
         else
@@ -78,6 +68,17 @@ module Tenji
       else
         @images.first
       end
+    end
+
+    private def gallery()
+      { 'cover' => cover,
+        'url' => url }
+    end
+
+    private def init_dirnames(dir)
+      dir.is_a! Pathname
+
+      { 'input' => dir.basename.to_s, 'output' => dir.basename.to_s }
     end
 
     private def init_images(dir, sizes, quality)
@@ -109,9 +110,9 @@ module Tenji
 
     private def url()
       galleries = Tenji::Config.dir 'galleries', output: true
-      album = @dirname
+      gallery = @dirnames['output']
       name = ""
-      "/#{galleries}/#{album}/#{name}"
+      "/#{galleries}/#{gallery}/#{name}"
     end
   end
 end

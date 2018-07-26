@@ -5,14 +5,13 @@ module Tenji
     class Image < Jekyll::StaticFile
       using Tenji::Refinements
 
-      def initialize(site, base, dir, name, gallery_name)
-        @gallery_name = gallery_name
+      def initialize(site, base, dir, name, input_dirname)
+        @input_dirname = input_dirname
         super site, base, dir, name
       end
 
       def path
-        galleries_name = Tenji::Config.dir 'galleries'
-        ::File.join(*[@base, galleries_name, @gallery_name, @name].compact)
+        ::File.join(*[@base, @input_dirname, @name].compact)
       end
     end
   end

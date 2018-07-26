@@ -5,14 +5,13 @@ module Tenji
     class Thumb < Jekyll::StaticFile
       using Tenji::Refinements
 
-      def initialize(site, base, dir, name, gallery_name)
-        @gallery_name = gallery_name
+      def initialize(site, base, dir, name, input_dirname)
+        @input_dirname = input_dirname
         super site, base, dir, name
       end
 
-      def path
-        thumbs_name = Tenji::Config.dir 'thumbs'
-        ::File.join(*[@base, thumbs_name, @gallery_name, @name].compact)
+      def path 
+        ::File.join(*[@base, @input_dirname, @name].compact)
       end
     end
   end

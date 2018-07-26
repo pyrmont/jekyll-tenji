@@ -60,7 +60,7 @@ class TenjiImageTest < Minitest::Test
         el_0 = AnyType.new(methods: { 'position' => 0 })
         el_1 = AnyType.new(methods: { 'position' => 1 })
         el_2 = AnyType.new(methods: { 'position' => 2 })
-        gallery = AnyType.new(methods: { 'dirname' => 'gallery1', 'images' => [ el_0, el_1, el_2 ]  })
+        gallery = AnyType.new(methods: { 'dirnames' => { 'output' => 'gallery1' }, 'images' => [ el_0, el_1, el_2 ]  })
         @obj = Tenji::Image.new file, Hash.new, gallery
       end
 
@@ -92,7 +92,7 @@ class TenjiImageTest < Minitest::Test
     context "has a method #to_liquid that" do
       setup do
         file = Pathname.new 'test/data/gallery2/01-castle.jpg'
-        gallery = AnyType.new(methods: { 'dirname' => 'gallery2' })
+        gallery = AnyType.new(methods: { 'dirnames' => { 'output' => 'gallery2' } })
         @obj = Tenji::Image.new file, Hash.new, gallery
       end
 
@@ -107,7 +107,7 @@ class TenjiImageTest < Minitest::Test
     context "has a private method #image that" do
       setup do
         file = Pathname.new 'test/data/gallery2/01-castle.jpg'
-        gallery = AnyType.new(methods: { 'dirname' => 'gallery2' })
+        gallery = AnyType.new(methods: { 'dirnames' => { 'output' => 'gallery2' }})
         @obj = Tenji::Image.new file, Hash.new, gallery
         @obj.position = 1
       end

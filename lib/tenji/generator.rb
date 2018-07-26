@@ -8,7 +8,7 @@ module Tenji
 
     def generate(site)
       site.is_a! Jekyll::Site
- 
+
       Tenji::Config.configure(site.config['galleries'] || Hash.new)
 
       site_dir = Pathname.new site.source
@@ -33,8 +33,7 @@ module Tenji
       base_dir = Pathname.new site.source
 
       galleries.each do |g|
-        gallery_dir = dir + g.dirname
-        gg = Tenji::Generator::Gallery.new g, site, base_dir, gallery_dir
+        gg = Tenji::Generator::Gallery.new g, site, base_dir
         gg.generate_index site.pages
         gg.generate_images site.static_files
         gg.generate_thumbs site.static_files
@@ -58,10 +57,11 @@ module Tenji
       galleries.is_a! Array
 
       base_dir = Pathname.new site.source
+      config = Tenji::Config
 
       galleries.each do |g|
-        input_dir = base_dir + Tenji::Config.dir(:galleries) + g.dirname
-        output_dir = base_dir + Tenji::Config.dir(:thumbs) + g.dirname
+        input_dir = base_dir + config.dir(:galleries) + g.dirnames['input']
+        output_dir = base_dir + config.dir(:thumbs) + g.dirnames['output']
         output_dir.mkpath unless output_dir.exist?
         g.images.each do |i|
           source_file = input_dir + i.name

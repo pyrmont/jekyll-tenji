@@ -27,11 +27,20 @@ class TenjiTest < Minitest::Test
 
       should "render a photo gallery" do
         @site.process
-        album_dir = @temp_dir.subdirectories[0]
-        assert_equal 'albums', album_dir.basename.to_s
-        gallery_dir = album_dir.subdirectories[0]
-        thumb_dir = gallery_dir.subdirectories[0]
-        assert_equal 'thumbs', thumb_dir.basename.to_s
+        expected = [ 'albums', 
+                     'albums/gallery',
+                     'albums/gallery/01-castle.html',
+                     'albums/gallery/01-castle.jpg',
+                     'albums/gallery/index.html',
+                     'albums/gallery/thumbs',
+                     'albums/gallery/thumbs/01-castle-small-2x.jpg',
+                     'albums/gallery/thumbs/01-castle-small.jpg',
+                     'albums/index.html' ]
+        actual =  @temp_dir.glob('**/*').sort
+        assert_equal 9, actual.size
+        for i in 0...actual.size do
+          assert_equal (@temp_dir + expected[i]).to_s, actual[i].to_s
+        end
       end
     end
   end

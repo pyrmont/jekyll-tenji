@@ -11,7 +11,7 @@ class TenjiFileImageTest < Minitest::Test
                                       'url' => 'http://localhost' })
       @site = Jekyll::Site.new config
       @obj = Tenji::File::Image.new @site, @site.source, 'albums/gallery1',
-                                    'photo1.jpg', 'gallery1'
+                                    'photo1.jpg', '_albums/gallery1'
     end
 
     teardown do
@@ -33,7 +33,7 @@ class TenjiFileImageTest < Minitest::Test
         Tenji::Config.reset
       end
 
-      should "return a directory path" do
+      should "return a file path" do
         assert_equal @site.source + '/_albums/gallery1/photo1.jpg', @obj.path
       end
     end

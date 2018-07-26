@@ -28,9 +28,9 @@ module Tenji
 
     private def url()
       galleries = Tenji::Config.dir 'galleries', output: true
+      gallery = @source.gallery.dirnames['output']
       thumbs = Tenji::Config.dir 'thumbs', output: true
-      album = @source.gallery.dirname
-      "/#{galleries}/#{album}/#{thumbs}/#{@name}"
+      "/#{galleries}/#{gallery}/#{thumbs}/#{@name}"
     end
   end
 end

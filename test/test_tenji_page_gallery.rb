@@ -8,9 +8,9 @@ class TenjiPageGalleryTest < Minitest::Test
       @gallery = Tenji::Gallery.new gallery_dir, AnyType.new
       @site = TestSite.site source: 'test/data', dest: 'tmp'
       @base = @site.source
-      @dir = gallery_dir.to_s
+      @output_dirname = gallery_dir.to_s
       @name = 'index.html'
-      @gallery_name = 'gallery1'
+      @input_dirname = gallery_dir.to_s
     end
 
     teardown do
@@ -19,18 +19,18 @@ class TenjiPageGalleryTest < Minitest::Test
 
     context "has a method #initialize that" do
       should "return an object" do
-        obj = Tenji::Page::Gallery.new @gallery, @site, @base, @dir, @name, @gallery_name
+        obj = Tenji::Page::Gallery.new @gallery, @site, @base, @output_dirname, @name, @input_dirname
         assert_equal 'Tenji::Page::Gallery', obj.class.name
       end
 
       should "raise an error with invalid arguments" do
         pg = Tenji::Page::Gallery
-        assert_raises(Tenji::TypeError) { pg.new nil, @site, @base, @dir, @name, @gallery_name }
-        assert_raises(Tenji::TypeError) { pg.new @gallery,  nil, @base, @dir, @name, @gallery_name }
-        assert_raises(Tenji::TypeError) { pg.new @gallery, @site, nil, @dir, @name, @gallery_name }
-        assert_raises(Tenji::TypeError) { pg.new @gallery, @site, @base, nil, @name, @gallery_name }
-        assert_raises(Tenji::TypeError) { pg.new @gallery, @site, @base, @dir, nil, @gallery_name }
-        assert_raises(Tenji::TypeError) { pg.new @gallery, @site, @base, @dir, @name, nil }
+        assert_raises(Tenji::TypeError) { pg.new nil, @site, @base, @output_dirname, @name, @input_dirname }
+        assert_raises(Tenji::TypeError) { pg.new @gallery,  nil, @base, @output_dirname, @name, @input_dirname }
+        assert_raises(Tenji::TypeError) { pg.new @gallery, @site, nil, @output_dirname, @name, @input_dirname }
+        assert_raises(Tenji::TypeError) { pg.new @gallery, @site, @base, nil, @name, @input_dirname }
+        assert_raises(Tenji::TypeError) { pg.new @gallery, @site, @base, @output_dirname, nil, @input_dirname }
+        assert_raises(Tenji::TypeError) { pg.new @gallery, @site, @base, @output_dirname, @name, nil }
       end
     end
 
@@ -43,9 +43,10 @@ class TenjiPageGalleryTest < Minitest::Test
         Tenji::Config.reset
       end
 
-      should "return a directory path" do
-        obj = Tenji::Page::Gallery.new @gallery, @site, @base, @dir, @name, @gallery_name
-        assert_equal '_albums/gallery1/index.html', obj.path
+      should "return a file path" do
+        output_path = 'albums/gallery1'
+        obj = Tenji::Page::Gallery.new @gallery, @site, @base, @output_dirname, @name, @input_dirname
+        assert_equal 'test/data/gallery1/index.html', obj.path
       end
     end
   end

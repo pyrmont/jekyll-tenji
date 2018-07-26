@@ -5,19 +5,19 @@ module Tenji
     class Image < Jekyll::Page
       using Tenji::Refinements
 
-      def initialize(image, site, base, dir, name, gallery_name)
+      def initialize(image, site, base, dir, name, input_dirname)
         image.is_a! Tenji::Image
         site.is_a! Jekyll::Site
         base.is_a! String
         dir.is_a! String
         name.is_a! String
-        gallery_name.is_a! String
+        input_dirname.is_a! String
 
         @site = site
         @base = base
         @dir = dir
         @name = ::File.basename(name, '.*') + '.html'
-        @gallery_name = gallery_name
+        @input_dirname = input_dirname
 
         process_name
 
@@ -28,7 +28,7 @@ module Tenji
       end
 
       def path
-        ::File.join(Tenji::Config.dir('galleries'), @gallery_name, @name)
+        ::File.join(@input_dirname, @name)
       end
 
       private def process_name()

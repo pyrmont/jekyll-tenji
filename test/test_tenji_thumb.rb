@@ -40,7 +40,7 @@ class TenjiThumbTest < Minitest::Test
       setup do
         dir = Pathname.new 'test/data/gallery2'
         file = dir + '01-castle.jpg'
-        gallery = AnyType.new(methods: { 'dirname' => 'gallery2' })
+        gallery = AnyType.new(methods: { 'dirnames' => { 'output' => 'gallery2' }})
         @image = Tenji::Image.new file, Hash.new, gallery
         @dimensions = { 'x' => 400, 'y' => 400 }
         @obj = Tenji::Thumb.new 'small', @dimensions, @image

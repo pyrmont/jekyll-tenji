@@ -16,7 +16,7 @@ class TenjiGalleryTest < Minitest::Test
         list = Tenji::List.new dir
         obj = Tenji::Gallery.new dir, list
         assert_equal 'Tenji::Gallery', obj.class.name
-        assert_equal 'gallery1', obj.dirname
+        assert_equal 'gallery1', obj.dirnames['output']
         assert_equal [ 'Tenji::Image' ], obj.images.map { |i| i.class.name }
         assert_equal 'Tenji::List', obj.list.class.name
         assert_equal 'Hash', obj.metadata.class.name
@@ -43,20 +43,20 @@ class TenjiGalleryTest < Minitest::Test
       end
 
       should "return a value for comparisons" do
-        lower_np = AnyType.new(methods: { 'dirname' => 'a',
+        lower_np = AnyType.new(methods: { 'dirnames' => { 'input' => 'a' },
                                           'metadata' => Hash.new })
-        equal_np = AnyType.new(methods: { 'dirname' => 'gallery1',
+        equal_np = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
                                           'metadata' => Hash.new })
-        higher_np = AnyType.new(methods: { 'dirname' => 'z',
+        higher_np = AnyType.new(methods: { 'dirnames' => { 'input' => 'z' },
                                            'metadata' => Hash.new })
 
         years = [ '1/01/1000', '1/01/2000', '1/01/3000' ]
         periods = years.map { |y| { 'period' => [ DateTime.parse(y) ] } }
-        lower_wp = AnyType.new(methods: { 'dirname' => 'gallery1',
+        lower_wp = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
                                           'metadata' => periods[0] })
-        equal_wp = AnyType.new(methods: { 'dirname' => 'gallery1',
+        equal_wp = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
                                           'metadata' => periods[1] })
-        higher_wp = AnyType.new(methods: { 'dirname' => 'gallery1',
+        higher_wp = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
                                            'metadata' => periods[2] })
 
         assert_equal -1, @obj <=> lower_np
@@ -92,25 +92,8 @@ class TenjiGalleryTest < Minitest::Test
       should "return a Hash object with certain keys set depending on the position" do
         res = @obj.to_liquid
         assert_equal Hash, res.class
-        assert_equal 'gallery2', res['dirname']
         assert_equal "This is a gallery.\n", res['content']
         assert_equal '01-castle.jpg', res['cover'].name
-      end
-    end
-
-    context "has a private method #init_cover that" do
-      setup do
-        dir = Pathname.new 'test/data/gallery2/'
-        @obj = Tenji::Gallery.new dir, AnyType.new
-      end
-
-      should "return an Image object" do
-        fm = { 'cover' => '01-castle.jpg' }
-        res = @obj.send :init_cover, fm
-        assert_equal '01-castle.jpg', res.name
-        fm = { 'cover' => 'not-real.jpg' }
-        res = @obj.send :init_cover, fm
-        assert_nil res
       end
     end
   end

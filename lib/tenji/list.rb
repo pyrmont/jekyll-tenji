@@ -12,7 +12,7 @@ module Tenji
     def initialize(dir)
       dir.is_a! Pathname
       dir.exist!
-
+      
       @global = Tenji::Config.settings('list') || Hash.new
 
       fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file(:metadata))

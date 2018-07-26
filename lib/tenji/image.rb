@@ -95,9 +95,9 @@ module Tenji
 
     private def page_url()
       galleries = Tenji::Config.dir 'galleries', output: true
-      album = @gallery.dirname
+      gallery = @gallery.dirnames['output']
       name = @name.sub_ext(Tenji::Config.ext('page', output: true))
-      "/#{galleries}/#{album}/#{name}"
+      "/#{galleries}/#{gallery}/#{name}"
     end
 
     private def title_from_name()
@@ -106,8 +106,8 @@ module Tenji
     
     private def url()
       galleries = Tenji::Config.dir 'galleries', output: true
-      album = @gallery.dirname
-      "/#{galleries}/#{album}/#{@name}"
+      gallery = @gallery.dirnames['output']
+      "/#{galleries}/#{gallery}/#{@name}"
     end
 
   end
