@@ -78,7 +78,10 @@ module Tenji
     private def init_dirnames(dir)
       dir.is_a! Pathname
 
-      { 'input' => dir.basename.to_s, 'output' => dir.basename.to_s }
+      input_name = dir.basename.to_s
+      output_name = input_name.gsub(/^\d+-/, '')
+
+      { 'input' => input_name, 'output' => output_name }
     end
 
     private def init_images(dir, sizes, quality)

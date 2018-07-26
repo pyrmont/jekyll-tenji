@@ -15,12 +15,21 @@ class TenjiGalleryTest < Minitest::Test
         dir = Pathname.new 'test/data/gallery1/'
         list = Tenji::List.new dir
         obj = Tenji::Gallery.new dir, list
-        assert_equal 'Tenji::Gallery', obj.class.name
+        assert_equal Tenji::Gallery, obj.class
         assert_equal 'gallery1', obj.dirnames['output']
-        assert_equal [ 'Tenji::Image' ], obj.images.map { |i| i.class.name }
-        assert_equal 'Tenji::List', obj.list.class.name
-        assert_equal 'Hash', obj.metadata.class.name
+        assert_equal [ Tenji::Image ], obj.images.map { |i| i.class }
+        assert_equal Tenji::List, obj.list.class
+        assert_equal Hash, obj.metadata.class
         assert_equal '', obj.text
+      end
+
+      should "initialize the Gallery object with different directory names" do
+        dir = Pathname.new 'test/data/05-gallery/'
+        list = AnyType.new
+        obj = Tenji::Gallery.new dir, list
+        assert_equal Tenji::Gallery, obj.class
+        assert_equal '05-gallery', obj.dirnames['input']
+        assert_equal 'gallery', obj.dirnames['output']
       end
 
       should "raise an error if the file doesn't exist" do
