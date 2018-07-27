@@ -25,7 +25,7 @@ module Tenji
         @content = gallery.text
 
         if gallery.hidden?
-          msg = "'#{@data['title']}' is at #{url}"
+          msg = "'#{@data['title']}' is at #{@site.config['url'] + url}"
           Jekyll.logger.info('Hidden gallery:', msg)
         end
 
