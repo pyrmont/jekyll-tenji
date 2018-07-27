@@ -27,10 +27,10 @@ module Tenji
       sizes = init_sizes fm
       quality = init_quality fm
 
-      @dirnames = init_dirnames dir
       @images = init_images dir, sizes, quality
       @text = text
       @metadata = init_metadata fm
+      @dirnames = init_dirnames dir
     end
 
     def <=>(other)
@@ -88,7 +88,12 @@ module Tenji
       dir.is_a! Pathname
 
       input_name = dir.basename.to_s
-      output_name = input_name.gsub(/^\d+-/, '')
+      plain_name = input_name.gsub(/^\d+-/, '')
+      output_name = if hidden?
+                      Base64.urlsafe_encode64(plain_name, padding: false)
+                    else
+                      plain_name
+                    end
 
       { 'input' => input_name, 'output' => output_name }
     end

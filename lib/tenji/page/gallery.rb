@@ -24,6 +24,11 @@ module Tenji
         @data = gallery.metadata
         @content = gallery.text
 
+        if gallery.hidden?
+          msg = "'#{@data['title']}' is at #{url}"
+          Jekyll.logger.info('Hidden gallery:', msg)
+        end
+
         Jekyll::Hooks.trigger :pages, :post_init, self
       end
 
