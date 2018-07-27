@@ -24,16 +24,18 @@ module Tenji
         @data = gallery.metadata
         @content = gallery.text
 
-        if gallery.hidden?
-          msg = "'#{@data['title']}' is at #{@site.config['url'] + url}"
-          Jekyll.logger.info('Hidden gallery:', msg)
-        end
+        hidden_message if gallery.hidden?
 
         Jekyll::Hooks.trigger :pages, :post_init, self
       end
 
       def path
         ::File.join(@input_dirname, @name)
+      end
+
+      private def hidden_message()
+        msg = "'#{@data['title']}' is at #{@site.config['url'] + url}"
+        Jekyll.logger.info('Hidden gallery:', msg)
       end
 
       private def process_name()
