@@ -59,7 +59,7 @@ module Tenji
       galleries = dir.subdirectories.map do |s|
                     Tenji::Gallery.new s
                   end
-      galleries.sort
+      galleries.sort!
 
       res = { 'all' => Array.new, 'listed' => Array.new, 'hidden' => Array.new }
       galleries.each do |g|
