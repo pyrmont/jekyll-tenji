@@ -6,7 +6,7 @@ class TenjiGeneratorListTest < Minitest::Test
       Tenji::Config.configure
       @site = TestSite.site source: 'test/data', dest: 'tmp'
       dir = Pathname.new 'test/data/gallery2'
-      @list = Tenji::List.new dir
+      @list = Tenji::List.new dir, AnyType.new
     end
 
     teardown do
@@ -22,7 +22,7 @@ class TenjiGeneratorListTest < Minitest::Test
 
       should "initilaize a Generator::List object" do
         obj = Tenji::Generator::List.new @list, @site, @base, @prefix_path
-        assert_equal 'Tenji::Generator::List', obj.class.name
+        assert_equal Tenji::Generator::List, obj.class
       end
 
       should "raise an error if the arguments are invalid" do
@@ -44,7 +44,7 @@ class TenjiGeneratorListTest < Minitest::Test
       should "add to an array of Page objects" do
         pages = Array.new
         @obj.generate_index pages
-        assert_equal [ 'Tenji::Page::List' ], pages.map { |p| p.class.name }.uniq
+        assert_equal [ Tenji::Page::List ], pages.map { |p| p.class }.uniq
       end
 
       should "raise an error with invalid arguments" do

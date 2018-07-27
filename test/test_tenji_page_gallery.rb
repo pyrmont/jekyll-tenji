@@ -5,7 +5,7 @@ class TenjiPageGalleryTest < Minitest::Test
     setup do
       Tenji::Config.configure
       gallery_dir = Pathname.new 'test/data/gallery1'
-      @gallery = Tenji::Gallery.new gallery_dir, AnyType.new
+      @gallery = Tenji::Gallery.new gallery_dir
       @site = TestSite.site source: 'test/data', dest: 'tmp'
       @base = @site.source
       @output_dirname = gallery_dir.to_s

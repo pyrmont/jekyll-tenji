@@ -13,20 +13,17 @@ class TenjiGalleryTest < Minitest::Test
     context "has a method #initialize that" do
       should "initialize the Gallery object if the directory exists" do
         dir = Pathname.new 'test/data/gallery1/'
-        list = Tenji::List.new dir
-        obj = Tenji::Gallery.new dir, list
+        obj = Tenji::Gallery.new dir
         assert_equal Tenji::Gallery, obj.class
         assert_equal 'gallery1', obj.dirnames['output']
         assert_equal [ Tenji::Image ], obj.images.map { |i| i.class }
-        assert_equal Tenji::List, obj.list.class
         assert_equal Hash, obj.metadata.class
         assert_equal '', obj.text
       end
 
       should "initialize the Gallery object with different directory names" do
         dir = Pathname.new 'test/data/05-gallery/'
-        list = AnyType.new
-        obj = Tenji::Gallery.new dir, list
+        obj = Tenji::Gallery.new dir
         assert_equal Tenji::Gallery, obj.class
         assert_equal '05-gallery', obj.dirnames['input']
         assert_equal 'gallery', obj.dirnames['output']
@@ -35,13 +32,8 @@ class TenjiGalleryTest < Minitest::Test
       should "raise an error if the file doesn't exist" do
         dir = Pathname.new 'not/a/real/directory'
         assert_raises(Tenji::NotFoundError) do
-          Tenji::Gallery.new dir, AnyType.new
+          Tenji::Gallery.new dir
         end
-      end
-
-      should "raise an error if the list does not exist" do
-        dir = Pathname.new 'test/data/gallery1/'
-        assert_raises(Tenji::TypeError) { Tenji::Gallery.new dir, nil }
       end
     end
 
@@ -49,7 +41,7 @@ class TenjiGalleryTest < Minitest::Test
       setup do
         Tenji::Config.configure
         dir = Pathname.new 'test/data/gallery1/'
-        @obj = Tenji::Gallery.new dir, AnyType.new
+        @obj = Tenji::Gallery.new dir
       end
 
       teardown do
@@ -100,7 +92,7 @@ class TenjiGalleryTest < Minitest::Test
     context "has a method #to_liquid that" do
       setup do
         dir = Pathname.new 'test/data/gallery2/'
-        @obj = Tenji::Gallery.new dir, AnyType.new
+        @obj = Tenji::Gallery.new dir
       end
 
       should "return a Hash object with certain keys set depending on the position" do

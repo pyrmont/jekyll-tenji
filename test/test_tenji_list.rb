@@ -13,17 +13,16 @@ class TenjiListTest < Minitest::Test
     context "has a method #initialize that" do
       should "initialize a List object" do
         dir = Pathname.new 'test/data/_albums/'
-        obj = Tenji::List.new dir
-        assert_equal 'Tenji::List', obj.class.name
+        obj = Tenji::List.new dir, AnyType.new
+        assert_equal Tenji::List, obj.class
         assert_equal '_albums', obj.dirname
-        assert_equal [ 'Tenji::Gallery' ], obj.galleries.map { |g| g.class.name }
-        assert_equal 'Hash', obj.metadata.class.name
+        assert_equal Hash, obj.metadata.class
         assert_equal '', obj.text
       end
 
       should "raise an error if the file doesn't exist" do
         dir = Pathname.new 'not/a/real/directory'
-        assert_raises(Tenji::NotFoundError) { Tenji::List.new dir }
+        assert_raises(Tenji::NotFoundError) { Tenji::List.new dir, AnyType.new }
       end
     end
   end

@@ -9,8 +9,10 @@ module Tenji
     DEFAULTS = { 'title' => 'Photo Albums',
                  'layout' => 'gallery_list' }
 
-    def initialize(dir)
+    def initialize(dir, galleries)
       dir.is_a! Pathname
+      galleries.is_a! Array
+
       dir.exist!
       
       @global = Tenji::Config.settings('list') || Hash.new
@@ -18,7 +20,7 @@ module Tenji
       fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file(:metadata))
 
       @dirname = dir.basename.to_s
-      @galleries = init_galleries dir
+      @galleries = galleries
 
       @text = text
       @metadata = init_metadata fm
@@ -26,14 +28,6 @@ module Tenji
 
     def to_liquid()
       { 'galleries' => @galleries }
-    end
-
-    private def init_galleries(dir)
-      dir.is_a! Pathname
-      galleries = dir.subdirectories.map do |d|
-                    Tenji::Gallery.new d, self
-                  end
-      galleries.sort
     end
 
     private def init_metadata(frontmatter)

@@ -4,21 +4,20 @@ module Tenji
   class Gallery
     using Tenji::Refinements
 
-    attr_reader :dirnames, :images, :list, :metadata, :text
+    attr_reader :dirnames, :images, :metadata, :text
 
     DEFAULTS = { 'title' => 'A Gallery',
                  'description' => '',
                  'layout' => 'gallery_index',
                  'cover' => nil,
-                 'listed' => true,
+                 'hidden' => false,
                  'paginate' => 25,
                  'quality' => 'original',
                  'individual_pages' => false,
                  'sizes' => { 'small' => { 'x' => 400, 'y' => 400 } } }
 
-    def initialize(dir, list)
+    def initialize(dir)
       dir.is_a! Pathname
-      list.is_a! Tenji::List
 
       dir.exist!
 
@@ -29,7 +28,6 @@ module Tenji
       quality = init_quality fm
 
       @dirnames = init_dirnames dir
-      @list = list
       @images = init_images dir, sizes, quality
       @text = text
       @metadata = init_metadata fm
@@ -57,6 +55,10 @@ module Tenji
       else
         (this_start <=> other_start) * period_sort
       end
+    end
+
+    def hidden?()
+      @metadata['hidden']
     end
 
     def to_liquid()

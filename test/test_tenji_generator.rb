@@ -31,14 +31,14 @@ class TenjiGeneratorTest < Minitest::Test
         @generator.generate @site
 
         pages = @site.pages
-        assert_equal [ Tenji::Page::List, Tenji::Page::Gallery, Tenji::Page::Image ],
+        assert_equal [ Tenji::Page::Gallery, Tenji::Page::Image, Tenji::Page::List ],
                      pages.map { |p| p.class }.uniq
-        assert_equal [ 'index.html', 'index.html', '01-castle.html' ],
+        assert_equal [ 'index.html', '01-castle.html', 'index.html' ],
                      pages.map { |p| p.name }
 
         files = @site.static_files
-        assert_equal [ 'Tenji::File::Image', 'Tenji::File::Thumb' ],
-                     files.map { |f| f.class.name }.uniq
+        assert_equal [ Tenji::File::Image, Tenji::File::Thumb ],
+                     files.map { |f| f.class }.uniq
         filenames = [ '01-castle.jpg', '01-castle-small.jpg', '01-castle-small-2x.jpg' ]
         assert_equal filenames, files.map { |f| f.name }
       end

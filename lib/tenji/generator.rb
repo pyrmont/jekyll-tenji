@@ -15,11 +15,12 @@ module Tenji
       input_dir = Pathname.new Tenji::Config.dir(:galleries)
       output_dir = Pathname.new Tenji::Config.dir(:galleries, output: true)
       
-      list = Tenji::List.new(site_dir + input_dir)
+      galleries = init_galleries(site_dir + input_dir)
+      list = Tenji::List.new(site_dir + input_dir, galleries['listed'])
 
-      write_thumbnails site, list.galleries
+      write_thumbnails site, galleries['all']
+      generate_galleries site, galleries['all'], output_dir
       generate_list site, list, output_dir
-      generate_galleries site, list.galleries, output_dir
       
       add_tenji = Proc.new { |site,payload| payload['tenji'] = list }
       Jekyll::Hooks.register :site, :pre_render, &add_tenji
@@ -50,6 +51,22 @@ module Tenji
 
       gl = Tenji::Generator::List.new list, site, base_dir, dir
       gl.generate_index site.pages
+    end
+
+    private def init_galleries(dir)
+      dir.is_a! Pathname
+
+      galleries = dir.subdirectories.map do |s|
+                    Tenji::Gallery.new s
+                  end
+      galleries.sort
+
+      res = { 'all' => Array.new, 'listed' => Array.new, 'hidden' => Array.new }
+      galleries.each do |g|
+        res['all'].push g
+        (g.hidden?) ? res['hidden'].push(g) : res['listed'].push(g)
+      end
+      res
     end
 
     private def write_thumbnails(site, galleries)

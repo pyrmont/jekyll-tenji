@@ -6,7 +6,7 @@ class TenjiGeneratorGalleryTest < Minitest::Test
       Tenji::Config.configure
       @site = TestSite.site source: 'test/data', dest: 'tmp'
       @dir = Pathname.new 'test/data/gallery2'
-      @gallery = Tenji::Gallery.new @dir, AnyType.new
+      @gallery = Tenji::Gallery.new @dir
       @base = Pathname.new @site.source
       @generator = Tenji::Generator::Gallery.new @gallery, @site, @base
     end

@@ -5,7 +5,7 @@ class TenjiPageListTest < Minitest::Test
     setup do
       Tenji::Config.configure
       galleries_dir = Pathname.new 'test/data/_albums'
-      @list = Tenji::List.new galleries_dir
+      @list = Tenji::List.new galleries_dir, AnyType.new
       @site = TestSite.site source: 'test/data', dest: 'tmp'
       @base = @site.source
       @dir = galleries_dir.to_s
@@ -19,7 +19,7 @@ class TenjiPageListTest < Minitest::Test
     context "has a method #initialize that" do
       should "initialise a Page::List object" do
         obj = Tenji::Page::List.new @list, @site, @base, @dir, @name
-        assert_equal 'Tenji::Page::List', obj.class.name
+        assert_equal Tenji::Page::List, obj.class
       end
 
       should "raise an error with invalid arguments" do
