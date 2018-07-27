@@ -16,7 +16,7 @@ module Tenji
 
     def self.configure(options = {})
       options.is_a! Hash
-      @config = DEFAULTS.merge options
+      @config = DEFAULTS.deep_merge options
     end
 
     def self.reset()

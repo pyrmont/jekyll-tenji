@@ -2,6 +2,17 @@
 
 module Tenji
   module Refinements
+    refine Hash do
+      def deep_merge(h)
+        res = self.merge h
+        self.each do |k,v|
+          if h.key?(k) && h[k].is_a?(Hash)
+            res[k] = self[k].deep_merge h[k]
+          end
+        end
+        res
+      end
+    end
     refine Object do
       def is_a!(type)
         return if self.is_a? type
