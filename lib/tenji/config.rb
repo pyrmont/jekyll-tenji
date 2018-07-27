@@ -11,7 +11,8 @@ module Tenji
                  'output_page_ext' => '.html',
                  'scale_max' => 2,
                  'scale_suffix_format' => '-#x',
-                 'list_index' => true }
+                 'list_index' => true,
+                 'sort' => { 'name' => 'asc', 'period' => 'desc' } }
 
     def self.configure(options = {})
       options.is_a! Hash
@@ -55,6 +56,20 @@ module Tenji
       is_set!
       key = name.to_s + '_settings'
       @config[key]
+    end
+
+    def self.sort(type)
+      is_set!
+      value = @config['sort'][type]
+      if type == 'period' && value == 'ignore'
+        :ignore
+      elsif value.downcase == 'asc'
+        1
+      elsif value.downcase == 'desc'
+        -1
+      else
+        1
+      end
     end
 
     def self.suffix(type, factor: nil)

@@ -47,8 +47,13 @@ class TenjiGalleryTest < Minitest::Test
 
     context "has a method #<=> that" do
       setup do
+        Tenji::Config.configure
         dir = Pathname.new 'test/data/gallery1/'
         @obj = Tenji::Gallery.new dir, AnyType.new
+      end
+
+      teardown do
+        Tenji::Config.reset
       end
 
       should "return a value for comparisons" do
@@ -68,9 +73,9 @@ class TenjiGalleryTest < Minitest::Test
         higher_wp = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
                                            'metadata' => periods[2] })
 
-        assert_equal -1, @obj <=> lower_np
+        assert_equal 1, @obj <=> lower_np
         assert_equal 0, @obj <=> equal_np
-        assert_equal 1, @obj <=> higher_np
+        assert_equal -1, @obj <=> higher_np
 
         assert_equal 1, @obj <=> lower_wp
         assert_equal 1, @obj <=> equal_wp
