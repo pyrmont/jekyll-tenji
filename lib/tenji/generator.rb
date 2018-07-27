@@ -15,15 +15,21 @@ module Tenji
       input_dir = Pathname.new Tenji::Config.dir(:galleries)
       output_dir = Pathname.new Tenji::Config.dir(:galleries, output: true)
       
-      galleries = init_galleries(site_dir + input_dir)
-      list = Tenji::List.new(site_dir + input_dir, galleries['listed'])
+      @galleries = init_galleries(site_dir + input_dir)
+      @list = Tenji::List.new(site_dir + input_dir, @galleries['listed'])
 
-      write_thumbnails site, galleries['all']
-      generate_galleries site, galleries['all'], output_dir
-      generate_list site, list, output_dir
+      write_thumbnails site, @galleries['all']
+      generate_galleries site, @galleries['all'], output_dir
+      generate_list site, @list, output_dir
       
-      add_tenji = Proc.new { |site,payload| payload['tenji'] = list }
-      Jekyll::Hooks.register :site, :pre_render, &add_tenji
+      Jekyll::Hooks.register :site, :pre_render, &method(:add_tenji)
+    end
+
+    private def add_tenji(site, payload)
+      tenji = { 'all_galleries' => @galleries['all'],
+                'galleries' => @galleries['listed'],
+                'hidden_galleries' => @galleries['hidden'] }
+      payload['tenji'] = tenji
     end
 
     private def generate_galleries(site, galleries, dir)
