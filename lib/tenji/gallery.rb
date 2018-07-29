@@ -57,31 +57,34 @@ module Tenji
       end
     end
 
+    def data()
+      attrs = { 'cover' => cover(@metadata['cover']),
+                'images' => images }
+      @metadata.merge attrs
+    end
+
     def hidden?()
       @metadata['hidden']
     end
 
     def to_liquid()
-      attrs = { 'content' => @text }
-      @metadata.merge(gallery).merge(attrs)
+      attrs = { 'content' => @text,
+                'cover' => cover(@metadata['cover']),
+                'url' => url }
+      @metadata.merge attrs
+    end
+    
+    def url()
+      galleries = Tenji::Config.dir 'galleries', output: true
+      gallery = @dirnames['output']
+      name = ''
+      "/#{galleries}/#{gallery}/#{name}"
     end
 
-    private def cover()
-      if cover = @metadata['cover']
-        if index = @images.find_index { |i| i.name == cover }
-          @images.at(index)
-        else
-          Jekyll.logger.warn "Cover image #{cover} doesn't exist"
-          nil
-        end
-      else
-        @images.first
-      end
-    end
-
-    private def gallery()
-      { 'cover' => cover,
-        'url' => url }
+    private def cover(name)
+      return @images.first unless name
+      
+      @images.find { |i| i.name == name }
     end
 
     private def init_dirnames(dir)
@@ -111,8 +114,7 @@ module Tenji
 
     private def init_metadata(frontmatter)
       frontmatter.is_a! Hash
-      attrs = { 'images' => @images }
-      DEFAULTS.merge(@global).merge(attrs).merge(frontmatter)
+      DEFAULTS.merge(@global).merge(frontmatter)
     end
 
     private def init_quality(frontmatter)
@@ -123,13 +125,6 @@ module Tenji
     private def init_sizes(frontmatter)
       frontmatter.is_a! Hash
       frontmatter['sizes'] || @global['sizes'] || DEFAULTS['sizes']
-    end
-
-    private def url()
-      galleries = Tenji::Config.dir 'galleries', output: true
-      gallery = @dirnames['output']
-      name = ""
-      "/#{galleries}/#{gallery}/#{name}"
     end
   end
 end

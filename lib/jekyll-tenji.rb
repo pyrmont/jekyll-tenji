@@ -13,6 +13,8 @@ require 'tenji/refinements'
 require 'tenji/config'
 require 'tenji/utilities'
 
+require 'tenji/paginator'
+
 require 'tenji/generator'
 
 require 'tenji/image'

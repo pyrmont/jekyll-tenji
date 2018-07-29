@@ -20,7 +20,7 @@ class TenjiPageGalleryTest < Minitest::Test
     context "has a method #initialize that" do
       should "return an object" do
         obj = Tenji::Page::Gallery.new @gallery, @site, @base, @output_dirname, @name, @input_dirname
-        assert_equal 'Tenji::Page::Gallery', obj.class.name
+        assert_equal Tenji::Page::Gallery, obj.class
       end
 
       should "raise an error with invalid arguments" do

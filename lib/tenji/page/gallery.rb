@@ -21,9 +21,9 @@ module Tenji
 
         process_name
 
-        @data = gallery.metadata
+        @data = gallery.data
         @content = gallery.text
-
+        
         hidden_message if gallery.hidden?
 
         Jekyll::Hooks.trigger :pages, :post_init, self

@@ -29,8 +29,17 @@ module Tenji
       def generate_index(pages)
         pages.is_a! Array
         name = 'index' + Tenji::Config.ext(:page, output: true)
-        params = [ @gallery, @site, @base, @output_dirname, name, @input_dirname ]
-        pages << Tenji::Page::Gallery.new(*params)
+        gallery = Tenji::Paginator.new @gallery, 'images', @gallery.metadata['paginate'], @gallery.url
+        gallery.pages.each do |g|
+          g = paged_metadata(gallery, g)
+          output_dirname = paged_dirname(gallery, g)
+          params = [ g, @site, @base, output_dirname, name, @input_dirname ]
+          pages << Tenji::Page::Gallery.new(*params)
+        end
+        # @gallery.pages.each do |p|
+        #  params = [ @gallery, @site, @base, @output_dirname, name, @input_dirname, p ]
+        #  pages << Tenji::Page::Gallery.new(*params)
+        # end
       end
 
       def generate_individual_pages(pages)
@@ -66,6 +75,22 @@ module Tenji
       private def init_dirname(gallery_name, output: false)
         galleries_dirname = Tenji::Config.dir('galleries', output: output)
         ::File.join(galleries_dirname, gallery_name)
+      end
+
+      private def paged_dirname(gallery, g)
+        num = gallery.number g
+        if num > 1
+          ::File.join(@output_dirname, 'page-' + num.to_s)
+        else
+          @output_dirname
+        end
+      end
+
+      private def paged_metadata(gallery, g)
+        num = gallery.number g
+        metadata = g.metadata.merge(gallery.urls(num))
+        g.instance_variable_set(:@metadata, metadata)
+        g
       end
     end
   end

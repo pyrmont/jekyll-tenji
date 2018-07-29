@@ -19,7 +19,7 @@ class TenjiGeneratorGalleryTest < Minitest::Test
     context "has a method #initialize that" do
       should "initialize a Generator::Gallery object" do
         obj = Tenji::Generator::Gallery.new @gallery, @site, @base
-        assert_equal 'Tenji::Generator::Gallery', obj.class.name
+        assert_equal Tenji::Generator::Gallery, obj.class
       end
 
       should "raise an error if the arguments are invalid" do
@@ -46,8 +46,7 @@ class TenjiGeneratorGalleryTest < Minitest::Test
       should "add to an array of Page objects" do
         pages = Array.new
         @generator.generate_index pages
-        assert_equal [ 'Tenji::Page::Gallery' ],
-                     pages.map { |p| p.class.name }.uniq
+        assert_equal [ Tenji::Page::Gallery ], pages.map { |p| p.class }.uniq
       end
 
       should "raise an error if an invalid object is provided" do
@@ -59,8 +58,7 @@ class TenjiGeneratorGalleryTest < Minitest::Test
       should "add to an array of Page objects" do
         pages = Array.new
         @generator.generate_individual_pages pages
-        assert_equal [ 'Tenji::Page::Image' ],
-                     pages.map { |p| p.class.name }.uniq
+        assert_equal [ Tenji::Page::Image ], pages.map { |p| p.class }.uniq
       end
 
       should "raise an error if an invalid object is provided" do
@@ -74,8 +72,7 @@ class TenjiGeneratorGalleryTest < Minitest::Test
       should "add to an array of File::Thumb objects" do
         files = Array.new
         @generator.generate_thumbs files
-        assert_equal [ 'Tenji::File::Thumb' ],
-                     files.map { |f| f.class.name }.uniq
+        assert_equal [ Tenji::File::Thumb ], files.map { |f| f.class }.uniq
       end
 
       should "raise an error if an invalid object is provided" do

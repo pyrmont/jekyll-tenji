@@ -39,13 +39,8 @@ class TenjiGalleryTest < Minitest::Test
 
     context "has a method #<=> that" do
       setup do
-        Tenji::Config.configure
         dir = Pathname.new 'test/data/gallery1/'
         @obj = Tenji::Gallery.new dir
-      end
-
-      teardown do
-        Tenji::Config.reset
       end
 
       should "return a value for comparisons" do
@@ -86,6 +81,32 @@ class TenjiGalleryTest < Minitest::Test
 
       should "raise an error if the comparator is not a Tenji::Image" do
         assert_raises(Tenji::TypeError) { @obj <=> nil }
+      end
+    end
+
+    context "has a method #data that" do
+      should "return a Hash object with certain keys set for a gallery with minimal settings" do
+        dir = Pathname.new 'test/data/gallery1'
+        obj = Tenji::Gallery.new dir
+        images = obj.instance_variable_get(:@images)
+        data = obj.data
+        assert_equal images.first, data['cover']
+        assert_equal images, data['images']
+      end
+      
+    end
+
+    context "has a method #hidden? that" do
+      should "return false if gallery is not hidden" do
+        dir = Pathname.new 'test/data/gallery2/'
+        obj = Tenji::Gallery.new dir
+        assert_equal false, obj.hidden?
+      end
+
+      should "return true if gallery is hidden" do
+        dir = Pathname.new 'test/data/gallery4/'
+        obj = Tenji::Gallery.new dir
+        assert_equal true, obj.hidden?
       end
     end
 
