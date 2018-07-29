@@ -29,17 +29,13 @@ module Tenji
       def generate_index(pages)
         pages.is_a! Array
         name = 'index' + Tenji::Config.ext(:page, output: true)
-        gallery = Tenji::Paginator.new @gallery, 'images', @gallery.metadata['paginate'], @gallery.url
+        gallery = Tenji::Paginator.new @gallery, 'images', @gallery.metadata['paginate'], @gallery.url + 'page-#num/'
         gallery.pages.each do |g|
           g = paged_metadata(gallery, g)
           output_dirname = paged_dirname(gallery, g)
           params = [ g, @site, @base, output_dirname, name, @input_dirname ]
           pages << Tenji::Page::Gallery.new(*params)
         end
-        # @gallery.pages.each do |p|
-        #  params = [ @gallery, @site, @base, @output_dirname, name, @input_dirname, p ]
-        #  pages << Tenji::Page::Gallery.new(*params)
-        # end
       end
 
       def generate_individual_pages(pages)
