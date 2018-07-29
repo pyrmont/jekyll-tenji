@@ -29,7 +29,9 @@ module Tenji
       def generate_index(pages)
         pages.is_a! Array
         name = 'index' + Tenji::Config.ext(:page, output: true)
-        gallery = Tenji::Paginator.new @gallery, 'images', @gallery.metadata['paginate'], @gallery.url + 'page-#num/'
+        params = [ @gallery, 'images', @gallery.metadata['paginate'],
+                   @gallery.url + 'page-#num/' ]
+        gallery = Tenji::Paginator.new(*params)
         gallery.pages.each do |g|
           g = paged_metadata(gallery, g)
           output_dirname = paged_dirname(gallery, g)
@@ -52,8 +54,9 @@ module Tenji
 
         factors = 1..Tenji::Config.option('scale_max')
 
-        input_dirname = ::File.join(Tenji::Config.dir('thumbs'), @gallery.dirnames['output'])
-        output_dirname = ::File.join(@output_dirname, 
+        input_dirname = ::File.join(Tenji::Config.dir('thumbs'),
+                                    @gallery.dirnames['output'])
+        output_dirname = ::File.join(@output_dirname,
                                      Tenji::Config.dir('thumbs', output: true))
         @gallery.images.each do |i|
           i.thumbs.each_value do |t|

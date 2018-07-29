@@ -13,11 +13,19 @@ module Tenji
         res
       end
     end
+
     refine Object do
       def is_a!(type)
         return if self.is_a? type
         val = self.to_s.empty? ? 'NIL' : self
-        msg = "Value #{val} is of type #{self.class.name}, expected #{type}"
+        msg = "Value #{val} is type #{self.class.name}, expected #{type}"
+        raise Tenji::TypeError.new msg
+      end
+
+      def is_maybe!(type)
+        return if self.is_a?(type) || self.nil?
+        val = self.to_s.empty? ? 'NIL' : self
+        msg = "Value #{val} is type #{self.class.name}, expected #{type} or nil"
         raise Tenji::TypeError.new msg
       end
     end
