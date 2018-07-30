@@ -6,10 +6,12 @@ class TenjiPaginatorTest < Minitest::Test
       Tenji::Config.configure
       dir = Pathname.new 'test/data/gallery1/'
       source = Tenji::Gallery.new dir
-      @p1 = Tenji::Paginator.new source, 'images', source.metadata['paginate'], source.url, 'page-#num/'
+      names = { 'items' => '@images', 'data' => '@metadata' }
+      page_template = 'page-#num/'
+      @p1 = Tenji::Paginator.new source, names, source.metadata['paginate'], source.url, page_template
       dir = Pathname.new 'test/data/gallery4/'
       source = Tenji::Gallery.new dir
-      @p2 = Tenji::Paginator.new source, 'images', source.metadata['paginate'], source.url, 'page-#num/'
+      @p2 = Tenji::Paginator.new source, names, source.metadata['paginate'], source.url, page_template
     end
 
     teardown do
@@ -35,27 +37,33 @@ class TenjiPaginatorTest < Minitest::Test
     context "has a method #page that" do
       should "return the requested paged object" do
         obj = @p1.page 1
+        assert_equal 1, obj.instance_variable_get(:@__page_num__)
         assert_equal 1, obj.instance_variable_get(:@images).size
-        assert_equal 1, obj.instance_variable_get(:@__page_num__) 
+        assert_nil obj.instance_variable_get(:@metadata)['url_prev']
+        assert_nil obj.instance_variable_get(:@metadata)['url_next']
+        assert_equal [ '/albums/gallery1/' ], obj.instance_variable_get(:@metadata)['url_pages']
 
         obj = @p2.page 1
+        assert_equal 1, obj.instance_variable_get(:@__page_num__)
         assert_equal 1, obj.instance_variable_get(:@images).size
-        assert_equal 1, obj.instance_variable_get(:@__page_num__) 
-        
+        assert_nil obj.instance_variable_get(:@metadata)['url_prev']
+        assert_equal '/albums/Z2FsbGVyeTQ/page-2/', obj.instance_variable_get(:@metadata)['url_next']
+        assert_equal [ '/albums/Z2FsbGVyeTQ/', '/albums/Z2FsbGVyeTQ/page-2/' ], obj.instance_variable_get(:@metadata)['url_pages']
+
         obj = @p2.page 2
+        assert_equal 2, obj.instance_variable_get(:@__page_num__)
         assert_equal 1, obj.instance_variable_get(:@images).size
-        assert_equal 2, obj.instance_variable_get(:@__page_num__) 
       end
 
       should "return the current paged object if an invalid number is given" do
         obj = @p1.page
         assert_equal 1, obj.instance_variable_get(:@images).size
-        assert_equal 1, obj.instance_variable_get(:@__page_num__) 
+        assert_equal 1, obj.instance_variable_get(:@__page_num__)
 
         obj = @p2.page 2
         obj = @p2.page 3
         assert_equal 1, obj.instance_variable_get(:@images).size
-        assert_equal 2, obj.instance_variable_get(:@__page_num__) 
+        assert_equal 2, obj.instance_variable_get(:@__page_num__)
       end
     end
 
@@ -66,20 +74,6 @@ class TenjiPaginatorTest < Minitest::Test
         page1 = @p2.page 1
         page2 = @p2.page 2
         assert_equal [ page1, page2 ], @p2.pages
-      end
-    end
-
-    context "has a method #urls that" do
-      should "return a hash of urls" do
-        obj = @p1.urls 1
-        assert_nil obj['url_prev']
-        assert_nil obj['url_next']
-        assert_equal [ '/albums/gallery1/' ], obj['url_pages']
-        
-        obj = @p2.urls 1
-        assert_nil obj['url_prev']
-        assert_equal '/albums/Z2FsbGVyeTQ/page-2/', obj['url_next']
-        assert_equal [ '/albums/Z2FsbGVyeTQ/', '/albums/Z2FsbGVyeTQ/page-2/' ], obj['url_pages']
       end
     end
   end

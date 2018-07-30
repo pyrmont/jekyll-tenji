@@ -4,21 +4,28 @@ module Tenji
   class Paginator
     using Tenji::Refinements
 
-    def initialize(source, items_name, items_per_page, base_url, page_template)
-      items_name.is_a! String
+    def initialize(source, names, items_per_page, base_url, page_template)
+      names.is_a! Hash
       items_per_page.is_maybe! Integer
       base_url.is_a! String
       page_template.is_a! String
 
       @source = source
-      @items = @source.instance_variable_get("@#{items_name}")
-      @items_name = items_name
+
+      @items_name = names['items']
       @items_per_page = items_per_page
+      @items = @source.instance_variable_get(@items_name.to_sym)
+
       @total_pages = total_pages
       @page_nums = (1..@total_pages).to_a
       @page_num = 1
+
+      @data_name = names['data']
+      @data = @source.instance_variable_get(@data_name.to_sym)
+
       @base_url = base_url
       @page_template = page_template
+
       @cache = Hash.new
     end
 
@@ -32,8 +39,9 @@ module Tenji
       @page_num = num if num && num > 0 && num <= @total_pages
       return @cache[@page_num] if @cache.key? @page_num
       res = @source.dup
-      res.instance_variable_set("@#{@items_name}".to_sym, page_of_items)
       res.instance_variable_set(:@__page_num__, @page_num)
+      res.instance_variable_set(@items_name.to_sym, page_of_items)
+      res.instance_variable_set(@data_name.to_sym, page_of_data)
       @cache[@page_num] = res
     end
 
@@ -41,12 +49,9 @@ module Tenji
       @page_nums.map { |n| page n }
     end
 
-    def urls(num)
-      num.is_a! Integer
-      @url_pages ||= @page_nums.map { |n| url(n) }
-      { 'url_prev' => num > 1 ? url(num - 1) : nil,
-        'url_next' => num < @total_pages ? url(num + 1) : nil,
-        'url_pages' => @url_pages }
+    private def page_of_data()
+      return @data unless @items_per_page
+      @data.merge(urls)
     end
 
     private def page_of_items()
@@ -64,8 +69,15 @@ module Tenji
 
     private def url(num)
       num.is_a! Integer
-      return @base_url if num == 1
+      return @base_url unless num > 1
       @base_url + @page_template.sub(/#num/, num.to_s)
+    end
+
+    private def urls()
+      @url_pages ||= @page_nums.map { |n| url(n) }
+      { 'url_prev' => @page_num > 1 ? url(@page_num - 1) : nil,
+        'url_next' => @page_num < @total_pages ? url(@page_num + 1) : nil,
+        'url_pages' => @url_pages }
     end
   end
 end
