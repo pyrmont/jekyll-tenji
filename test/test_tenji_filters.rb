@@ -75,13 +75,18 @@ class TenjiFiltersTest < Minitest::Test
         assert_equal 'Wednesday, Jul 05', res
       end
 
+      should "return the first argument if an empty array" do
+        period = [ ]
+        assert_equal period, @obj.format_period(period)
+      end
+
       should "return the first argument if not an array" do
         period = 'Not an array'
         assert_equal period, @obj.format_period(period)
       end
 
       should "raise an error if the arguments are invalid" do
-        assert_raises(StandardError) { @obj.format_period([ 0, 0, 0 ]) }
+        assert_raises(::ArgumentError) { @obj.format_period([ 0, 0, 0 ]) }
       end
     end
 

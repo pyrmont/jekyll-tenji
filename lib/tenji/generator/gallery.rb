@@ -30,7 +30,7 @@ module Tenji
         pages.is_a! Array
         name = 'index' + Tenji::Config.ext(:page, output: true)
         params = [ @gallery, 'images', @gallery.metadata['paginate'],
-                   @gallery.url + 'page-#num/' ]
+                   @gallery.url, 'page-#num/' ]
         gallery = Tenji::Paginator.new(*params)
         gallery.pages.each do |g|
           g = paged_metadata(gallery, g)

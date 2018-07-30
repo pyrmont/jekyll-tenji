@@ -21,7 +21,16 @@ class TenjiGalleryTest < Minitest::Test
         assert_equal '', obj.text
       end
 
-      should "initialize the Gallery object with different directory names" do
+      should "initialize the Gallery object with a hidden gallery" do
+        dir = Pathname.new 'test/data/gallery4/'
+        obj = Tenji::Gallery.new dir
+        obfuscated_name = Base64.urlsafe_encode64('gallery4', padding: false)
+        assert_equal Tenji::Gallery, obj.class
+        assert_equal 'gallery4', obj.dirnames['input']
+        assert_equal obfuscated_name, obj.dirnames['output']
+      end
+
+      should "initialize the Gallery object with a prefixed directory" do
         dir = Pathname.new 'test/data/05-gallery/'
         obj = Tenji::Gallery.new dir
         assert_equal Tenji::Gallery, obj.class
@@ -39,44 +48,62 @@ class TenjiGalleryTest < Minitest::Test
 
     context "has a method #<=> that" do
       setup do
+        Tenji::Config.configure
         dir = Pathname.new 'test/data/gallery1/'
         @obj = Tenji::Gallery.new dir
-      end
-
-      should "return a value for comparisons" do
-        lower_np = AnyType.new(methods: { 'dirnames' => { 'input' => 'a' },
+        
+        @lower_np = AnyType.new(methods: { 'dirnames' => { 'input' => 'a' },
                                           'metadata' => Hash.new })
-        equal_np = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
+        @equal_np = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
                                           'metadata' => Hash.new })
-        higher_np = AnyType.new(methods: { 'dirnames' => { 'input' => 'z' },
+        @higher_np = AnyType.new(methods: { 'dirnames' => { 'input' => 'z' },
                                            'metadata' => Hash.new })
 
         years = [ '1/01/1000', '1/01/2000', '1/01/3000' ]
         periods = years.map { |y| { 'period' => [ DateTime.parse(y) ] } }
-        lower_wp = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
+        @lower_wp = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
                                           'metadata' => periods[0] })
-        equal_wp = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
+        @equal_wp = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
                                           'metadata' => periods[1] })
-        higher_wp = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
+        @higher_wp = AnyType.new(methods: { 'dirnames' => { 'input' => 'gallery1' },
                                            'metadata' => periods[2] })
+      end
 
-        assert_equal 1, @obj <=> lower_np
-        assert_equal 0, @obj <=> equal_np
-        assert_equal -1, @obj <=> higher_np
+      teardown do
+        Tenji::Config.reset
+      end
 
-        assert_equal 1, @obj <=> lower_wp
-        assert_equal 1, @obj <=> equal_wp
-        assert_equal 1, @obj <=> higher_wp
+      should "return a value for comparisons" do
+        assert_equal 1, @obj <=> @lower_np
+        assert_equal 0, @obj <=> @equal_np
+        assert_equal -1, @obj <=> @higher_np
+
+        assert_equal 1, @obj <=> @lower_wp
+        assert_equal 1, @obj <=> @equal_wp
+        assert_equal 1, @obj <=> @higher_wp
 
         @obj.instance_variable_set :@metadata, { 'period' => [ DateTime.parse('1/01/2000') ] }
 
-        assert_equal -1, @obj <=> lower_np
-        assert_equal -1, @obj <=> equal_np
-        assert_equal -1, @obj <=> higher_np
+        assert_equal -1, @obj <=> @lower_np
+        assert_equal -1, @obj <=> @equal_np
+        assert_equal -1, @obj <=> @higher_np
 
-        assert_equal -1, @obj <=> lower_wp
-        assert_equal 0, @obj <=> equal_wp
-        assert_equal 1, @obj <=> higher_wp
+        assert_equal -1, @obj <=> @lower_wp
+        assert_equal 0, @obj <=> @equal_wp
+        assert_equal 1, @obj <=> @higher_wp
+      end
+
+      should "ignore periods if set in the configuration" do
+        @obj.instance_variable_set :@metadata, { 'period' => [ DateTime.parse('1/01/2000') ] }
+        Tenji::Config.configure({ 'sort' => { 'period' => 'ignore' } })
+
+        assert_equal 1, @obj <=> @lower_np
+        assert_equal 0, @obj <=> @equal_np
+        assert_equal -1, @obj <=> @higher_np
+
+        assert_equal 0, @obj <=> @lower_wp
+        assert_equal 0, @obj <=> @equal_wp
+        assert_equal 0, @obj <=> @higher_wp
       end
 
       should "raise an error if the comparator is not a Tenji::Image" do
@@ -94,6 +121,14 @@ class TenjiGalleryTest < Minitest::Test
         assert_equal images, data['images']
       end
       
+      should "return a Hash object with certain keys set for a gallery with specific settings" do
+        dir = Pathname.new 'test/data/gallery4'
+        obj = Tenji::Gallery.new dir
+        images = obj.instance_variable_get(:@images)
+        data = obj.data
+        assert_equal images.last, data['cover']
+        assert_equal images, data['images']
+      end
     end
 
     context "has a method #hidden? that" do

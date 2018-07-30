@@ -4,10 +4,11 @@ module Tenji
   class Paginator
     using Tenji::Refinements
 
-    def initialize(source, items_name, items_per_page, url_template)
+    def initialize(source, items_name, items_per_page, base_url, page_template)
       items_name.is_a! String
       items_per_page.is_maybe! Integer
-      url_template.is_a! String
+      base_url.is_a! String
+      page_template.is_a! String
 
       @source = source
       @items = @source.instance_variable_get("@#{items_name}")
@@ -16,7 +17,8 @@ module Tenji
       @total_pages = total_pages
       @page_nums = (1..@total_pages).to_a
       @page_num = 1
-      @url_template = url_template
+      @base_url = base_url
+      @page_template = page_template
       @cache = Hash.new
     end
 
@@ -62,7 +64,8 @@ module Tenji
 
     private def url(num)
       num.is_a! Integer
-      @url_template.sub(/#num/, num.to_s)
+      return @base_url if num == 1
+      @base_url + @page_template.sub(/#num/, num.to_s)
     end
   end
 end

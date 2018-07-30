@@ -7,6 +7,9 @@ module Tenji
     end
   end
 
+  class ConfigurationError < ::StandardError
+  end
+
   class NotAFileError < ::StandardError
   end
 

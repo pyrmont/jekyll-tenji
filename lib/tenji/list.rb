@@ -29,7 +29,7 @@ module Tenji
     def to_liquid()
       { 'galleries' => @galleries }
     end
-
+    
     private def init_metadata(frontmatter)
       frontmatter.is_a! Hash
       attrs = { 'galleries' => @galleries }

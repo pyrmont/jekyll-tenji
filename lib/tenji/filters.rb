@@ -56,7 +56,8 @@ module Tenji
       when 0
         period
       else
-        raise StandardError
+        msg = 'Period array contained too many elements'
+        raise ::ArgumentError, msg
       end
     end
 

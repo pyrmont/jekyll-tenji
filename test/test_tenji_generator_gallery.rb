@@ -43,10 +43,20 @@ class TenjiGeneratorGalleryTest < Minitest::Test
     end
 
     context "has a method #generate_index that" do
-      should "add to an array of Page objects" do
+      should "add a page to an array of Page objects" do
         pages = Array.new
         @generator.generate_index pages
-        assert_equal [ Tenji::Page::Gallery ], pages.map { |p| p.class }.uniq
+        assert_equal [ Tenji::Page::Gallery ], pages.map { |p| p.class }
+      end
+
+      should "add multiple pages to an array of Page objects" do
+        pages = Array.new
+        dir = Pathname.new 'test/data/gallery4'
+        gallery = Tenji::Gallery.new dir
+        generator = Tenji::Generator::Gallery.new gallery, @site, @base
+        generator.generate_index pages
+        type = Tenji::Page::Gallery
+        assert_equal [ type, type ], pages.map { |p| p.class }
       end
 
       should "raise an error if an invalid object is provided" do

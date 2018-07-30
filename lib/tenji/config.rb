@@ -68,7 +68,8 @@ module Tenji
       elsif value.downcase == 'desc'
         -1
       else
-        1
+        msg = "Sort value for #{type} in configuration file is invalid"
+        raise Tenji::ConfigurationError, msg
       end
     end
 

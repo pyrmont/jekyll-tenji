@@ -23,6 +23,29 @@ class TenjiRefinementsTest < Minitest::Test
       end
     end
 
+    context "refines Object with a method #is_maybe! that" do
+      should "return nil if the type matches" do
+        obj = 10
+        assert_nil obj.is_maybe!(Integer)
+        assert_nil obj.is_maybe!(Numeric)
+
+        obj = 'String'
+        assert_nil obj.is_maybe!(String)
+
+        obj = nil
+        assert_nil obj.is_maybe!(Integer)
+        assert_nil obj.is_maybe!(String)
+      end
+
+      should "raise an error if the type doesn't match" do
+        obj = 10
+        assert_raises(Tenji::TypeError) { obj.is_maybe!(String) }
+
+        obj = 'String'
+        assert_raises(Tenji::TypeError) { obj.is_maybe!(Integer) }
+      end
+    end
+    
     context "refines Pathname with a method #append_to_base that" do
       should "return a Pathname object with a string appended to the base" do
         obj = Pathname.new '/path/to/a/file.rb'

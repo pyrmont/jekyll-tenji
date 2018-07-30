@@ -189,6 +189,38 @@ class TenjiConfigTest < Minitest::Test
       end
     end
 
+    context "has a class method .sort that" do
+      setup do
+        @obj = Tenji::Config
+        @obj.configure
+      end
+
+      teardown do
+        @obj.reset
+      end
+
+      should "return a sort direction for a valid key" do
+        type = 'name'
+        assert_equal 1, @obj.sort(type)
+        type = 'period'
+        assert_equal -1, @obj.sort(type)
+        @obj.configure({ 'sort' => { 'period' => 'ignore' }})
+        type = 'period'
+        assert_equal :ignore, @obj.sort(type)
+      end
+
+      should "raise an error for an invalid order" do
+        @obj.configure({ 'sort' => { 'period' => 'down' } })
+        type = 'period'
+        assert_raises(Tenji::ConfigurationError) { @obj.sort(type) }
+      end
+
+      should "raise an error if the state object has not been set" do
+        @obj.reset
+        assert_raises(Tenji::ConfigurationNotSetError) { @obj.sort('period') }
+      end
+    end
+
     context "has a class method .suffix that" do
       setup do
         @obj = Tenji::Config

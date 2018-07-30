@@ -25,5 +25,14 @@ class TenjiListTest < Minitest::Test
         assert_raises(Tenji::NotFoundError) { Tenji::List.new dir, AnyType.new }
       end
     end
+
+    context "has a method #to_liquid that" do
+      should "return a Hash object with certain keys set" do
+        dir = Pathname.new 'test/data/_albums/'
+        list = Tenji::List.new dir, AnyType.new(methods: { 'foo' => 'bar' })
+        obj = list.to_liquid
+        assert_equal 'bar', obj['galleries'].foo
+      end
+    end
   end
 end

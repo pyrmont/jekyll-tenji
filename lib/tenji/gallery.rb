@@ -36,17 +36,13 @@ module Tenji
     def <=>(other)
       other.is_a! Tenji::Gallery
 
-      if Tenji::Config.sort('period') == :ignore
-        ignore_period = true
-      else
-        this_start = @metadata['period']&.first
-        other_start = other.metadata['period']&.first
-      end
+      this_start = @metadata['period']&.first
+      other_start = other.metadata['period']&.first
 
       name_sort = Tenji::Config.sort('name')
       period_sort = Tenji::Config.sort('period')
 
-      if ignore_period || this_start == other_start
+      if period_sort == :ignore || this_start == other_start
         (@dirnames['input'] <=> other.dirnames['input']) * name_sort
       elsif this_start.nil?
         1
