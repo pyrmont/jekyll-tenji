@@ -4,7 +4,7 @@ module Tenji
   class Gallery
     using Tenji::Refinements
 
-    attr_reader :dirnames, :images, :metadata, :text
+    attr_reader :cover, :dirnames, :images, :metadata, :text
 
     DEFAULTS = { 'title' => 'A Gallery',
                  'description' => '',
@@ -31,6 +31,7 @@ module Tenji
       @text = text
       @metadata = init_metadata fm
       @dirnames = init_dirnames dir
+      @cover = init_cover @metadata['cover']
     end
 
     def <=>(other)
@@ -54,7 +55,7 @@ module Tenji
     end
 
     def data()
-      attrs = { 'cover' => cover(@metadata['cover']),
+      attrs = { 'cover' => @cover,
                 'images' => images }
       @metadata.merge attrs
     end
@@ -65,7 +66,7 @@ module Tenji
 
     def to_liquid()
       attrs = { 'content' => @text,
-                'cover' => cover(@metadata['cover']),
+                'cover' => @cover,
                 'url' => url }
       @metadata.merge attrs
     end
@@ -77,10 +78,18 @@ module Tenji
       "/#{galleries}/#{gallery}/#{name}"
     end
 
-    private def cover(name)
-      return @images.first unless name
-      
-      @images.find { |i| i.name == name }
+    # private def cover(name)
+    #  return @images.first unless name
+    #  
+    #  @images.find { |i| i.name == name }
+    # end
+
+    private def init_cover(name)
+      source = name.nil? ? @images.first : @images.find { |i| i.name == name }
+      config = Tenji::Config.option('cover')
+      dimensions = { 'x' => config['x'], 'y' => config['y'] }
+      resize = config['resize']
+      Tenji::Thumb.new('cover', dimensions, resize, source)
     end
 
     private def init_dirnames(dir)

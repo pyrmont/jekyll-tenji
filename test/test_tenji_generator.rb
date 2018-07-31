@@ -31,9 +31,8 @@ class TenjiGeneratorTest < Minitest::Test
                      pages.map { |p| p.name }
 
         files = @site.static_files
-        assert_equal [ Tenji::File::Image, Tenji::File::Thumb, Tenji::File::Thumb ],
-                     files.map { |f| f.class }
-        filenames = [ '01-castle.jpg', '01-castle-small.jpg', '01-castle-small-2x.jpg' ]
+        assert_equal [ Tenji::File::Image, Tenji::File::Thumb, Tenji::File::Thumb, Tenji::File::Thumb, Tenji::File::Thumb ], files.map { |f| f.class }
+        filenames = [ '01-castle.jpg', '01-castle-cover.jpg', '01-castle-cover-2x.jpg', '01-castle-small.jpg', '01-castle-small-2x.jpg' ]
         assert_equal filenames, files.map { |f| f.name }
       end
 

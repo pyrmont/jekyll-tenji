@@ -19,7 +19,8 @@ class TenjiWriterThumbTest < Minitest::Test
         file = Pathname.new 'test/data/gallery2/01-castle.jpg'
         source = Tenji::Image.new file, Hash.new, AnyType.new
         dimensions = { 'x' => 400, 'y' => 400 }
-        @obj = Tenji::Thumb.new 'small', dimensions, source
+        resize = 'fit'
+        @obj = Tenji::Thumb.new 'small', dimensions, resize, source
         @input_file = file
         @output_file = @temp_dir + @obj.name
       end
@@ -28,9 +29,30 @@ class TenjiWriterThumbTest < Minitest::Test
         @output_file.delete if @output_file.exist?
       end
 
-      should "write a thumbnail to disk if the source is newer" do
+      should "write a thumbnail to disk with maximum dimensions if the source is newer" do
+        refute @output_file.exist?
         Tenji::Writer::Thumb.write @obj, @input_file, @temp_dir
         assert @output_file.exist?
+        output = Magick::Image.ping(@output_file).first
+        assert (output.rows == 400 || output.columns == 400)
+      end
+      
+      should "write a thumbnail to disk with a maximum width if the source is newer" do
+        @obj.instance_variable_set(:@dimensions, { 'x' => 400, 'y' => nil })
+        refute @output_file.exist?
+        Tenji::Writer::Thumb.write @obj, @input_file, @temp_dir
+        assert @output_file.exist?
+        output = Magick::Image.ping(@output_file).first
+        assert_equal 400, output.columns
+      end
+
+      should "write a thumbnail to disk with a maximum height if the source is newer" do
+        @obj.instance_variable_set(:@dimensions, { 'x' => nil, 'y' => 400 })
+        refute @output_file.exist?
+        Tenji::Writer::Thumb.write @obj, @input_file, @temp_dir
+        assert @output_file.exist?
+        output = Magick::Image.ping(@output_file).first
+        assert_equal 400, output.rows
       end
 
       should "do nothing if the source is older" do

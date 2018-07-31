@@ -33,11 +33,13 @@ class TenjiTest < Minitest::Test
                      'albums/gallery/01-castle.jpg',
                      'albums/gallery/index.html',
                      'albums/gallery/thumbs',
+                     'albums/gallery/thumbs/01-castle-cover-2x.jpg',
+                     'albums/gallery/thumbs/01-castle-cover.jpg',
                      'albums/gallery/thumbs/01-castle-small-2x.jpg',
                      'albums/gallery/thumbs/01-castle-small.jpg',
                      'albums/index.html' ]
         actual =  @temp_dir.glob('**/*').sort
-        assert_equal 9, actual.size
+        assert_equal 11, actual.size
         for i in 0...actual.size do
           assert_equal (@temp_dir + expected[i]).to_s, actual[i].to_s
         end

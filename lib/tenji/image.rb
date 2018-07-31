@@ -89,7 +89,9 @@ module Tenji
     private def init_thumbs(sizes)
       sizes.is_a! Hash
       sizes.keys.reduce(Hash.new) do |memo,s|
-        memo.update({ s => Tenji::Thumb.new(s, sizes[s], self) })
+        dimensions = { 'x' => sizes[s]['x'], 'y' => sizes[s]['y'] }
+        resize = sizes[s]['resize'] || 'fit'
+        memo.update({ s => Tenji::Thumb.new(s, dimensions, resize, self) })
       end
     end
 

@@ -19,16 +19,24 @@ module Tenji
         factors.each do |f|
           suffix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
           output_file = base_file.append_to_base suffix
-          dimensions = thumb.dimensions.transform_values { |v| v * f }
-          write_file source_file, output_file, dimensions
+          dimensions = thumb.dimensions.transform_values { |v| v.nil? ? v : v * f }
+          write_file source_file, output_file, dimensions, thumb.resize
         end
       end
 
-      private_class_method def self.write_file(input, output, dimensions)
+      private_class_method def self.write_file(input, output, dimensions, resize)
         return if output.exist? && (output.mtime > input.mtime)
+        
         image = Magick::ImageList.new input.realpath.to_s
         image.auto_orient!
-        image.resize_to_fit! dimensions['x'], dimensions['y']
+        
+        case resize
+        when 'fill'
+          image.resize_to_fill! dimensions['x'], dimensions['y']
+        when 'fit'
+          image.resize_to_fit! dimensions['x'], dimensions['y']
+        end
+        
         image.write output.to_s
         image.destroy!
       end

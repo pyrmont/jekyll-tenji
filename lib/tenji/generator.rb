@@ -86,6 +86,10 @@ module Tenji
         input_dir = base_dir + config.dir(:galleries) + g.dirnames['input']
         output_dir = base_dir + config.dir(:thumbs) + g.dirnames['output']
         output_dir.mkpath unless output_dir.exist?
+        
+        source_file = input_dir + g.cover.source.name
+        Tenji::Writer::Thumb.write g.cover, source_file, output_dir
+
         g.images.each do |i|
           source_file = input_dir + i.name
           i.thumbs.each_value do |t|

@@ -16,7 +16,8 @@ class TenjiThumbTest < Minitest::Test
         file = dir + '01-castle.jpg'
         @image = Tenji::Image.new file, Hash.new, AnyType.new
         @dimensions = { 'x' => 400, 'y' => 400 }
-        @obj = Tenji::Thumb.new 'small', @dimensions, @image
+        @resize = 'fit'
+        @obj = Tenji::Thumb.new 'small', @dimensions, @resize, @image
       end
 
       should "initialise a Thumb object" do
@@ -24,15 +25,17 @@ class TenjiThumbTest < Minitest::Test
         assert_equal '01-castle-small.jpg', @obj.name
         assert_equal 'small', @obj.size
         assert_equal @dimensions, @obj.dimensions
+        assert_equal @resize, @obj.resize
         assert_equal @image, @obj.source
       end
 
       should "raise an error if the arguments are invalid" do
         any = AnyType.new
         t = Tenji::Thumb
-        assert_raises(Tenji::TypeError) { t.new nil, any, any }
-        assert_raises(Tenji::TypeError) { t.new any, nil, any }
-        assert_raises(Tenji::TypeError) { t.new any, any, nil }
+        assert_raises(Tenji::TypeError) { t.new nil, any, any, any }
+        assert_raises(Tenji::TypeError) { t.new any, nil, any, any }
+        assert_raises(Tenji::TypeError) { t.new any, any, nil, any }
+        assert_raises(Tenji::TypeError) { t.new any, any, any, nil }
       end
     end
 
@@ -43,7 +46,8 @@ class TenjiThumbTest < Minitest::Test
         gallery = AnyType.new(methods: { 'dirnames' => { 'output' => 'gallery2' }})
         @image = Tenji::Image.new file, Hash.new, gallery
         @dimensions = { 'x' => 400, 'y' => 400 }
-        @obj = Tenji::Thumb.new 'small', @dimensions, @image
+        @resize = 'fit'
+        @obj = Tenji::Thumb.new 'small', @dimensions, @resize, @image
       end
 
       should "return a Hash object with certain keys set" do
@@ -51,8 +55,6 @@ class TenjiThumbTest < Minitest::Test
         assert_equal Hash, res.class
         assert_equal '01-castle-small.jpg', res['name']
         assert_equal '/albums/gallery2/thumbs/01-castle-small.jpg', res['url']
-        assert_equal 400, res['x']
-        assert_equal 400, res['y']
         assert_equal 'small', res['size']
         assert_equal @image, res['source']
       end

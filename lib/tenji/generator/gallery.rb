@@ -57,15 +57,13 @@ module Tenji
                                     @gallery.dirnames['output'])
         output_dirname = ::File.join(@output_dirname,
                                      Tenji::Config.dir('thumbs', output: true))
+
+        name = @gallery.cover.name
+        add_thumbnail files, factors, output_dirname, name, input_dirname
+        
         @gallery.images.each do |i|
-          i.thumbs.each_value do |t|
-            pos = t.name.rindex '.'
-            factors.each do |f|
-              fix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
-              name = t.name.infix(pos, fix)
-              params = [ @site, @base, output_dirname, name, input_dirname ]
-              files << Tenji::File::Thumb.new(*params)
-            end
+          i.thumbs.each_value do |t| 
+            add_thumbnail files, factors, output_dirname, t.name, input_dirname
           end
         end
       end
@@ -81,6 +79,16 @@ module Tenji
           ::File.join(@output_dirname, 'page-' + num.to_s)
         else
           @output_dirname
+        end
+      end
+
+      private def add_thumbnail(files, factors, output_dirname, name, input_dirname)
+        pos = name.rindex '.'
+        factors.each do |f|
+          fix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
+          basename = name.infix(pos, fix)
+          params = [ @site, @base, output_dirname, basename, input_dirname ]
+          files << Tenji::File::Thumb.new(*params)
         end
       end
     end

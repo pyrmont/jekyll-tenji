@@ -115,18 +115,20 @@ class TenjiGalleryTest < Minitest::Test
       should "return a Hash object with certain keys set for a gallery with minimal settings" do
         dir = Pathname.new 'test/data/gallery1'
         obj = Tenji::Gallery.new dir
+        cover = obj.instance_variable_get(:@cover)
         images = obj.instance_variable_get(:@images)
         data = obj.data
-        assert_equal images.first, data['cover']
+        assert_equal cover, data['cover']
         assert_equal images, data['images']
       end
       
       should "return a Hash object with certain keys set for a gallery with specific settings" do
         dir = Pathname.new 'test/data/gallery4'
         obj = Tenji::Gallery.new dir
+        cover = obj.instance_variable_get(:@cover)
         images = obj.instance_variable_get(:@images)
         data = obj.data
-        assert_equal images.last, data['cover']
+        assert_equal cover, data['cover']
         assert_equal images, data['images']
       end
     end
@@ -155,7 +157,7 @@ class TenjiGalleryTest < Minitest::Test
         res = @obj.to_liquid
         assert_equal Hash, res.class
         assert_equal "This is a gallery.\n", res['content']
-        assert_equal '01-castle.jpg', res['cover'].name
+        assert_equal '01-castle-cover.jpg', res['cover'].name
       end
     end
   end
