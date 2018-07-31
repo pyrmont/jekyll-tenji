@@ -14,7 +14,7 @@ module Tenji
                  'paginate' => 25,
                  'quality' => 'original',
                  'individual_pages' => false,
-                 'sizes' => { 'small' => { 'x' => 400, 'y' => 400 } } }
+                 'sizes' => { 'small' => { 'resize' => 'fit', 'x' => 400 } } }
 
     def initialize(dir)
       dir.is_a! Pathname
@@ -70,19 +70,13 @@ module Tenji
                 'url' => url }
       @metadata.merge attrs
     end
-    
+
     def url()
       galleries = Tenji::Config.dir 'galleries', output: true
       gallery = @dirnames['output']
       name = ''
       "/#{galleries}/#{gallery}/#{name}"
     end
-
-    # private def cover(name)
-    #  return @images.first unless name
-    #  
-    #  @images.find { |i| i.name == name }
-    # end
 
     private def init_cover(name)
       source = name.nil? ? @images.first : @images.find { |i| i.name == name }

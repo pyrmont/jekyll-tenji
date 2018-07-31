@@ -15,17 +15,17 @@ class TenjiThumbTest < Minitest::Test
         dir = Pathname.new 'test/data/gallery2'
         file = dir + '01-castle.jpg'
         @image = Tenji::Image.new file, Hash.new, AnyType.new
-        @dimensions = { 'x' => 400, 'y' => 400 }
-        @resize = 'fit'
-        @obj = Tenji::Thumb.new 'small', @dimensions, @resize, @image
+        @constraints = { 'x' => 400, 'y' => 400 }
+        @resize_function = 'fit'
+        @obj = Tenji::Thumb.new 'small', @constraints, @resize_function, @image
       end
 
       should "initialise a Thumb object" do
         assert_equal Tenji::Thumb, @obj.class
         assert_equal '01-castle-small.jpg', @obj.name
         assert_equal 'small', @obj.size
-        assert_equal @dimensions, @obj.dimensions
-        assert_equal @resize, @obj.resize
+        assert_equal @constraints, @obj.constraints
+        assert_equal @resize_function, @obj.resize_function
         assert_equal @image, @obj.source
       end
 

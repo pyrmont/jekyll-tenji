@@ -16,6 +16,9 @@ module Tenji
   class NotFoundError < ::StandardError
   end
 
+  class ResizeError < ::StandardError
+  end
+
   class TypeError < ::StandardError
   end
 end

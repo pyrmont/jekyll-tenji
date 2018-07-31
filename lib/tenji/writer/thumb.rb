@@ -19,24 +19,33 @@ module Tenji
         factors.each do |f|
           suffix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
           output_file = base_file.append_to_base suffix
-          dimensions = thumb.dimensions.transform_values { |v| v.nil? ? v : v * f }
-          write_file source_file, output_file, dimensions, thumb.resize
+          constraints = thumb.constraints.transform_values { |v| v.nil? ? v : v * f }
+          write_file source_file, output_file, constraints, thumb.resize_function
         end
       end
 
-      private_class_method def self.write_file(input, output, dimensions, resize)
-        return if output.exist? && (output.mtime > input.mtime)
-        
-        image = Magick::ImageList.new input.realpath.to_s
-        image.auto_orient!
-        
-        case resize
+      private_class_method def self.resize(image, constraints, resize_function)
+        case resize_function
         when 'fill'
-          image.resize_to_fill! dimensions['x'], dimensions['y']
+          msg = 'The fill resize function requires both constraints'
+          raise Tenji::ResizeError, msg unless constraints['x'] && constraints['y']
+          image.resize_to_fill! constraints['x'], constraints['y']
         when 'fit'
-          image.resize_to_fit! dimensions['x'], dimensions['y']
+          msg = 'The fit resize function requires at least one dimension'
+          raise Tenji::ResizeError, msg unless constraints['x'] || constraints['y']
+          image.resize_to_fit! constraints['x'], constraints['y']
+        else
+          msg = 'Unrecognised resize function'
+          raise StandardError, msg
         end
-        
+      end
+
+      private_class_method def self.write_file(input, output, constraints, resize_function)
+        return if output.exist? && (output.mtime > input.mtime)
+
+        image = Magick::Image.read(input.realpath.to_s).first
+        image.auto_orient!
+        resize image, constraints, resize_function
         image.write output.to_s
         image.destroy!
       end

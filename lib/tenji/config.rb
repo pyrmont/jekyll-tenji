@@ -12,7 +12,7 @@ module Tenji
                  'scale_max' => 2,
                  'scale_suffix_format' => '-#x',
                  'list_index' => true,
-                 'cover' => { 'resize' => 'fit', 'x' => 200, 'y' => 200 },
+                 'cover' => { 'resize' => 'fill', 'x' => 200, 'y' => 200 },
                  'sort' => { 'name' => 'asc', 'period' => 'desc' } }
 
     def self.configure(options = {})

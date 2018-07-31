@@ -60,16 +60,14 @@ module Tenji
     end
 
     private def image_next()
-      return nil if @position.nil?
-      return nil if @position + 1 == @gallery.images.length
-      
+      return nil unless @position && (@position + 1 < @gallery.images.length)
+
       @gallery.images[@position + 1]
     end
 
     private def image_prev()
-      return nil if @position.nil?
-      return nil if @position == 0
-      
+      return nil unless @position && @position > 0
+
       @gallery.images[@position - 1]
     end
 
@@ -88,11 +86,11 @@ module Tenji
 
     private def init_thumbs(sizes)
       sizes.is_a! Hash
-      sizes.keys.reduce(Hash.new) do |memo,s|
-        dimensions = { 'x' => sizes[s]['x'], 'y' => sizes[s]['y'] }
-        resize = sizes[s]['resize'] || 'fit'
-        memo.update({ s => Tenji::Thumb.new(s, dimensions, resize, self) })
-      end
+      sizes.map do |k,v|
+        constraints = v.slice('x', 'y')
+        resize_function = v['resize']
+        [ k, Tenji::Thumb.new(k, constraints, resize_function, self) ]
+      end.to_h
     end
 
     private def page_url()
@@ -105,7 +103,7 @@ module Tenji
     private def title_from_name()
       @name.sub /^\d+-/, ''
     end
-    
+
     private def url()
       galleries = Tenji::Config.dir 'galleries', output: true
       gallery = @gallery.dirnames['output']
