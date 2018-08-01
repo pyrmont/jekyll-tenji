@@ -23,7 +23,7 @@ module Tenji
 
       @global = Tenji::Config.settings('gallery') || Hash.new
 
-      fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file(:metadata))
+      fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file('metadata'))
       sizes = init_sizes fm
       quality = init_quality fm
 

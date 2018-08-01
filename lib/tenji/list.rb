@@ -17,7 +17,7 @@ module Tenji
       
       @global = Tenji::Config.settings('list') || Hash.new
 
-      fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file(:metadata))
+      fm, text = Tenji::Utilities.read_yaml(dir + Tenji::Config.file('metadata'))
 
       @dirname = dir.basename.to_s
       @galleries = galleries
