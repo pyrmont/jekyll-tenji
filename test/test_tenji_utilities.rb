@@ -68,7 +68,7 @@ class TenjiUtilitiesTest < Minitest::Test
                      'individual_pages' => true,
                      'paginate' => 15 }
         dir = Pathname.new 'test/data/gallery2'
-        file = dir + Tenji::Config.file(:metadata)
+        file = dir + Tenji::Config.file('metadata')
         data, content = Tenji::Utilities.read_yaml file
         assert_equal metadata, data
         assert_equal "This is a gallery.\n", content
@@ -76,7 +76,7 @@ class TenjiUtilitiesTest < Minitest::Test
 
       should "return empty objects if a metadata file doesn't exist" do
         dir = Pathname.new 'not/a/real/path'
-        file = dir + Tenji::Config.file(:metadata)
+        file = dir + Tenji::Config.file('metadata')
         data, content = Tenji::Utilities.read_yaml file
         assert_equal Hash.new, data
         assert_equal '', content
@@ -84,7 +84,7 @@ class TenjiUtilitiesTest < Minitest::Test
 
       should "raise an error if an invalid file is given" do
         dir = Pathname.new 'test/data/gallery3'
-        file = dir + Tenji::Config.file(:metadata)
+        file = dir + Tenji::Config.file('metadata')
         config = { 'strict_front_matter' => true }
         assert_raises(Psych::SyntaxError) do
           capture_io { Tenji::Utilities.read_yaml file, config }
@@ -93,7 +93,7 @@ class TenjiUtilitiesTest < Minitest::Test
 
       should "raise an error for invalid arguments" do
         u = Tenji::Utilities
-        file = Pathname.new('test/data/gallery1') + Tenji::Config.file(:metadata)
+        file = Pathname.new('test/data/gallery1') + Tenji::Config.file('metadata')
         assert_raises(Tenji::TypeError) { u.read_yaml file, nil }
         assert_raises(Tenji::TypeError) { u.read_yaml nil, Hash.new }
       end
