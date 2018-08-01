@@ -12,8 +12,8 @@ module Tenji
       Tenji::Config.configure(site.config['galleries'] || Hash.new)
 
       site_dir = Pathname.new site.source
-      input_dir = Pathname.new Tenji::Config.dir(:galleries)
-      output_dir = Pathname.new Tenji::Config.dir(:galleries, output: true)
+      input_dir = Pathname.new Tenji::Config.dir('galleries')
+      output_dir = Pathname.new Tenji::Config.dir('galleries', output: true)
       
       @galleries = init_galleries(site_dir + input_dir)
       @list = Tenji::List.new(site_dir + input_dir, @galleries['listed'])
@@ -83,8 +83,8 @@ module Tenji
       config = Tenji::Config
 
       galleries.each do |g|
-        input_dir = base_dir + config.dir(:galleries) + g.dirnames['input']
-        output_dir = base_dir + config.dir(:thumbs) + g.dirnames['output']
+        input_dir = base_dir + config.dir('galleries') + g.dirnames['input']
+        output_dir = base_dir + config.dir('thumbs') + g.dirnames['output']
         output_dir.mkpath unless output_dir.exist?
         
         source_file = input_dir + g.cover.source.name
