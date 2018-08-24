@@ -154,4 +154,30 @@ describe Tenji::Config do
       assert_equal (1..2), @obj.scale_factors
     end
   end
+
+  describe "::set" do
+    it "sets a new configuration option at the top level" do
+      assert_nil @config['foo']
+      @obj.set 'foo', 42
+      assert_equal 42, @config['foo']
+    end
+
+    it "sets an existing configuration option at the top level" do
+      assert_equal 10, @config['galleries_per_page']
+      @obj.set 'galleries_per_page', 42
+      assert_equal 42, @config['galleries_per_page']
+    end
+
+    it "sets a new configuration option at the gallery level" do
+      assert_nil @config['gallery']['foo']['bar']
+      @obj.set 'bar', 42, 'foo'
+      assert_equal 42, @config['gallery']['foo']['bar']
+    end
+
+    it "sets an existing configuration option at the gallery level" do
+      @config['gallery']['foo']['bar'] = 21
+      @obj.set 'bar', 42, 'foo'
+      assert_equal 42, @config['gallery']['foo']['bar']
+    end
+  end
 end
