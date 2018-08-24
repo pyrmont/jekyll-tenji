@@ -1,58 +1,195 @@
 require 'test_helper'
 
-class TenjiGeneratorTest < Minitest::Test
-  context "Tenji::Generator" do
-    setup do
-      Tenji::Config.configure
-      subdir = ('a'..'z').to_a.shuffle[0,8].join
-      @temp_dir = Pathname.new('tmp/' + subdir)
-      @temp_dir.mkpath
-      @site = TestSite.site source: 'test/data/site', dest: @temp_dir.to_s
-      @generator = Tenji::Generator.new
+describe Tenji::Generator do
+  before do
+    @config = Tenji::Config
+    @site = TestSite.site source: 'test/data/', dest: 'tmp/'
+  end
+
+  describe "#initialize" do
+    it "instantiates a Tenji::Generator object" do
+      generator = Tenji::Generator.new
+      assert_equal Tenji::Generator, generator.class
+      assert_equal Tenji::Config, generator.config
+      assert_equal Tenji::Queue, generator.pre.class
+      assert_equal Tenji::Queue, generator.post.class
+    end
+  end
+
+  describe "#read" do
+    before do
+      @config.configure({ 'galleries_dir' => 'test/data/_albums' })
+      @obj = Tenji::Generator.new
     end
 
-    teardown do
-      Tenji::Config.reset
-      @temp_dir.rmtree
-      @site = nil
+    after do
+      @config.reset
     end
 
-    context "has a method #generate that" do
-      should "add Gallery pages to a site object" do
-        assert_equal [], @site.pages
-        assert_equal [], @site.static_files
+    it "builds a queue of file paths" do
+      @obj.read
+      assert_equal({ 'gallery' => (@config.dir(:galleries) + 'gallery/index.md') }, @obj.pre.gallery_pages)
+      assert_equal({ 'gallery' => [ @config.dir(:galleries) + 'gallery/01-castle.jpg' ] }, @obj.pre.image_files)
+      assert_equal({ 'gallery' => { '01-castle' => (@config.dir(:galleries) + 'gallery/01-castle.md') } }, @obj.pre.image_pages)
+      assert_equal Hash.new, @obj.pre.thumb_files
+    end
+  end
 
-        @generator.generate @site
+  describe "#make" do
+    before do 
+      @config.configure
 
-        pages = @site.pages
-        assert_equal [ Tenji::Page::Gallery, Tenji::Page::Image, Tenji::Page::List ],
-                     pages.map { |p| p.class }
-        assert_equal [ 'index.html', '01-castle.html', 'index.html' ],
-                     pages.map { |p| p.name }
+      factory = TestFactory.new @site, list: [ nil ], galleries: [ 'gallery/index.md', 'gallery2/' ], images: [ 'gallery/01-castle.jpg' ], pages: [ 'gallery/01-castle.md' ], thumbs: [ 'gallery/01-castle-small.jpg' ], covers: [ 'gallery/cover.jpg' ]
 
-        files = @site.static_files
-        assert_equal [ Tenji::File::Image, Tenji::File::Thumb, Tenji::File::Thumb, Tenji::File::Thumb, Tenji::File::Thumb ], files.map { |f| f.class }
-        filenames = [ '01-castle.jpg', '01-castle-cover.jpg', '01-castle-cover-2x.jpg', '01-castle-small.jpg', '01-castle-small-2x.jpg' ]
-        assert_equal filenames, files.map { |f| f.name }
-      end
+      @obj = Tenji::Generator.new @site.config
+      @obj.site = @site
+      @obj.pre = Tenji::Queue.new(factory.make :paths)
 
-      should "raise an error with invalid arguments" do
-        assert_raises(Tenji::TypeError) { @generator.generate nil }
-      end
+      @expected = factory.make :entities, :hash
     end
 
-    context "has a private method #add_tenji that" do
-      should "add a Hash object to a payload variable" do
-        @generator.generate @site
-        galleries = @generator.instance_variable_get(:@galleries)
-        payload = Hash.new
-        @generator.send :add_tenji, @site, payload
-        obj = payload['tenji']
-        assert_equal Hash, obj.class
-        assert_equal galleries['all'], obj['all_galleries']
-        assert_equal galleries['listed'], obj['galleries']
-        assert_equal galleries['hidden'], obj['hidden_galleries']
+    after do
+      @config.reset
+    end
+
+    it "builds a queue of entities" do
+      @obj.make
+      assert_equal @expected[:list], @obj.post.list_page
+      assert_equal @expected[:galleries], @obj.post.gallery_pages
+      assert_equal @expected[:images], @obj.post.image_files
+      assert_equal @expected[:pages], @obj.post.image_pages
+      assert_equal @expected[:thumbs], @obj.post.thumb_files
+      assert_equal @expected[:covers], @obj.post.cover_files
+    end
+  end
+  
+  describe "#sort" do
+    before do
+      @config.configure
+
+      factory = TestFactory.new @site, list: [ nil ], galleries: [ '3/', '2/', '1/' ], images: [ '1/03.jpg', '1/01.jpg', '1/02.jpg' ], pages: nil, thumbs: nil, covers: nil
+
+      @obj = Tenji::Generator.new @site.config
+      @obj.post = Tenji::Queue.new(factory.make :entities)
+      @obj.galleries['all'] = @obj.post.gallery_pages.values
+
+      @expected = factory.make :entities, :hash
+    end
+
+    after do
+      @config.reset
+    end
+
+    it "sorts galleries and images based on filenames" do
+      @obj.sort
+      
+      gallery_pages = @expected[:galleries].values.sort
+      image_files = @expected[:images]['1'].sort.each.with_index { |el,i| el.position = i }
+
+      assert_equal gallery_pages, @obj.galleries['all']
+      assert_equal image_files, @obj.post.image_files['1']
+    end
+
+    it "sorts galleries based on internal data" do
+      @obj.post.gallery_pages['3'].data = { 'period' => [ DateTime.new(1970, 1, 1) ] }
+      @obj.sort
+
+      gallery_pages = @expected[:galleries]['3'].data = { 'period' => [ DateTime.new(1970, 1, 1) ] }
+      gallery_pages = @expected[:galleries].values.sort
+
+      assert_equal gallery_pages, @obj.galleries['all']
+    end
+  end
+
+  describe "#reference" do
+    before do
+      @config.configure
+
+      factory = TestFactory.new @site, list: [ nil ], galleries: [ 'gallery/index.md', 'gallery2/' ], images: [ 'gallery/01-castle.jpg' ], pages: [ 'gallery/01-castle.md' ], thumbs: [ 'gallery/01-castle-small.jpg' ], covers: [ 'gallery/covery.jpg' ]
+      
+      @obj = Tenji::Generator.new @site.config
+      @obj.post = Tenji::Queue.new(factory.make :entities)
+      @obj.galleries = { 'all' => @obj.post.gallery_pages.values, 'hidden' => nil, 'listed' => @obj.post.gallery_pages.values }
+    end
+
+    after do
+      @config.reset
+    end
+
+    it "adds references to the entities" do
+      @obj.reference
+
+      assert_equal @obj.post.gallery_pages.values, @obj.post.list_page.data['galleries']
+      assert_equal @obj.post.image_files['gallery'], @obj.post.gallery_pages['gallery'].data['images']
+      assert_equal @obj.post.cover_files['gallery'], @obj.post.gallery_pages['gallery'].data['cover']
+      assert_equal @obj.post.image_files['gallery2'], @obj.post.gallery_pages['gallery2'].data['images']
+      assert_equal @obj.post.thumb_files['gallery']['01-castle.jpg'], @obj.post.image_files['gallery'].first.data['sizes']
+      assert_equal @obj.post.image_files['gallery'].first.path, @obj.post.cover_files['gallery'].source_path
+    end
+  end
+  
+  describe "#write" do
+    before do
+      @config.configure
+
+      factory = TestFactory.new @site, images: [ 'gallery1/01.jpg', 'gallery1/02.jpg', 'gallery1/03.jpg' ], thumbs: [ 'gallery1/01-small.jpg', 'gallery1/02-small.jpg', 'gallery1/03-small.jpg' ], covers: [ 'gallery1/cover.jpg' ]
+      
+      site = TestSite.site source: 'test/data/', dest: 'tmp'
+      base = site.source
+      
+      @obj = Tenji::Generator.new site.config
+      @obj.post = Tenji::Queue.new(factory.make :entities)
+
+      @images = @obj.post.image_files['gallery1']
+      @thumbs = @obj.post.thumb_files['gallery1'].map { |k,v| v['small'] }
+      @cover = @obj.post.cover_files['gallery1']
+      
+      @thumbs.each.with_index { |t,index| t.source_path = @images[index].path }
+      @cover.source_path = @images.first.path
+      
+      @obj.writer = Minitest::Mock.new
+    end
+
+    after do
+      @config.reset
+    end
+
+    it "writes thumbnails with Tenji::Writer" do
+      @thumbs.each do |t|
+        @obj.writer.expect :write_thumb, nil, [ t.source_path, t.path, @config.constraints('small', 'gallery1'), @config.resize_function('small', 'gallery1'), @config.scale_factors ]
       end
+
+      @cover.yield_self do |c|
+        @obj.writer.expect :write_thumb, nil, [ c.source_path, c.path, @config.constraints(:cover), @config.resize_function(:cover), @config.scale_factors ]
+      end
+
+      @obj.write
+
+      @obj.writer.verify
+    end
+  end
+  
+  describe "#assign" do
+    before do
+      @config.configure
+
+      factory = TestFactory.new @site, list: [ nil ], galleries: [ 'gallery/index.md', 'gallery2/' ], images: [ 'gallery/01-castle.jpg' ], pages: [ 'gallery/01-castle.md' ], thumbs: [ 'gallery/01-castle-small.jpg' ], covers: [ 'gallery/cover.jpg' ]    
+      
+      @obj = Tenji::Generator.new @site.config
+      @obj.site = @site
+      @obj.post = Tenji::Queue.new(factory.make :entities)
+
+      @expected = factory.make :entities, :array, @obj.post.to_a, flatten: true
+    end
+
+    after do
+      @config.reset
+    end
+
+    it "assigns objects to the appropriate collections" do
+      @obj.assign
+      assert_equal [ @expected[0], *@expected[1], *@expected[3] ], @obj.site.pages
+      assert_equal [ *@expected[2], *@expected[4], *@expected[5] ], @obj.site.static_files
     end
   end
 end

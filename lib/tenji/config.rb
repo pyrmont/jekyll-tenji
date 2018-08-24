@@ -4,64 +4,119 @@ module Tenji
   module Config
     using Tenji::Refinements
 
-    DEFAULTS = { 'galleries_dir' => '_albums',
-                 'thumbs_dir' => '_thumbs',
-                 'metadata_file' => 'index.md',
-                 'input_page_ext' => '.md',
-                 'output_page_ext' => '.html',
-                 'scale_max' => 2,
-                 'scale_suffix_format' => '-#x',
-                 'list_index' => true,
-                 'cover' => { 'resize' => 'fill', 'x' => 200, 'y' => 200 },
-                 'sort' => { 'name' => 'asc', 'period' => 'desc' } }
+    DEFAULTS = { 
+      'cover'             => { 'resize' => 'fill', 'x' => 200, 'y' => 200 },
+      'galleries_dir'     => '_albums',
+      'list_index'        => true,
+      'scale_max'         => 2,
+      'scale_suffix'      => '-#x',
+      'sort'              => { 'name' => 'asc', 'period' => 'desc' },
+      'thumbs_dir'        => '_thumbs',
+      
+      'gallery_settings'  => {
+        'cover'         => nil,
+        'hidden'        => false,
+        'layout'        => 'gallery_index',
+        'original'      => true,
+        'paginate'      => 25,
+        'single_pages'  => true,
+        'sizes'         => { 'small' => { 'resize' => 'fit', 'x' => 400 } },
+        'sort'          => { 'name' => 'asc', 'period' => 'desc' }
+      }
+    }
+
+    def self.inspect
+      "<#{self.class} Tenji::Config>"
+    end
 
     def self.configure(options = {})
-      options.is_a! Hash
-      @config = DEFAULTS.deep_merge options
+      @config = defaults.deep_merge options
+      @config.update({ 'gallery' => Hash.new { |h,k| h[k] = Hash.new } } )
     end
 
     def self.reset()
       @config = nil
     end
 
-    def self.config
-      is_set!
+    def self.debug
       @config
     end
 
-    def self.dir(name, output: false)
-      is_set!
+    def self.add_config(name, options)
+      @config['gallery'][name] = options
+    end
+
+    def self.constraints(name, dirname = nil)
+      settings = case name
+                 when :cover
+                   option('cover')
+                 else
+                   option('sizes', dirname)[name]
+                 end
+      settings.slice('x', 'y')
+    end
+
+    def self.cover(name)
+      option('cover', name)
+    end
+    
+    def self.dir(name)
       key = name.to_s + '_dir'
-      (output) ? @config[key].delete_prefix('_') : @config[key]
+      dirname = option key
+      dirname ? Tenji::Path.new(dirname) : nil
     end
 
-    def self.ext(name, output: false)
-      is_set!
-      key = (output) ? 'output_' + name.to_s + '_ext' :
-                       'input_' + name.to_s + '_ext'
-      @config[key]
+    def self.hidden?(dirname)
+      option('hidden', dirname)
     end
 
-    def self.file(name)
-      is_set!
-      key = name.to_s + '_file'
-      @config[key]
+    def self.items_per_page(dirname)
+      option('paginate', dirname)
     end
 
-    def self.option(name)
-      is_set!
-      @config[name]
+    def self.option(name, dirname = nil)
+      if dirname
+        @config['gallery'][dirname][name] || @config['gallery_settings'][name]
+      else
+        @config[name]
+      end
+    end
+
+    def self.resize_function(name, dirname = nil)
+      settings = case
+                 when :cover
+                   option('cover')
+                 else
+                   option('sizes', dirname)[name]
+                 end
+      settings['resize']
+    end
+    
+    def self.scale_factors()
+      1..option('scale_max')
+    end
+
+    def self.set(name, value, dirname = nil)
+      settings = (dirname) ? @config['gallery'][dirname] : @config
+
+      if name.is_a? Array
+        key = name.pop
+        setting = name.reduce(settings) { |memo,k| memo.fetch(k) }
+      else
+        key = name
+        setting = settings
+      end
+
+      setting[key] = value
     end
 
     def self.settings(name)
-      is_set!
       key = name.to_s + '_settings'
-      @config[key]
+      option(key)
     end
 
-    def self.sort(type)
-      is_set!
-      value = @config['sort'][type]
+    def self.sort(type, dirname = nil)
+      value = option('sort', dirname)[type]
       if type == 'period' && value == 'ignore'
         :ignore
       elsif value.downcase == 'asc'
@@ -74,17 +129,21 @@ module Tenji
       end
     end
 
-    def self.suffix(type, factor: nil)
-      is_set!
+    def self.thumb_sizes(dirname)
+      option('sizes', dirname)
+    end
 
-      if type.to_s == 'scale'
-        msg = 'Scale must be an Integer'
-        raise ::ArgumentError, msg unless factor.is_a? Integer
-        key = type.to_s + '_suffix_format'
-        @config[key]&.sub('#', factor.to_s)
-      else
-        nil
+    private_class_method def self.deep_copy(hsh)
+      res = Hash.new
+      hsh.each do |k,v|
+        value = v.is_a?(Hash) ? deep_copy(v) : v.dup
+        res[k] = value
       end
+      res
+    end
+
+    private_class_method def self.defaults()
+      deep_copy DEFAULTS
     end
 
     private_class_method def self.is_set!()

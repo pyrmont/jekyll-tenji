@@ -31,12 +31,6 @@ module Tenji
     end
 
     refine Pathname do
-      def append_to_base(str)
-        ext = self.extname
-        base = self.sub_ext('').to_s
-        Pathname.new(base + str + ext)
-      end
-
       def exist!()
         return if self.exist?
         msg = "#{self} does not exist"

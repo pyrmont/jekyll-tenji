@@ -1,257 +1,138 @@
 require 'test_helper'
 
-class TenjiConfigTest < Minitest::Test
-  context "Tenji::Config" do
-    setup do
-      @defaults = Tenji::Config::DEFAULTS
+describe Tenji::Config do
+  before do
+    @obj = Tenji::Config
+    @obj.configure
+    @config = @obj.instance_variable_get :@config
+  end
+
+  after do
+    @obj.reset
+    @config = nil
+  end
+
+  describe "::configure" do
+    before do
+      @defaults = Tenji::Config::DEFAULTS.dup.update({ 'gallery' => Hash.new })
+      @obj.reset
     end
 
-    context "has a class method .configure that" do
-      should "return a Hash with default values with no arguments" do
-        obj = Tenji::Config.configure
-        assert_equal 'Hash', obj.class.name
-        assert_equal @defaults, obj
-        Tenji::Config.reset
-      end
-
-      should "return a Hash with custom values with an options hash" do
-        options = { 'galleries_dir' => '_galleries' }
-        obj = Tenji::Config.configure options
-        assert_equal options['galleries_dir'], obj['galleries_dir']
-        assert_equal @defaults['thumbs_dir'], obj['thumbs_dir']
-        Tenji::Config.reset
-      end
-
-      should "raise an error if an invalid argument is passed" do
-        assert_raises(Tenji::TypeError) { Tenji::Config.configure nil }
-      end
+    it "configures the Tenji::Config object with the default settings" do
+      @obj.configure
+      assert_equal @defaults, @obj.instance_variable_get(:@config)
     end
 
-    context "has a class method .reset that" do
-      should "set the state object to nil" do
-        Tenji::Config.configure
-        obj = Tenji::Config.config
-        assert_equal @defaults, obj
-        Tenji::Config.reset
-        assert_nil Tenji::Config.instance_variable_get :@config
-      end
+    it "configures the Tenji::Config object with the custom settings" do
+      @obj.configure({ 'paginate' => 5 })
+      assert_equal @defaults.merge({ 'paginate' => 5 }), @obj.instance_variable_get(:@config)
+    end
+  end
+
+  describe "::reset" do
+    it "resets the settings of Tenji::Config" do
+      assert @obj.instance_variable_get(:@config)
+      @obj.reset
+      assert_nil @obj.instance_variable_get(:@config)
+    end
+  end
+
+  describe "::debug" do
+    it "returns the internal Hash object used to store the settings" do
+      assert_equal @config, @obj.debug
+    end
+  end
+
+  describe "::add_config" do
+    it "adds configuration options for a gallery" do
+      assert_equal Hash.new, @config['gallery']['foo']
+      @obj.add_config 'foo', { 'bar' => 42 }
+      assert_equal 42, @config['gallery']['foo']['bar']
+    end
+  end
+
+  describe "::constraints" do
+    it "returns the size constraints for the cover" do
+      assert_equal Hash['x' => 200, 'y' => 200], @obj.constraints(:cover)
     end
 
-    context "has a class method .config that" do
-      should "return the state object" do
-        Tenji::Config.configure
-        obj = Tenji::Config.config
-        assert_equal @defaults, obj
-        Tenji::Config.reset
-      end
+    it "returns the size constraints for an arbitrary size and gallery" do
+      @config['gallery']['foo']['sizes'] = { 'unusual' => { 'resize' => 'fit', 'x' => 300, 'y' => 50 } }
+      assert_equal Hash['x' => 300, 'y' => 50], @obj.constraints('unusual', 'foo')
+    end
+  end
 
-      should "raise an error if the state object has not been set" do
-        assert_raises(Tenji::ConfigurationNotSetError) { Tenji::Config.config }
-      end
+  describe "::cover" do
+    it "returns the filename of the cover image if set for the gallery" do
+      @config['gallery']['foo']['cover'] = 'bar.jpg'
+      assert_equal 'bar.jpg', @obj.cover('foo')
+    end
+    
+    it "returns nil if no cover image set for the gallery" do
+      assert_nil @obj.cover('foo')
+    end
+  end
+  
+  describe "::dir" do
+    it "returns a Tenji::Path object for either :galleries or :thumbs" do
+      assert_equal Tenji::Path.new('_albums'), @obj.dir(:galleries)
+      assert_equal Tenji::Path.new('_thumbs'), @obj.dir(:thumbs)
     end
 
-    context "has a class method .dir that" do
-      setup do
-        @obj = Tenji::Config
-        @obj.configure
-      end
+    it "returns nil if the key doesn't exist" do
+      assert_nil @obj.dir('foo')
+    end
+  end
 
-      teardown do
-        @obj.reset
-      end
-
-      should "return a directory name for a valid key" do
-        dirname = 'galleries'
-        default_dir = @defaults[dirname + '_dir']
-        assert_equal default_dir, @obj.dir(dirname)
-        assert_equal default_dir.delete_prefix('_'),
-                     @obj.dir(dirname, output: true)
-      end
-
-      should "return nil for a non-existent key" do
-        assert_nil @obj.dir('Does not exist')
-      end
-
-      should "raise an error if the state object has not been set" do
-        @obj.reset
-        assert_raises(Tenji::ConfigurationNotSetError) { @obj.dir 'something' }
-      end
+  describe "::hidden?" do
+    it "returns true if the given gallery is hidden" do
+      @config['gallery']['foo']['hidden'] = true
+      assert @obj.hidden?('foo')
     end
 
-    context "has a class method .ext that" do
-      setup do
-        @obj = Tenji::Config
-        @obj.configure
-      end
+    it "returns false if the given gallery is not hidden" do
+      @config['gallery']['foo']['hidden'] = false
+      refute @obj.hidden?('foo')
+    end
+    
+    it "returns the default value if there is no setting for the given gallery" do
+      refute @obj.hidden?('foo')
+      @config['gallery_settings']['hidden'] = true
+      assert @obj.hidden?('foo')
+    end
+  end
 
-      teardown do
-        @obj.reset
-      end
-
-      should "return an extension name for a valid key" do
-        extname = 'page'
-        default_internal_ext = @defaults['input_' + extname + '_ext']
-        default_external_ext = @defaults['output_' + extname + '_ext']
-        assert_equal default_internal_ext, @obj.ext(extname)
-        assert_equal default_external_ext, @obj.ext(extname, output: true)
-      end
-
-      should "return nil for a non-existent key" do
-        assert_nil @obj.ext('Does not exist')
-      end
-
-      should "raise an error if the state object has not been set" do
-        @obj.reset
-        assert_raises(Tenji::ConfigurationNotSetError) { @obj.ext 'something' }
-      end
+  describe "::items_per_page" do
+    it "returns the number of items which trigger a new page for a given gallery" do
+      @config['gallery']['foo']['paginate'] = 100
+      assert_equal 100, @obj.items_per_page('foo')
     end
 
-    context "has a class method .file that" do
-      setup do
-        @obj = Tenji::Config
-        @obj.configure
-      end
+    it "returns the default number of items which trigger a new page if there is no setting for the given gallery" do
+      assert_equal 25, @obj.items_per_page('foo')
+    end
+  end
 
-      teardown do
-        @obj.reset
-      end
-
-      should "return a file name for a valid key" do
-        filename = 'metadata'
-        default_filename = @defaults['metadata_file']
-        assert_equal default_filename, @obj.file(filename)
-      end
-
-      should "return nil for a non-existent key" do
-        assert_nil @obj.file('Does not exist')
-      end
-
-      should "raise an error if the state object has not been set" do
-        @obj.reset
-        assert_raises(Tenji::ConfigurationNotSetError) { @obj.file 'something' }
-      end
+  describe "::option" do
+    it "returns a setting for a given key" do
+      assert_equal '_albums', @obj.option('galleries_dir')
     end
 
-    context "has a class method .option that" do
-      setup do
-        @obj = Tenji::Config
-        @obj.configure
-      end
-
-      teardown do
-        @obj.reset
-      end
-
-      should "return the option for a valid key" do
-        key = 'galleries_dir'
-        default_value = @defaults[key]
-        assert_equal default_value, @obj.option(key)
-      end
-
-      should "return nil for a non-existent key" do
-        assert_nil @obj.option('Does not exist')
-      end
-
-      should "raise an error if the state object has not been set" do
-        @obj.reset
-        assert_raises(Tenji::ConfigurationNotSetError) do
-          @obj.option 'something'
-        end
-      end
+    it "returns a setting for a given key and a given gallery" do
+      assert_equal 'gallery_index', @obj.option('layout', 'foo')
+      @config['gallery']['foo']['layout'] = 'custom'
+      assert_equal 'custom', @obj.option('layout', 'foo')
     end
 
-    context "has a class method .settings that" do
-      setup do
-        @settings = { 'gallery_settings' => { 'originals' => false } }
-        @obj = Tenji::Config
-        @obj.configure @settings
-      end
-
-      teardown do
-        @obj.reset
-      end
-
-      should "return a file name for a valid key" do
-        setting_name = 'gallery'
-        assert_equal @settings[setting_name + '_settings'],
-                     @obj.settings(setting_name)
-      end
-
-      should "return nil for a non-existent key" do
-        assert_nil @obj.settings('Does not exist')
-      end
-
-      should "raise an error if the state object has not been set" do
-        @obj.reset
-        assert_raises(Tenji::ConfigurationNotSetError) do
-          @obj.settings 'something'
-        end
-      end
+    it "returns nil if the key doesn't exist" do
+      assert_nil @obj.option('foo')
+      assert_nil @obj.option('scale_max', 'foo')
     end
+  end
 
-    context "has a class method .sort that" do
-      setup do
-        @obj = Tenji::Config
-        @obj.configure
-      end
-
-      teardown do
-        @obj.reset
-      end
-
-      should "return a sort direction for a valid key" do
-        type = 'name'
-        assert_equal 1, @obj.sort(type)
-        type = 'period'
-        assert_equal -1, @obj.sort(type)
-        @obj.configure({ 'sort' => { 'period' => 'ignore' }})
-        type = 'period'
-        assert_equal :ignore, @obj.sort(type)
-      end
-
-      should "raise an error for an invalid order" do
-        @obj.configure({ 'sort' => { 'period' => 'down' } })
-        type = 'period'
-        assert_raises(Tenji::ConfigurationError) { @obj.sort(type) }
-      end
-
-      should "raise an error if the state object has not been set" do
-        @obj.reset
-        assert_raises(Tenji::ConfigurationNotSetError) { @obj.sort('period') }
-      end
-    end
-
-    context "has a class method .suffix that" do
-      setup do
-        @obj = Tenji::Config
-        @obj.configure
-      end
-
-      teardown do
-        @obj.reset
-      end
-
-      should "return a suffix if key is 'scale' and factor is valid" do
-        suffix = 'scale'
-        factor = 2
-        assert_equal @defaults['scale_suffix_format'].sub('#', factor.to_s),
-                     @obj.suffix('scale', factor: factor)
-      end
-
-      should "raise an error if key is 'scale' and factor is invalid" do
-        assert_raises(::ArgumentError) { @obj.suffix('scale', 'a') }
-      end
-
-      should "return nil for a non-existent key" do
-        assert_nil @obj.suffix('Does not exist')
-      end
-
-      should "raise an error if the state object has not been set" do
-        @obj.reset
-        assert_raises(Tenji::ConfigurationNotSetError) do
-          @obj.suffix('something')
-        end
-      end
+  describe "::resize_function" do
+    it "returns the resize function for the cover image" do
+      assert_equal 'fill', @obj.resize_function(:cover)
     end
   end
 end

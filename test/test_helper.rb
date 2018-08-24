@@ -2,15 +2,12 @@ require 'simplecov'
 SimpleCov.start
 
 require 'minitest/autorun'
-require 'minitest/reporters'
-require 'shoulda/context'
-
-# Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
-# Minitest::Reporters.use!
 
 require 'pathname'
 require 'jekyll'
 require 'jekyll-tenji'
+
+require 'test_factory'
 
 Jekyll.logger.log_level = :error
 

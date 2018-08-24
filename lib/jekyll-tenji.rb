@@ -11,25 +11,22 @@ require 'tenji/exceptions'
 require 'tenji/refinements'
 
 require 'tenji/config'
+require 'tenji/path'
+require 'tenji/queue'
 require 'tenji/utilities'
-
-require 'tenji/paginator'
+require 'tenji/writer'
 
 require 'tenji/generator'
 
-require 'tenji/image'
-require 'tenji/gallery'
-require 'tenji/list'
-require 'tenji/thumb'
+require 'tenji/convertible'
+require 'tenji/pageable'
+require 'tenji/scalable'
 
-require 'tenji/file/image'
-require 'tenji/file/thumb'
-require 'tenji/generator/gallery'
-require 'tenji/generator/list'
-require 'tenji/page/gallery'
-require 'tenji/page/image'
-require 'tenji/page/list'
-require 'tenji/writer/thumb'
+require "tenji/gallery_page"
+require "tenji/image_file"
+require "tenji/image_page"
+require "tenji/list_page"
+require "tenji/thumb_file"
 
 require 'tenji/filters'
 

@@ -22,15 +22,13 @@ Gem::Specification.new do |spec|
 
   spec.requirements << "imagemagick, >=v6.9 (RMagick dependency)"
 
-  spec.add_runtime_dependency "rmagick", "~> 2.16.0"
-  spec.add_runtime_dependency "exifr", "~> 1.3.0"
+  spec.add_runtime_dependency "rmagick", "~> 2.16"
+  spec.add_runtime_dependency "exifr", "~> 1.3"
 
   spec.add_development_dependency "bundler", "~> 1.12"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "jekyll", "~> 3.8.3"
-  spec.add_development_dependency "minitest", "~> 5.10.3"
-  spec.add_development_dependency "minitest-reporters", "~> 1.1.19"
-  spec.add_development_dependency "shoulda-context", "~> 1.2.0"
-  spec.add_development_dependency "simplecov", "~> 0.15.1"
-  spec.add_development_dependency "yard", "~> 0.9.12"
+  spec.add_development_dependency "jekyll", "~> 3.8"
+  spec.add_development_dependency "minitest", "~> 5.11"
+  spec.add_development_dependency "simplecov", "~> 0.15"
+  spec.add_development_dependency "yard", "~> 0.9"
 end
