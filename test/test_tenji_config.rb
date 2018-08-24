@@ -148,4 +148,10 @@ describe Tenji::Config do
       assert_equal 'custom', @obj.resize_function('large', 'foo')
     end
   end
+
+  describe "::scale_factors" do
+    it "returns a range from 1 to the maximum scale factor" do
+      assert_equal (1..2), @obj.scale_factors
+    end
+  end
 end
