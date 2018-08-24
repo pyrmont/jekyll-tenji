@@ -5,23 +5,24 @@ module Tenji
     using Tenji::Refinements
 
     DEFAULTS = { 
-      'cover'             => { 'resize' => 'fill', 'x' => 200, 'y' => 200 },
-      'galleries_dir'     => '_albums',
-      'list_index'        => true,
-      'scale_max'         => 2,
-      'scale_suffix'      => '-#x',
-      'sort'              => { 'name' => 'asc', 'period' => 'desc' },
-      'thumbs_dir'        => '_thumbs',
+      'cover'               => { 'resize' => 'fill', 'x' => 200, 'y' => 200 },
+      'galleries_dir'       => '_albums',
+      'galleries_per_page'  => 10,
+      'list_index'          => true,
+      'scale_max'           => 2,
+      'scale_suffix'        => '-#x',
+      'sort'                => { 'name' => 'asc', 'period' => 'desc' },
+      'thumbs_dir'          => '_thumbs',
       
-      'gallery_settings'  => {
-        'cover'         => nil,
-        'hidden'        => false,
-        'layout'        => 'gallery_index',
-        'original'      => true,
-        'paginate'      => 25,
-        'single_pages'  => true,
-        'sizes'         => { 'small' => { 'resize' => 'fit', 'x' => 400 } },
-        'sort'          => { 'name' => 'asc', 'period' => 'desc' }
+      'gallery_settings'    => {
+        'cover'           => nil,
+        'hidden'          => false,
+        'images_per_page' => 25,
+        'layout'          => 'gallery_index',
+        'original'        => true,
+        'single_pages'    => true,
+        'sizes'           => { 'small' => { 'resize' => 'fit', 'x' => 400 } },
+        'sort'            => { 'name' => 'asc', 'period' => 'desc' }
       }
     }
 
@@ -70,8 +71,12 @@ module Tenji
       option('hidden', dirname)
     end
 
-    def self.items_per_page(dirname)
-      option('paginate', dirname)
+    def self.items_per_page(dirname = nil)
+      if dirname
+        option('images_per_page', dirname)
+      else
+        option('galleries_per_page')
+      end
     end
 
     def self.option(name, dirname = nil)

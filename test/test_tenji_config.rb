@@ -24,8 +24,8 @@ describe Tenji::Config do
     end
 
     it "configures the Tenji::Config object with the custom settings" do
-      @obj.configure({ 'paginate' => 5 })
-      assert_equal @defaults.merge({ 'paginate' => 5 }), @obj.instance_variable_get(:@config)
+      @obj.configure({ 'foo' => 5 })
+      assert_equal @defaults.merge({ 'foo' => 5 }), @obj.instance_variable_get(:@config)
     end
   end
 
@@ -104,7 +104,7 @@ describe Tenji::Config do
 
   describe "::items_per_page" do
     it "returns the number of items which trigger a new page for a given gallery" do
-      @config['gallery']['foo']['paginate'] = 100
+      @config['gallery']['foo']['images_per_page'] = 100
       assert_equal 100, @obj.items_per_page('foo')
     end
 

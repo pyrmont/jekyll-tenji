@@ -178,7 +178,7 @@ describe Tenji::GalleryPage do
     end
 
     it "uses the method defined on Jekyll::Convertible" do
-      @config.set [ 'gallery_settings', 'paginate' ], false
+      @config.set [ 'gallery_settings', 'images_per_page' ], false
       @obj = Tenji::GalleryPage.new @site, @base, '_albums/other', nil
       
       method = @obj.method(:write)
@@ -189,7 +189,7 @@ describe Tenji::GalleryPage do
       before do
         Tenji::GalleryPage.class_eval { def write(dest) puts destination(dest) end }
 
-        @config.set [ 'gallery_settings', 'paginate' ], 1
+        @config.set [ 'gallery_settings', 'images_per_page' ], 1
         factory = TestFactory.new @site, images: [ 'gallery/1.jpg', 'gallery/2.jpg', 'gallery/3.jpg' ]
         
         @obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery', nil
