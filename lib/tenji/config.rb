@@ -88,7 +88,7 @@ module Tenji
     end
 
     def self.resize_function(name, dirname = nil)
-      settings = case
+      settings = case name
                  when :cover
                    option('cover')
                  else

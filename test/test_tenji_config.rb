@@ -138,5 +138,14 @@ describe Tenji::Config do
     it "returns the resize function for the cover image" do
       assert_equal 'fill', @obj.resize_function(:cover)
     end
+
+    it "returns the default resize function for a given gallery and given thumbnail size" do
+      assert_equal 'fit', @obj.resize_function('small', 'foo')
+    end
+
+    it "returns the custom resize function for a given gallery and given thumbnail size" do
+      @config['gallery']['foo']['sizes'] = { 'large' => { 'resize' => 'custom' } }
+      assert_equal 'custom', @obj.resize_function('large', 'foo')
+    end
   end
 end
