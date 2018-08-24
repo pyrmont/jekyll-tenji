@@ -103,6 +103,10 @@ describe Tenji::Config do
   end
 
   describe "::items_per_page" do
+    it "returns the number of items which trigger a new page for the list" do
+      assert_equal 10, @obj.items_per_page
+    end
+
     it "returns the number of items which trigger a new page for a given gallery" do
       @config['gallery']['foo']['images_per_page'] = 100
       assert_equal 100, @obj.items_per_page('foo')
