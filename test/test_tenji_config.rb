@@ -180,4 +180,10 @@ describe Tenji::Config do
       assert_equal 42, @config['gallery']['foo']['bar']
     end
   end
+
+  describe "::settings" do
+    it "returns the settings associated with a key" do
+      assert_equal @config['gallery_settings'], @obj.settings(:gallery)
+    end
+  end
 end
