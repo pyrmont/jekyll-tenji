@@ -221,4 +221,11 @@ describe Tenji::Config do
       assert_equal @ignore, @obj.sort('period', 'foo')
     end
   end
+
+  describe "::thumb_sizes" do
+    it "returns the settings for thumbs" do
+      expected = { 'small' => { 'resize' => 'fit', 'x' => 400 } }
+      assert_equal expected, @obj.thumb_sizes('foo')
+    end
+  end
 end
