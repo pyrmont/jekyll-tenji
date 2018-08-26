@@ -186,4 +186,39 @@ describe Tenji::Config do
       assert_equal @config['gallery_settings'], @obj.settings(:gallery)
     end
   end
+
+  describe "::sort" do
+    before do
+      @asc = 1
+      @desc = -1
+      @ignore = :ignore
+    end
+
+    it "returns the default sort order for the top-level setting" do
+      assert_equal @asc, @obj.sort('name')
+      assert_equal @desc, @obj.sort('period')
+    end
+
+    it "returns the default sort order for the gallery-level setting" do
+      assert_equal @asc, @obj.sort('name', 'foo')
+      assert_equal @desc, @obj.sort('period', 'foo')
+    end
+
+    it "returns a descending sort order" do
+      @config['gallery']['foo']['sort'] = { 'name' => 'desc', 'period' => 'desc' }
+      assert_equal @desc, @obj.sort('name', 'foo')
+      assert_equal @desc, @obj.sort('period', 'foo')
+    end
+
+    it "returns an ascending sort order" do
+      @config['gallery']['foo']['sort'] = { 'name' => 'asc', 'period' => 'asc' }
+      assert_equal @asc, @obj.sort('name', 'foo')
+      assert_equal @asc, @obj.sort('period', 'foo')
+    end
+
+    it "returns an ignore code for a characteristic to ignore" do
+      @config['gallery']['foo']['sort'] = { 'period' => 'ignore' }
+      assert_equal @ignore, @obj.sort('period', 'foo')
+    end
+  end
 end
