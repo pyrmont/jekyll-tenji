@@ -36,4 +36,12 @@ describe Tenji::ImagePage do
       assert_nil obj.content
     end  
   end  
+
+  describe "#image=" do
+    it "assigns the parameter" do
+      image = Object.new
+      @obj.image = image
+      assert_equal image, @obj.data['image']
+    end
+  end
 end
