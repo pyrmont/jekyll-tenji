@@ -39,6 +39,18 @@ describe Tenji::GalleryPage do
       assert_nil obj.content
       assert_equal 25, obj.instance_variable_get(:@__items_per_page__)
     end
+
+    it "instantiates a Tenji::GalleryPage object for a directory without a numeric prefix" do
+      obj = Tenji::GalleryPage.new @site, @base, '_albums/01-gallery', nil 
+      assert_equal Tenji::GalleryPage, obj.class
+      assert_equal '01-gallery', obj.gallery_name
+      assert_equal '', obj.path
+      assert_equal 'index', obj.basename
+      assert_equal '.html', obj.ext
+      assert_equal '/albums/gallery/', obj.dir 
+      assert_nil obj.content
+      assert_equal 25, obj.instance_variable_get(:@__items_per_page__)
+    end
   end
 
   describe "#initialize_copy" do
