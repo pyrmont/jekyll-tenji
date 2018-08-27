@@ -155,6 +155,16 @@ describe Tenji::Config do
     end
   end
 
+  describe "::scale_suffix" do
+    it "returns an empty string for a factor of 1" do
+      assert_equal '', @obj.scale_suffix(1)
+    end
+
+    it "returns a modified string for a factor that is not 1" do
+      assert_equal '-2x', @obj.scale_suffix(2)
+    end
+  end
+
   describe "::set" do
     it "sets a new configuration option at the top level" do
       assert_nil @config['foo']
