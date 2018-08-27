@@ -55,4 +55,12 @@ describe Tenji::ImageFile do
       assert_equal gallery, @obj.data['gallery']
     end
   end
+
+  describe "#page=" do
+    it "assigns the parameter" do
+      page = Object.new
+      @obj.page = page
+      assert_equal page, @obj.data['page']
+    end
+  end
 end
