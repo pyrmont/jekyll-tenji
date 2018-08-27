@@ -230,6 +230,11 @@ describe Tenji::Config do
       @config['gallery']['foo']['sort'] = { 'period' => 'ignore' }
       assert_equal @ignore, @obj.sort('period', 'foo')
     end
+
+    it "raises an error for an invalid sort setting" do
+      @config['gallery']['foo']['sort'] = { 'name' => 'ignore' }
+      assert_raises(Tenji::ConfigurationError) { @obj.sort('name', 'foo') }
+    end
   end
 
   describe "::thumb_sizes" do
