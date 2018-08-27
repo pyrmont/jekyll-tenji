@@ -4,7 +4,7 @@ module Tenji
   class ImagePage < Jekyll::Page
     using Tenji::Refinements
 
-    include Tenji::Convertible
+    include Tenji::Processable
 
     def initialize(site, base, dir, name)
       @config = Tenji::Config

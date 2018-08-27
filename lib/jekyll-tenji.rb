@@ -18,7 +18,7 @@ require 'tenji/writer'
 
 require 'tenji/generator'
 
-require 'tenji/convertible'
+require 'tenji/processable'
 require 'tenji/pageable'
 require 'tenji/scalable'
 

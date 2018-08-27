@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Tenji
-  module Convertible
+  module Processable
     using Tenji::Refinements
 
     attr_accessor :config, :gallery_name

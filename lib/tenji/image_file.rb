@@ -4,7 +4,7 @@ module Tenji
   class ImageFile < Jekyll::StaticFile
     using Tenji::Refinements
 
-    include Tenji::Convertible
+    include Tenji::Processable
 
     attr_accessor :position
 

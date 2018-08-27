@@ -4,8 +4,8 @@ module Tenji
   class GalleryPage < Jekyll::Page
     using Tenji::Refinements
 
-    include Tenji::Convertible
     include Tenji::Pageable
+    include Tenji::Processable
 
     def initialize(site, base, dir, name)
       @config = Tenji::Config
