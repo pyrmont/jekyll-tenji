@@ -51,6 +51,19 @@ describe Tenji::GalleryPage do
       assert_nil obj.content
       assert_equal 25, obj.instance_variable_get(:@__items_per_page__)
     end
+
+    it "instantiates a Tenji::GalleryPage object for a hidden directory" do
+      @config.debug['gallery_settings']['hidden'] = true
+      obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery', nil 
+      assert_equal Tenji::GalleryPage, obj.class
+      assert_equal 'gallery', obj.gallery_name
+      assert_equal '', obj.path
+      assert_equal 'index', obj.basename
+      assert_equal '.html', obj.ext
+      assert_equal '/albums/Z2FsbGVyeQ/', obj.dir 
+      assert_nil obj.content
+      assert_equal 25, obj.instance_variable_get(:@__items_per_page__)
+    end
   end
 
   describe "#initialize_copy" do

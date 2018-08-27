@@ -31,7 +31,8 @@ module Tenji
     end
 
     private def output_gallery_name(str)
-      return res = str.sub(/^\d+-/, '') unless config.hidden?(gallery_name) 
+      res = str.sub(/^\d+-/, '')
+      return res unless config.hidden?(gallery_name)
       Base64.urlsafe_encode64(res, padding: false)
     end
     
