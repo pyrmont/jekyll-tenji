@@ -33,4 +33,18 @@ describe Tenji::ImageFile do
       assert_nil obj.position
     end
   end
+
+  describe "#<=>" do
+    before do
+      @obj = Tenji::ImageFile.new @site, @base, '_albums/gallery', '01-image.jpg'
+      factory = TestFactory.new @site, images: [ 'gallery/00-image.jpg', 'gallery/01-image.jpg', 'gallery/02-image.jpg' ]
+      @comps = factory.make :image_files, flatten: true
+    end
+
+    it "compares itself with Tenji::ImageFiles with no EXIF data" do
+      assert_equal 1, @obj <=> @comps[0]
+      assert_equal 0, @obj <=> @comps[1]
+      assert_equal -1, @obj <=> @comps[2]
+    end
+  end
 end

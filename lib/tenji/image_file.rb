@@ -26,7 +26,6 @@ module Tenji
     end
 
     def <=>(other)
-      other.is_a! Tenji::ImageFile
       @name <=> other.name
     end
     
