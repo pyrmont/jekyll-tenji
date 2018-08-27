@@ -36,7 +36,7 @@ describe Tenji::GalleryPage do
       assert_equal 'index', obj.basename
       assert_equal '.html', obj.ext
       assert_equal '/albums/gallery2/', obj.dir 
-      assert_equal '', obj.content
+      assert_nil obj.content
       assert_equal 25, obj.instance_variable_get(:@__items_per_page__)
     end
   end

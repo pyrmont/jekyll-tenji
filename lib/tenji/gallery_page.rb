@@ -84,7 +84,7 @@ module Tenji
 
     private def read_file(base, dir, name) 
       if name.nil?
-        @content = ''
+        @content = nil
         @data = Hash.new
       else
         read_yaml File.join(base, dir), name
