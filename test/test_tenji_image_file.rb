@@ -6,6 +6,7 @@ describe Tenji::ImageFile do
     @config.configure({ 'galleries_dir' => '_albums' })
     @site = TestSite.site source: 'test/data/', dest: 'tmp'
     @base = @site.source
+    @obj = Tenji::ImageFile.new @site, @base, '_albums/gallery', '01-image.jpg'
   end
 
   after do
@@ -36,7 +37,6 @@ describe Tenji::ImageFile do
 
   describe "#<=>" do
     before do
-      @obj = Tenji::ImageFile.new @site, @base, '_albums/gallery', '01-image.jpg'
       factory = TestFactory.new @site, images: [ 'gallery/00-image.jpg', 'gallery/01-image.jpg', 'gallery/02-image.jpg' ]
       @comps = factory.make :image_files, flatten: true
     end
@@ -45,6 +45,14 @@ describe Tenji::ImageFile do
       assert_equal 1, @obj <=> @comps[0]
       assert_equal 0, @obj <=> @comps[1]
       assert_equal -1, @obj <=> @comps[2]
+    end
+  end
+
+  describe "#gallery=" do
+    it "assigns the parameter" do
+      gallery = Object.new
+      @obj.gallery = gallery
+      assert_equal gallery, @obj.data['gallery']
     end
   end
 end
