@@ -24,4 +24,12 @@ describe Tenji::ListPage do
       assert_nil obj.content
     end 
   end
+
+  describe "#galleries=" do
+    it "assigns the parameter" do
+      galleries = Object.new
+      @obj.galleries = galleries
+      assert_equal galleries, @obj.data['galleries']
+    end
+  end
 end
