@@ -101,6 +101,11 @@ module Tenji
       1..option('scale_max')
     end
 
+    def self.scale_suffix(factor)
+      return '' if factor == 1
+      option('scale_suffix').gsub('#', factor.to_s)
+    end
+
     def self.set(name, value, dirname = nil)
       settings = (dirname) ? @config['gallery'][dirname] : @config
 

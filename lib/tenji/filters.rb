@@ -70,10 +70,9 @@ module Tenji
       return link unless link.is_a?(String)
 
       pos = link.rindex '.'
-      factors = 1..Tenji::Config.option('scale_max')
 
-      links = factors.map do |f|
-                fix = (f == 1) ? '' : Tenji::Config.suffix('scale', factor: f)
+      links = Tenji::Config.scale_factors.map do |f|
+                fix = Tenji::Config.scale_suffix(f)
                 "#{link.infix(pos, fix)} #{f}x"
               end
       links.join ', '
