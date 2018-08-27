@@ -63,4 +63,12 @@ describe Tenji::ImageFile do
       assert_equal page, @obj.data['page']
     end
   end
+
+  describe "#sizes=" do
+    it "assigns the parameter" do
+      sizes = Object.new
+      @obj.sizes = sizes
+      assert_equal sizes, @obj.data['sizes']
+    end
+  end
 end
