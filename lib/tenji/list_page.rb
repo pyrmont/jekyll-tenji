@@ -4,6 +4,7 @@ module Tenji
   class ListPage < Jekyll::Page
     using Tenji::Refinements
 
+    include Tenji::Pageable
     include Tenji::Processable
 
     def initialize(site, base, dir, name)
@@ -20,6 +21,8 @@ module Tenji
       process_dir
       process_name 
       
+      paginate config.items_per_page
+      
       data.default_proc = proc do |_, key|
         site.frontmatter_defaults.find(File.join(dir, @name), type, key)
       end
@@ -29,6 +32,14 @@ module Tenji
 
     def galleries=(galleries)
       @data['galleries'] = galleries
+    end
+
+    def items()
+      data['galleries']
+    end
+
+    def items=(galleries)
+      data['galleries'] = galleries
     end
     
     private def process_dir()
