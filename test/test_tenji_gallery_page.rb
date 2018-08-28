@@ -6,6 +6,7 @@ describe Tenji::GalleryPage do
     @config.configure({ 'galleries_dir' => '_albums' })
     @site = TestSite.site source: 'test/data/', dest: 'tmp'
     @base = @site.source
+    @obj = Tenji::GalleryPage.new @site, @base, '_albums/01-gallery', nil
   end
 
   after do
@@ -67,10 +68,6 @@ describe Tenji::GalleryPage do
   end
 
   describe "#initialize_copy" do
-    before do
-      @obj = Tenji::GalleryPage.new @site, @base, '_albums/01-gallery', nil
-    end
-
     it "instantiates a copy" do
       double = @obj.dup
       double.data['foo'] = 'bar'
@@ -80,7 +77,6 @@ describe Tenji::GalleryPage do
 
   describe "#<=>" do
     before do
-      @obj = Tenji::GalleryPage.new @site, @base, '_albums/01-gallery', nil
       factory = TestFactory.new @site, galleries: [ '00-gallery/', '01-gallery/', '02-gallery/' ]  
       @comps = factory.make :gallery_pages, flatten: true
     end
@@ -139,11 +135,7 @@ describe Tenji::GalleryPage do
   end
 
   describe "#cover=" do
-    before do
-      @obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery', nil
-    end
-
-    it "sets the 'cover' key" do
+    it "assigns the parameter" do
       cover = Object.new
       @obj.cover = cover
       assert_equal cover, @obj.data['cover']
@@ -151,22 +143,14 @@ describe Tenji::GalleryPage do
   end 
   
   describe "#images=" do
-    before do
-      @obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery', 'index.md'
-    end
-
-    it "sets the 'images' key" do
+    it "assigns the parameter" do
       images = Object.new
       @obj.images = images
       assert_equal images, @obj.data['images']
     end
   end
 
-  describe "#items()" do
-    before do
-      @obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery', 'index.md'
-    end
-
+  describe "#items" do
     it "gets the pageable items" do
       assert_nil @obj.items
 
@@ -177,11 +161,7 @@ describe Tenji::GalleryPage do
     end
   end
   
-  describe "#items=()" do
-    before do
-      @obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery', 'index.md'
-    end
-
+  describe "#items=" do
     it "sets the pageable items" do
       assert_nil @obj.instance_variable_get(:@data)['images']
 
@@ -193,10 +173,6 @@ describe Tenji::GalleryPage do
   end
   
   describe "#write" do
-    before do
-      @obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery', 'index.md'
-    end
-
     it "uses the method defined on Tenji::Pageable::Page" do
       method = @obj.method(:write)
       assert_equal Tenji::Pageable::Page, method.owner
