@@ -15,4 +15,26 @@ describe Tenji::Pageable do
       assert_equal 42, @obj.items_per_page
     end
   end
+
+  describe "#paginate" do
+    it "prepends a Tenji::Pageable::Page object if the parameter is truthy" do
+      assert_nil @obj.instance_variable_get(:@__items_per_page__)
+      refute @obj.singleton_class.ancestors.include?(Tenji::Pageable::Page)
+
+      @obj.paginate 10
+
+      assert 10, @obj.instance_variable_get(:@__items_per_page__)
+      assert @obj.singleton_class.ancestors.include?(Tenji::Pageable::Page)
+    end
+
+    it "prepends a Tenji::Pageable::Page object if the parameter is falsey" do
+      assert_nil @obj.instance_variable_get(:@__items_per_page__)
+      refute @obj.singleton_class.ancestors.include?(Tenji::Pageable::Page)
+
+      @obj.paginate false
+
+      assert_nil @obj.instance_variable_get(:@__items_per_page__)
+      refute @obj.singleton_class.ancestors.include?(Tenji::Pageable::Page)
+    end
+  end
 end

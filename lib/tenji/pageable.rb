@@ -7,8 +7,8 @@ module Tenji
     end
 
     def paginate(items_per_page)
-      @__items_per_page__ = items_per_page
       return unless items_per_page
+      @__items_per_page__ = items_per_page
       self.singleton_class.prepend Tenji::Pageable::Page
     end
 
