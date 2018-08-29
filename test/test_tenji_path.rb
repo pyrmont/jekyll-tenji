@@ -59,4 +59,20 @@ describe Tenji::Path do
       assert_equal Array.new(3, Tenji::Path), obj.files.map { |o| o.class }
     end
   end
+
+  describe "#image?" do
+    it "returns true when it is an image" do
+      obj = Tenji::Path.new 'foo.jpg'
+      assert obj.image?
+    end
+
+    it "returns false when it is not an image" do
+      obj = Tenji::Path.new 'foo.txt'
+      refute obj.image?
+    end
+
+    it "returns false when it has no extension" do
+      refute @obj.image?
+    end
+  end
 end
