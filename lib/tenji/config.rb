@@ -143,17 +143,8 @@ module Tenji
       option('sizes', dirname)
     end
 
-    private_class_method def self.deep_copy(hsh)
-      res = Hash.new
-      hsh.each do |k,v|
-        value = v.is_a?(Hash) ? deep_copy(v) : v.dup
-        res[k] = value
-      end
-      res
-    end
-
     private_class_method def self.defaults()
-      deep_copy DEFAULTS
+      DEFAULTS.deep_copy
     end
 
     private_class_method def self.is_set!()
