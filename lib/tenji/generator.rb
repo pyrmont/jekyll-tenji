@@ -214,8 +214,8 @@ module Tenji
 
         files.each do |file|
           config.thumb_sizes(dirname).each do |size, options|
-            thumb_file = file.append_to_base("-#{size}")
-            thumb = Tenji::ThumbFile.new(site, base, dir, thumb_file.name, file.to_s)
+            name = file.name.append_to_base("-#{size}")
+            thumb = Tenji::ThumbFile.new(site, base, dir, name, file.to_s)
             post.thumb_files[dirname][file.name][size] = thumb
           end
         end

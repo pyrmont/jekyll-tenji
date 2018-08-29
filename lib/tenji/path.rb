@@ -16,12 +16,6 @@ module Tenji
       Tenji::Path.new(super(p))
     end
 
-    def append_to_base(str)
-      ext = self.extname
-      base = self.sub_ext('').to_s
-      Tenji::Path.new(parent + (base + str + ext))
-    end
-
     def base()
       sub_ext('').basename.to_s
     end
