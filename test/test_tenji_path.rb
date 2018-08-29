@@ -41,4 +41,15 @@ describe Tenji::Path do
       assert_equal res.to_s, @obj.to_s
     end
   end
+
+  describe "#base" do
+    it "returns the base of a path with no extension as a string" do
+      assert_equal 'gallery', @obj.base
+    end
+
+    it "returns the base of a path with an extension as a string" do
+      obj = Tenji::Path.new 'foo/bar.ext'
+      assert 'bar', obj.base
+    end
+  end
 end
