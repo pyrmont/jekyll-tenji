@@ -1,10 +1,6 @@
 require 'test_helper'
 
 describe Tenji::Path do
-  before do
-    @obj = Tenji::Path.new('galleries/a/gallery')
-  end
-
   describe "#initialize" do
     it "instantiates a Tenji::Path object with a String object" do
       path = 'a/path/to/somewhere'
@@ -23,6 +19,10 @@ describe Tenji::Path do
   end
 
   describe "#+" do
+    before do
+      @obj = Tenji::Path.new('galleries/a/gallery')
+    end
+
     it "returns a Tenji::Path object with a concatenated path if the operand is a Tenji::Path object" do
       other = Tenji::Path.new 'foo'
       res = @obj + other
@@ -44,7 +44,8 @@ describe Tenji::Path do
 
   describe "#base" do
     it "returns the base of a path with no extension as a string" do
-      assert_equal 'gallery', @obj.base
+      obj = Tenji::Path.new('galleries/a/gallery')
+      assert_equal 'gallery', obj.base
     end
 
     it "returns the base of a path with an extension as a string" do
@@ -72,7 +73,8 @@ describe Tenji::Path do
     end
 
     it "returns false when it has no extension" do
-      refute @obj.image?
+      obj = Tenji::Path.new('galleries/a/gallery')
+      refute obj.image?
     end
   end
 end
