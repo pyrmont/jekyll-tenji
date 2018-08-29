@@ -54,7 +54,7 @@ describe Tenji::Path do
   end
 
   describe "#files" do
-    it "returns an array of Paths that are files" do
+    it "returns an array of Paths that are files in self" do
       obj = Tenji::Path.new 'test/data/_albums/gallery'
       assert_equal Array.new(3, Tenji::Path), obj.files.map { |o| o.class }
     end
