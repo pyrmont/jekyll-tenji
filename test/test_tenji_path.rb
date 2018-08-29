@@ -73,8 +73,20 @@ describe Tenji::Path do
     end
 
     it "returns false when it has no extension" do
-      obj = Tenji::Path.new('galleries/a/gallery')
+      obj = Tenji::Path.new 'galleries/a/gallery'
       refute obj.image?
+    end
+  end
+
+  describe "#index" do
+    it "returns a Tenji::Path of an index file within itself" do
+      obj = Tenji::Path.new 'test/data/_albums/gallery' 
+      assert_equal 'test/data/_albums/gallery/index.md', obj.index.to_s
+    end
+
+    it "returns nil if there is no index file within itself" do
+      obj = Tenji::Path.new 'test/data/_albums'
+      assert_nil obj.index
     end
   end
 end
