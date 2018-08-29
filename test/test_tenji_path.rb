@@ -52,4 +52,11 @@ describe Tenji::Path do
       assert 'bar', obj.base
     end
   end
+
+  describe "#files" do
+    it "returns an array of Paths that are files" do
+      obj = Tenji::Path.new 'test/data/_albums/gallery'
+      assert_equal Array.new(3, Tenji::Path), obj.files.map { |o| o.class }
+    end
+  end
 end
