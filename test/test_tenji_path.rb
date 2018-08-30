@@ -108,4 +108,16 @@ describe Tenji::Path do
       assert_equal 'file.html', obj.name
     end
   end
+
+  describe "#page?" do
+    it "returns true if it represents a page" do
+      obj = Tenji::Path.new 'foo.md'
+      assert obj.page?
+    end
+
+    it "returns false if it doesn't represent a page" do
+      obj = Tenji::Path.new 'foo'
+      refute obj.page?
+    end
+  end
 end
