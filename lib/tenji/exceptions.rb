@@ -18,7 +18,4 @@ module Tenji
 
   class ResizeError < ::StandardError
   end
-
-  class TypeError < ::StandardError
-  end
 end
