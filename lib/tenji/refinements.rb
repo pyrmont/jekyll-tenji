@@ -20,12 +20,7 @@ module Tenji
 
     refine String do
       def append_to_base(str)
-        pos = self.rindex('.') || self.length
-        infix pos, str
-      end
-
-      def infix(pos, str)
-        raise RangeError if pos.abs > length
+        pos = rindex('.') || length
         self[0...pos] + str + self[pos..-1]
       end
     end

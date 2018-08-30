@@ -69,11 +69,9 @@ module Tenji
     def to_srcset(link)
       return link unless link.is_a?(String)
 
-      pos = link.rindex '.'
-
       links = Tenji::Config.scale_factors.map do |f|
                 fix = Tenji::Config.scale_suffix(f)
-                "#{link.infix(pos, fix)} #{f}x"
+                "#{link.append_to_base(fix)} #{f}x"
               end
       links.join ', '
     end
