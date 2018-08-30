@@ -76,8 +76,6 @@ module Tenji
     end
 
     private def parse_period(period)
-      period.is_a! String
-
       components = period.split '-'
       components.map { |c| Date.parse(c.strip) }
     end

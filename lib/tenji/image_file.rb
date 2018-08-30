@@ -43,7 +43,6 @@ module Tenji
 
     private def read_exif(base, dir, name)
       filename = File.join(base, dir, name)
-      filename.is_a! String
 
       file = pathify(filename)
 
