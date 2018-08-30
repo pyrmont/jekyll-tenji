@@ -4,12 +4,10 @@ module Tenji
   module Refinements
     refine Hash do
       def deep_copy()
-        res = Hash.new &(self.default_proc)
-        self.each do |k,v|
+        reduce(Hash.new &default_proc) do |memo,(k,v)|
           value = v.is_a?(Hash) ? v.deep_copy : v.dup
-          res[k] = value
+          memo.update({ k => value })
         end
-        res
       end
 
       def deep_merge(h)
