@@ -120,4 +120,11 @@ describe Tenji::Path do
       refute obj.page?
     end
   end
+
+  describe "#subdirectories" do
+    it "returns an array of Tenji::Path objects that represent directories in itself" do
+      obj = Tenji::Path.new 'test/data/_albums'
+      assert_equal [ Tenji::Path ], obj.subdirectories.map { |o| o.class }
+    end
+  end
 end
