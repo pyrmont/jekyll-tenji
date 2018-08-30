@@ -101,4 +101,11 @@ describe Tenji::Path do
       refute obj.index?
     end
   end
+
+  describe "#name" do
+    it "returns the basename of a Tenji::Path object as a string" do
+      obj = Tenji::Path.new 'a/path/to/a/file.html'
+      assert_equal 'file.html', obj.name
+    end
+  end
 end
