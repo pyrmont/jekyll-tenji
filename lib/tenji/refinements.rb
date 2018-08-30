@@ -11,13 +11,10 @@ module Tenji
       end
 
       def deep_merge(h)
-        res = self.merge h
-        self.each do |k,v|
-          if h.key?(k) && h[k].is_a?(Hash)
-            res[k] = self[k].deep_merge h[k]
-          end
+        reduce(merge(h)) do |memo,(k,v)|
+          next memo unless h.key?(k) && h[k].is_a?(Hash)
+          memo.update({ k => v.deep_merge(h[k]) })
         end
-        res
       end
     end
 

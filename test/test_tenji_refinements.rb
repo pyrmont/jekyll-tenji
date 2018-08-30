@@ -29,5 +29,31 @@ describe Tenji::Refinements do
         refute_equal obj.object_id, res.object_id
       end
     end
+
+    describe "#deep_merge" do
+      it "returns a merged hash where the provided argument has no common keys" do 
+        obj = { a: 1, b: 2 }
+        res = obj.deep_merge Hash[ c: 3 ]
+        assert_equal Hash[ a: 1, b: 2, c: 3 ], res 
+      end
+
+      it "returns a merged hash where the provided argument has common keys" do
+        obj = { a: 1, b: 2 }
+        res = obj.deep_merge Hash[ b: 3 ]
+        assert_equal Hash[ a: 1, b: 3 ], res
+      end
+
+      it "returns a merged hash where the provided argument has common keys that have hash values" do
+        obj = { a: 1, b: { c: 3 } }
+        res = obj.deep_merge Hash[ b: { d: 4 } ]
+        assert_equal Hash[ a: 1, b: { c: 3, d: 4 } ], res
+      end
+
+      it "returns a merged hash where the provided argument has common keys that are nested" do
+        obj = { a: 1, b: { c: 3 } }
+        res = obj.deep_merge Hash[ b: { c: 4 } ]
+        assert_equal Hash[ a: 1, b: { c: 4 } ], res
+      end
+    end
   end
 end
