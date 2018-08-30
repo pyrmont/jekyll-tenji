@@ -4,7 +4,7 @@ module Tenji
   module Refinements
     refine Hash do
       def deep_copy()
-        reduce(Hash.new &default_proc) do |memo,(k,v)|
+        reduce(dup) do |memo,(k,v)|
           value = v.is_a?(Hash) ? v.deep_copy : v.dup
           memo.update({ k => value })
         end
