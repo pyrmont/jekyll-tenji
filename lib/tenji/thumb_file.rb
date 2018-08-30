@@ -19,16 +19,10 @@ module Tenji
       @path = File.join(base, dir, name)
       @source_path = source ? File.join(base, source) : nil
 
-      process_dir
-    end
-    
-    private def process_dir()
-      in_t = config.dir(:thumbs).to_s
-      out_t = config.dir(:galleries).to_s.slice(1..-1)
-      in_g = gallery_name
-      out_g = File.join(output_gallery_name(in_g),
-                        config.dir(:thumbs).to_s.slice(1..-1))
-      @dir = @dir.sub(in_t, out_t).sub(in_g, out_g)
+      process_dir config.dir(:thumbs),
+                  config.dir(:galleries, :out), 
+                  gallery_name,
+                  File.join(output_gallery_name, config.dir(:thumbs, :out))
     end
   end
 end

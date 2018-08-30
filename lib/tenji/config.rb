@@ -61,10 +61,16 @@ module Tenji
       option('cover', name)
     end
     
-    def self.dir(name)
+    def self.dir(name, output = nil)
       key = name.to_s + '_dir'
       dirname = option key
-      dirname ? Tenji::Path.new(dirname) : nil
+      if dirname.nil?
+        nil
+      elsif output == :out
+        dirname.slice(1..-1)
+      else
+        dirname
+      end
     end
 
     def self.hidden?(dirname)
@@ -85,6 +91,11 @@ module Tenji
       else
         @config[name]
       end
+    end
+    
+    def self.path(name)
+      dirname = self.dir name
+      dirname ? Tenji::Path.new(dirname) : nil
     end
 
     def self.resize_function(name, dirname = nil)

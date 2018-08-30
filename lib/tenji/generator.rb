@@ -48,7 +48,7 @@ module Tenji
     end
 
     def read()
-      dir = config.dir(:galleries)
+      dir = config.path(:galleries)
 
       add_file(dir.index || nil)
 
@@ -91,7 +91,7 @@ module Tenji
 
     private def add_references_to_covers()
       post.cover_files.each do |dirname, cover|
-        dir = (config.dir(:galleries) + dirname).to_s
+        dir = (config.path(:galleries) + dirname).to_s
         name = config.cover(dirname) || post.image_files[dirname].first.name
         cover.source_path = File.join(base, dir, name)
       end
@@ -166,7 +166,7 @@ module Tenji
     private def make_cover_files()
       pre.image_files.each do |dirname, files|
         next if files.empty?
-        dir = (@config.dir(:thumbs) + dirname).to_s
+        dir = (config.path(:thumbs) + dirname).to_s
         cover = Tenji::ThumbFile.new site, base, dir, 'cover.jpg'
         post.cover_files[dirname] = cover
       end
@@ -174,7 +174,7 @@ module Tenji
 
     private def make_gallery_pages()
       pre.gallery_pages.each do |dirname, file|
-        dir = (config.dir(:galleries) + dirname).to_s
+        dir = (config.path(:galleries) + dirname).to_s
         name = file&.name
         gallery = Tenji::GalleryPage.new(site, base, dir, name)        
         post.gallery_pages[dirname] = gallery
@@ -184,7 +184,7 @@ module Tenji
 
     private def make_image_files()
       pre.image_files.each do |dirname, files|
-        dir = (config.dir(:galleries) + dirname).to_s
+        dir = (config.path(:galleries) + dirname).to_s
         files.each do |file|
           image = Tenji::ImageFile.new(site, base, dir, file.name)
           post.image_files[dirname].push image
@@ -194,7 +194,7 @@ module Tenji
 
     private def make_image_pages()
       pre.image_pages.each do |dirname, files|
-        dir = (config.dir(:galleries) + dirname).to_s
+        dir = (config.path(:galleries) + dirname).to_s
         files.each do |basename, file|
           image = Tenji::ImagePage.new(site, base, dir, file.name)
           post.image_pages[dirname][basename] = image
@@ -203,14 +203,14 @@ module Tenji
     end
 
     private def make_list_page()
-      dir = config.dir(:galleries).to_s
+      dir = config.dir(:galleries)
       file = pre.list_page
       post.list_page = Tenji::ListPage.new(site, base, dir, file&.name)
     end
 
     private def make_thumb_files()
       pre.image_files.each do |dirname, files|
-        dir = (config.dir(:thumbs) + dirname).to_s
+        dir = (config.path(:thumbs) + dirname).to_s
 
         files.each do |file|
           config.thumb_sizes(dirname).each do |size, options|

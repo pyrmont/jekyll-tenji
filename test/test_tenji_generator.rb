@@ -28,9 +28,9 @@ describe Tenji::Generator do
 
     it "builds a queue of file paths" do
       @obj.read
-      assert_equal({ 'gallery' => (@config.dir(:galleries) + 'gallery/index.md') }, @obj.pre.gallery_pages)
-      assert_equal({ 'gallery' => [ @config.dir(:galleries) + 'gallery/01-castle.jpg' ] }, @obj.pre.image_files)
-      assert_equal({ 'gallery' => { '01-castle' => (@config.dir(:galleries) + 'gallery/01-castle.md') } }, @obj.pre.image_pages)
+      assert_equal({ 'gallery' => (@config.path(:galleries) + 'gallery/index.md') }, @obj.pre.gallery_pages)
+      assert_equal({ 'gallery' => [ @config.path(:galleries) + 'gallery/01-castle.jpg' ] }, @obj.pre.image_files)
+      assert_equal({ 'gallery' => { '01-castle' => (@config.path(:galleries) + 'gallery/01-castle.md') } }, @obj.pre.image_pages)
       assert_equal Hash.new, @obj.pre.thumb_files
     end
   end

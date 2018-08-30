@@ -18,7 +18,7 @@ module Tenji
 
       read_file base, dir, name
 
-      process_dir
+      process_dir config.dir(:galleries), config.dir(:galleries, :out)
       process_name 
       
       paginate config.items_per_page
@@ -41,12 +41,6 @@ module Tenji
     def items=(galleries)
       data['galleries'] = galleries
     end
-    
-    private def process_dir()
-      in_t = config.dir(:galleries).to_s
-      out_t = in_t.slice(1..-1)
-      @dir = @dir.sub(in_t, out_t)
-    end  
     
     private def read_file(base, dir, name) 
       if name.nil?

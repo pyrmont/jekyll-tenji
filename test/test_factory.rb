@@ -7,8 +7,8 @@ class TestFactory
     @site = site
     @base = site.source
 
-    @g_dir = @config.dir(:galleries).to_s
-    @t_dir = @config.dir(:thumbs).to_s
+    @g_dir = @config.dir(:galleries)
+    @t_dir = @config.dir(:thumbs)
 
     @list = list
     @galleries = galleries
@@ -81,7 +81,7 @@ class TestFactory
     galleries.reduce(Hash.new) do |memo, filename|
       path = Tenji::Path.new filename 
       dirname = filename[-1] == '/' ? filename[0...-1] : path.dirname.to_s
-      full_path = filename[-1] == '/' ? nil : @config.dir(:galleries) + filename
+      full_path = filename[-1] == '/' ? nil : @config.path(:galleries) + filename
       memo[dirname] = full_path
       memo
     end
@@ -101,7 +101,7 @@ class TestFactory
     return nil if images.nil?
     images.reduce(Hash.new { |h,k| h[k] = Array.new }) do |memo, filename|
       path = Tenji::Path.new filename
-      memo[path.parent.to_s].push(@config.dir(:galleries) + filename)
+      memo[path.parent.to_s].push(@config.path(:galleries) + filename)
       memo
     end
   end
@@ -120,7 +120,7 @@ class TestFactory
     return nil if pages.nil?
     pages.reduce(Hash.new { |h,k| h[k] = Hash.new }) do |memo, filename|
       path = Tenji::Path.new filename
-      memo[path.parent.to_s][path.base] = @config.dir(:galleries) + filename
+      memo[path.parent.to_s][path.base] = @config.path(:galleries) + filename
       memo
     end
   end

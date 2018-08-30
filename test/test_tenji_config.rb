@@ -74,9 +74,14 @@ describe Tenji::Config do
   end
   
   describe "::dir" do
-    it "returns a Tenji::Path object for either :galleries or :thumbs" do
-      assert_equal Tenji::Path.new('_albums'), @obj.dir(:galleries)
-      assert_equal Tenji::Path.new('_thumbs'), @obj.dir(:thumbs)
+    it "returns the directory name as a string" do
+      assert_equal '_albums', @obj.dir(:galleries)
+      assert_equal '_thumbs', @obj.dir(:thumbs)
+    end
+
+    it "returns the directory name that will be used externally as a string" do
+      assert_equal 'albums', @obj.dir(:galleries, :out)
+      assert_equal 'thumbs', @obj.dir(:thumbs, :out)
     end
 
     it "returns nil if the key doesn't exist" do
@@ -131,6 +136,17 @@ describe Tenji::Config do
     it "returns nil if the key doesn't exist" do
       assert_nil @obj.option('foo')
       assert_nil @obj.option('scale_max', 'foo')
+    end
+  end
+  
+  describe "::path" do
+    it "returns the directory name as a string" do
+      assert_equal Tenji::Path.new('_albums'), @obj.path(:galleries)
+      assert_equal Tenji::Path.new('_thumbs'), @obj.path(:thumbs)
+    end
+
+    it "returns nil if the key doesn't exist" do
+      assert_nil @obj.path('foo')
     end
   end
 

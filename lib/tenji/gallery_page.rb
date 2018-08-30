@@ -20,7 +20,10 @@ module Tenji
       read_file base, dir, name
       add_config
 
-      process_dir
+      process_dir config.dir(:galleries), 
+                  config.dir(:galleries, :out), 
+                  gallery_name, 
+                  output_gallery_name
       process_name
 
       paginate config.items_per_page(gallery_name)

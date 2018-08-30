@@ -30,8 +30,8 @@ module Tenji
       @path
     end
 
-    private def output_gallery_name(str)
-      res = str.sub(/^\d+-/, '')
+    private def output_gallery_name()
+      res = gallery_name.sub(/^\d+-/, '')
       return res unless config.hidden?(gallery_name)
       Base64.urlsafe_encode64(res, padding: false)
     end
@@ -40,12 +40,9 @@ module Tenji
       Tenji::Path.new(dir)
     end
     
-    private def process_dir()
-      in_t = config.dir(:galleries).to_s
-      out_t = in_t.slice(1..-1)
-      in_g = gallery_name
-      out_g = output_gallery_name(in_g)
-      @dir = @dir.sub(in_t, out_t).sub(in_g, out_g)
+    private def process_dir(t_in, t_out, g_in = '', g_out = '')
+      @dir = @dir.sub(t_in, t_out)
+      @dir = @dir.sub(g_in, g_out)
     end
     
     private def process_name()

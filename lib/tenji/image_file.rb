@@ -22,7 +22,10 @@ module Tenji
 
       read_exif base, dir, name
 
-      process_dir
+      process_dir config.dir(:galleries),
+                  config.dir(:galleries, :out),
+                  gallery_name,
+                  output_gallery_name
     end
 
     def <=>(other)
