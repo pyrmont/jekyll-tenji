@@ -56,4 +56,18 @@ describe Tenji::Refinements do
       end
     end
   end
+
+  describe String do
+    describe "#append_to_base" do
+      it "inserts the argument before the final full stop" do
+        obj = 'foo.bar'
+        assert_equal 'foo2.bar', obj.append_to_base('2')
+      end
+
+      it "inserts the argument at the end of the itself if no full stop" do
+        obj = 'foobar'
+        assert_equal 'foobar2', obj.append_to_base('2')
+      end
+    end
+  end
 end
