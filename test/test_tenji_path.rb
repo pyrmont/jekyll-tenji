@@ -89,4 +89,16 @@ describe Tenji::Path do
       assert_nil obj.index
     end
   end
+
+  describe "#index?" do
+    it "returns true if it represents an index" do
+      obj = Tenji::Path.new 'index.md'
+      assert obj.index?
+    end
+
+    it "returns false if it doesn't represent an index" do
+      obj = Tenji::Path.new 'foo.md'
+      refute obj.index?
+    end
+  end
 end
