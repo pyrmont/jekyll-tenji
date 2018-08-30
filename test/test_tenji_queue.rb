@@ -33,4 +33,18 @@ describe Tenji::Queue do
       assert_nil obj.cover_files['bar']
     end
   end
+
+  describe "#to_a" do
+    it "returns an array of the default values" do
+      args = [ nil, Hash.new, Hash.new, Hash.new, Hash.new, Hash.new ]
+      obj = Tenji::Queue.new
+      assert_equal args, obj.to_a
+    end
+
+    it "returns an array of the values used when initialising it" do
+      args = [ 'foo', { 'foo' => 'bar' }, { 'foo' => [ 'bar' ] }, { 'foo' => { 'foo' => 'bar' } }, { 'foo' => { 'foo' => { 'foo' => 'bar' } } }, { 'foo' => 'bar' } ]
+      obj = Tenji::Queue.new args
+      assert_equal args, obj.to_a
+    end
+  end
 end
