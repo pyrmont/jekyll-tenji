@@ -45,7 +45,10 @@ describe Tenji::ThumbFile do
     end
 
     it "writes the file to the destination directory" do
-      @obj.write ''
+      output, errors = capture_io { @obj.write '' } 
+      paths = output.split("\n")
+      assert_equal File.join(@site.dest, 'albums/gallery/thumbs/foo.jpg'), paths[0]
+      assert_equal File.join(@site.dest, 'albums/gallery/thumbs/foo-2x.jpg'), paths[1]
     end
   end
 end

@@ -188,7 +188,8 @@ describe Tenji::GalleryPage do
 
     describe "with a modified GalleryPage class" do
       before do
-        Tenji::GalleryPage.class_eval { def write(dest) puts destination(dest) end }
+        Jekyll::Convertible.alias_method :orig_write, :write
+        Jekyll::Convertible.class_eval { def write(dest) puts destination(dest) end }
 
         @config.set [ 'gallery_settings', 'images_per_page' ], 1
         factory = TestFactory.new @site, images: [ 'gallery/1.jpg', 'gallery/2.jpg', 'gallery/3.jpg' ]
@@ -198,7 +199,8 @@ describe Tenji::GalleryPage do
       end
 
       after do
-        Tenji::GalleryPage.remove_method :write
+        Jekyll::Convertible.alias_method :write, :orig_write
+        Jekyll::Convertible.remove_method :orig_write
       end
 
       it "outputs the paths to which it will write its pages" do
