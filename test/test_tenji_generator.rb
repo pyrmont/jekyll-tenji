@@ -156,11 +156,19 @@ describe Tenji::Generator do
 
     it "writes thumbnails with Tenji::Writer" do
       @thumbs.each do |t|
-        @obj.writer.expect :write_thumb, nil, [ t.source_path, t.path, @config.constraints('small', 'gallery1'), @config.resize_function('small', 'gallery1'), @config.scale_factors ]
+        @config.scale_factors.each do |f|
+          output_path = t.path[0...-4] + @config.scale_suffix(f) + '.jpg'
+          constraints = @config.constraints('small', 'gallery1').transform_values { |v| v * f }
+          @obj.writer.expect :write_thumb, nil, [ t.source_path, output_path, constraints, @config.resize_function('small', 'gallery1') ]
+        end
       end
 
       @cover.yield_self do |c|
-        @obj.writer.expect :write_thumb, nil, [ c.source_path, c.path, @config.constraints(:cover), @config.resize_function(:cover), @config.scale_factors ]
+        @config.scale_factors.each do |f|
+          output_path = c.path[0...-4] + @config.scale_suffix(f) + '.jpg'
+          constraints = @config.constraints(:cover).transform_values { |v| v * f }
+          @obj.writer.expect :write_thumb, nil, [ c.source_path, output_path, constraints, @config.resize_function(:cover) ]
+        end
       end
 
       @obj.write

@@ -245,11 +245,14 @@ module Tenji
 
     private def write_cover_files()
       post.cover_files.each do |dirname, cover|
-        writer.write_thumb cover.source_path,
-                           cover.path, 
-                           config.constraints(:cover), 
-                           config.resize_function(:cover),
-                           config.scale_factors
+        config.scale_factors.each do |f|
+          output_path = cover.path.append_to_base(config.scale_suffix(f))
+          constraints = config.constraints(:cover).transform_values { |v| v * f }
+          writer.write_thumb cover.source_path,
+                             output_path,
+                             constraints,
+                             config.resize_function(:cover)
+        end
       end
     end
 
@@ -257,11 +260,14 @@ module Tenji
       post.thumb_files.each do |dirname, thumbs|
         thumbs.each do |basename, sizes|
           sizes.each do |size, thumb|
-            writer.write_thumb thumb.source_path,
-                               thumb.path, 
-                               config.constraints(size, dirname), 
-                               config.resize_function(size, dirname),
-                               config.scale_factors
+            config.scale_factors.each do |f|
+              output_path = thumb.path.append_to_base(config.scale_suffix(f))
+              constraints = config.constraints(size, dirname).transform_values { |v| v * f }
+              writer.write_thumb thumb.source_path,
+                                 output_path,
+                                 constraints,
+                                 config.resize_function(size, dirname)
+            end
           end
         end
       end

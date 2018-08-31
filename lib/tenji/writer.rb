@@ -4,17 +4,12 @@ module Tenji
   class Writer
     using Tenji::Refinements
 
-    def write_thumb(input_path, base_path, constraints, resize, factors = 1..1)
-      factors.each do |f|
-        output_path = f == 1 ? base_path : base_path.append_to_base("-#{f}x")
-
-        next if File.exist?(output_path) && File.mtime(output_path) > File.mtime(input_path)
-        
-        scaled_constraints = constraints.transform_values { |v| v * f }
-        image = resized_image input_path, scaled_constraints, resize
-        image.write output_path
-        image.destroy!
-      end
+    def write_thumb(input_path, output_path, constraints, resize)
+      return if File.exist?(output_path) && File.mtime(output_path) > File.mtime(input_path)
+      
+      image = resized_image input_path, constraints, resize
+      image.write output_path
+      image.destroy!
     end
 
     private def resized_image(path, constraints, resize)
