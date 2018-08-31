@@ -6,6 +6,7 @@ describe Tenji::ThumbFile do
     @config.configure({ 'galleries_dir' => '_albums' })
     @site = TestSite.site source: 'test/data/', dest: 'tmp'
     @base = @site.source
+    @obj = Tenji::ThumbFile.new @site, @base, '_thumbs/gallery', 'foo.jpg', '_albums/gallery/bar.jpg'
   end
 
   after do
@@ -30,5 +31,21 @@ describe Tenji::ThumbFile do
       assert_equal File.join(@base, '_thumbs/gallery/', 'foo.jpg'), obj.path
       assert_equal File.join(@base, '_albums/gallery/', 'bar.jpg'), obj.source_path
     end 
+  end
+
+  describe "#write" do
+    before do
+      Jekyll::StaticFile.alias_method :orig_write, :write
+      Jekyll::StaticFile.class_eval { def write(dest) puts destination(dest) end }
+    end
+
+    after do
+      Jekyll::StaticFile.alias_method :write, :orig_write
+      Jekyll::StaticFile.remove_method :orig_write
+    end
+
+    it "writes the file to the destination directory" do
+      @obj.write ''
+    end
   end
 end
