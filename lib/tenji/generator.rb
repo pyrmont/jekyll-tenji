@@ -8,7 +8,7 @@ module Tenji
 
     def initialize(options = {})
       @site = nil
-      @base = (options) ? options['source'] : ''
+      @base = options['source'] || ''
       @config = Tenji::Config
       @pre = Tenji::Queue.new
       @post = Tenji::Queue.new
@@ -20,6 +20,7 @@ module Tenji
 
     def generate(site)
       @site = site
+      @config.configure
 
       read
       make
@@ -48,7 +49,7 @@ module Tenji
     end
 
     def read()
-      dir = config.path(:galleries)
+      dir = Tenji::Path.new(base) + config.dir(:galleries)
 
       add_file(dir.index || nil)
 

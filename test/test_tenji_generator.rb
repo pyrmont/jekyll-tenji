@@ -18,8 +18,8 @@ describe Tenji::Generator do
 
   describe "#read" do
     before do
-      @config.configure({ 'galleries_dir' => 'test/data/_albums' })
-      @obj = Tenji::Generator.new
+      @config.configure
+      @obj = Tenji::Generator.new({ 'source' => @site.source })
     end
 
     after do
@@ -28,9 +28,10 @@ describe Tenji::Generator do
 
     it "builds a queue of file paths" do
       @obj.read
-      assert_equal({ 'gallery' => (@config.path(:galleries) + 'gallery/index.md') }, @obj.pre.gallery_pages)
-      assert_equal({ 'gallery' => [ @config.path(:galleries) + 'gallery/01-castle.jpg' ] }, @obj.pre.image_files)
-      assert_equal({ 'gallery' => { '01-castle' => (@config.path(:galleries) + 'gallery/01-castle.md') } }, @obj.pre.image_pages)
+      parent = Tenji::Path.new(@obj.base) + @config.dir(:galleries)
+      assert_equal({ 'gallery' => (parent + 'gallery/index.md') }, @obj.pre.gallery_pages)
+      assert_equal({ 'gallery' => [ parent + 'gallery/01-castle.jpg' ] }, @obj.pre.image_files)
+      assert_equal({ 'gallery' => { '01-castle' => (parent + 'gallery/01-castle.md') } }, @obj.pre.image_pages)
       assert_equal Hash.new, @obj.pre.thumb_files
     end
   end

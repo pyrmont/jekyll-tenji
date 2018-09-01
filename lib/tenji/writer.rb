@@ -6,6 +6,8 @@ module Tenji
 
     def write_thumb(input_path, output_path, constraints, resize)
       return if File.exist?(output_path) && File.mtime(output_path) > File.mtime(input_path)
+              
+      Tenji::Path.new(output_path).parent.mkpath
       
       image = resized_image input_path, constraints, resize
       image.write output_path

@@ -29,7 +29,7 @@ describe Tenji::ThumbFile do
       assert_equal 'foo.jpg', obj.name
       assert_equal 'albums/gallery/thumbs', obj.instance_variable_get(:@dir)
       assert_equal File.join(@base, '_thumbs/gallery/', 'foo.jpg'), obj.path
-      assert_equal File.join(@base, '_albums/gallery/', 'bar.jpg'), obj.source_path
+      assert_equal File.join('_albums/gallery/', 'bar.jpg'), obj.source_path
     end 
   end
 
