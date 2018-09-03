@@ -255,6 +255,24 @@ describe Tenji::Config do
     end
   end
 
+  describe "::single_pages?" do
+    it "returns true if the given gallery displays pages for single images" do
+      @config['gallery']['foo']['single_pages'] = true
+      assert @obj.single_pages?('foo')
+    end
+
+    it "returns false if the given gallery does not display pages for single images" do
+      @config['gallery']['foo']['single_pages'] = false
+      refute @obj.single_pages?('foo')
+    end
+    
+    it "returns the default value if there is no setting for the given gallery" do
+      assert @obj.single_pages?('foo')
+      @config['gallery_settings']['single_pages'] = false
+      refute @obj.single_pages?('foo')
+    end
+  end
+
   describe "::sort" do
     before do
       @asc = 1
