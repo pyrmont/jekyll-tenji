@@ -11,8 +11,8 @@ module Tenji
     def initialize(site, base, dir, name)
       @config = Tenji::Config
       @gallery_name = pathify(dir).name
-
-			@site = site
+      
+      @site = site
       @base = base
       @dir = dir
       @name = name
