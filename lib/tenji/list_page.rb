@@ -43,7 +43,7 @@ module Tenji
     end
     
     def to_liquid(attrs = nil)
-      data['layout'] ||= config.layout
+      data['layout'] ||= config.layout(:list)
       super(attrs)
     end
 

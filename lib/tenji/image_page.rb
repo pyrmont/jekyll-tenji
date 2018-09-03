@@ -36,7 +36,7 @@ module Tenji
     end
 
     def to_liquid(attrs = nil)
-      data['layout'] ||= config.layout(gallery_name, :single)
+      data['layout'] ||= config.layout(:single, gallery_name)
       data['next'] = data['image'].image_next&.data&.fetch('page')
       data['prev'] = data['image'].image_prev&.data&.fetch('page')
       super(attrs)

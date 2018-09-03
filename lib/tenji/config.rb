@@ -8,7 +8,7 @@ module Tenji
       'cover'               => { 'resize' => 'fill', 'x' => 200, 'y' => 200 },
       'galleries_dir'       => '_albums',
       'galleries_per_page'  => 10,
-      'layout'              => 'gallery_list',
+      'layout_list'         => 'gallery_list',
       'list_index'          => true,
       'scale_max'           => 2,
       'scale_suffix'        => '-#x',
@@ -92,13 +92,9 @@ module Tenji
       end
     end
 
-    def self.layout(dirname = nil, type = nil)
-      if dirname
-        key = 'layout_' + type.to_s
-        option(key, dirname)
-      else
-        option('layout')
-      end
+    def self.layout(type, dirname = nil)
+      key = 'layout_' + type.to_s
+      option(key, dirname)
     end
 
     def self.list?()

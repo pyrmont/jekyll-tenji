@@ -75,7 +75,7 @@ module Tenji
     end
 
     def to_liquid(attrs = nil)
-      data['layout'] ||= config.layout(gallery_name, :gallery)
+      data['layout'] ||= config.layout(:gallery, gallery_name)
       super(attrs)
     end
 
