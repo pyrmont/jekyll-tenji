@@ -140,6 +140,18 @@ describe Tenji::Config do
     end
   end
 
+  describe "::layout" do
+    it "returns the given layout at the top level" do
+      @config['layout_custom'] = 'custom'
+      assert_equal 'custom', @obj.layout(:custom)
+    end
+
+    it "returns the given layout for a given gallery" do
+      @config['gallery']['foo']['layout_custom'] = 'custom'
+      assert_equal 'custom', @obj.layout(:custom, 'foo')
+    end
+  end
+
   describe "::option" do
     it "returns a setting for a given key" do
       assert_equal '_albums', @obj.option('galleries_dir')
