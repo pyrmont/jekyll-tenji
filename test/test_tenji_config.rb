@@ -182,7 +182,7 @@ describe Tenji::Config do
   end
   
   describe "::path" do
-    it "returns the directory name as a string" do
+    it "returns the directory name as a Tenji::Path object" do
       assert_equal Tenji::Path.new('_albums'), @obj.path(:galleries)
       assert_equal Tenji::Path.new('_thumbs'), @obj.path(:thumbs)
     end
