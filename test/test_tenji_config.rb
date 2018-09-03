@@ -128,9 +128,9 @@ describe Tenji::Config do
     end
 
     it "returns a setting for a given key and a given gallery" do
-      assert_equal 'gallery_index', @obj.option('layout', 'foo')
-      @config['gallery']['foo']['layout'] = 'custom'
-      assert_equal 'custom', @obj.option('layout', 'foo')
+      assert_equal 'gallery_index', @obj.option('layout_gallery', 'foo')
+      @config['gallery']['foo']['layout_gallery'] = 'custom'
+      assert_equal 'custom', @obj.option('layout_gallery', 'foo')
     end
 
     it "returns nil if the key doesn't exist" do

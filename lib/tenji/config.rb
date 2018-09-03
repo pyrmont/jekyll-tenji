@@ -8,6 +8,7 @@ module Tenji
       'cover'               => { 'resize' => 'fill', 'x' => 200, 'y' => 200 },
       'galleries_dir'       => '_albums',
       'galleries_per_page'  => 10,
+      'layout'              => 'gallery_list',
       'list_index'          => true,
       'scale_max'           => 2,
       'scale_suffix'        => '-#x',
@@ -16,10 +17,11 @@ module Tenji
       
       'gallery_settings'    => {
         'cover'           => nil,
+        'downloadable'    => true,
         'hidden'          => false,
         'images_per_page' => 25,
-        'layout'          => 'gallery_index',
-        'original'        => true,
+        'layout_gallery'  => 'gallery_index',
+        'layout_single'   => 'gallery_single',
         'single_pages'    => true,
         'sizes'           => { 'small' => { 'resize' => 'fit', 'x' => 400 } },
         'sort'            => { 'name' => 'asc', 'period' => 'desc' }
@@ -30,8 +32,9 @@ module Tenji
       "<#{self.class} Tenji::Config>"
     end
 
-    def self.configure(options = {})
-      @config = defaults.deep_merge options
+    def self.configure(options = nil)
+      options ||= Hash.new
+      @config = defaults.deep_merge(options)
       @config.update({ 'gallery' => Hash.new { |h,k| h[k] = Hash.new } } )
     end
 
@@ -73,6 +76,10 @@ module Tenji
       end
     end
 
+    def self.downloadable?(dirname)
+      option('downloadable', dirname)
+    end
+
     def self.hidden?(dirname)
       option('hidden', dirname)
     end
@@ -83,6 +90,19 @@ module Tenji
       else
         option('galleries_per_page')
       end
+    end
+
+    def self.layout(dirname = nil, type = nil)
+      if dirname
+        key = 'layout_' + type.to_s
+        option(key, dirname)
+      else
+        option('layout')
+      end
+    end
+
+    def self.list?()
+      option('list_index')
     end
 
     def self.option(name, dirname = nil)
@@ -134,6 +154,10 @@ module Tenji
     def self.settings(name)
       key = name.to_s + '_settings'
       option(key)
+    end
+
+    def self.single_pages?(dirname)
+      option('single_pages', dirname)
     end
 
     def self.sort(type, dirname = nil)

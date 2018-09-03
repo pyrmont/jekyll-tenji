@@ -17,23 +17,41 @@ module Tenji
       @dir = dir
       @name = name
       @path = File.join(base, dir, name)
-      @data = Hash.new
-      @position = nil
-
-      read_exif base, dir, name
 
       process_dir config.dir(:galleries),
                   config.dir(:galleries, :out),
                   gallery_name,
                   output_gallery_name
+      
+      @relative_path = File.join(@dir, @name)
+      @extname = File.extname(@name)
+      @data = @site.frontmatter_defaults.all(relative_path, type)
+      @position = nil
+
+      read_exif base, dir, name
     end
 
     def <=>(other)
       @name <=> other.name
     end
+
+    def downloadable?()
+      raise StandardError unless @data['page']
+      @data['page'].data['downloadable'] || config.downloadable?(gallery_name)
+    end
     
     def gallery=(gallery)
       @data['gallery'] = gallery
+    end
+    
+    def image_next()
+      return unless position + 1 < images.size
+      images[position + 1]
+    end
+
+    def image_prev()
+      return unless position > 0
+      images[position - 1]
     end
 
     def page=(page)
@@ -42,6 +60,18 @@ module Tenji
 
     def sizes=(sizes)
       @data['sizes'] = sizes
+    end
+
+    def to_liquid()
+      @data['downloadable'] = downloadable?
+      @data['next'] = image_next
+      @data['prev'] = image_prev
+      @data['url'] = url
+      super
+    end
+
+    private def images()
+      data['gallery'].data['images']
     end
 
     private def read_exif(base, dir, name)

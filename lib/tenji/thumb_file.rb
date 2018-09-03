@@ -23,6 +23,17 @@ module Tenji
                   config.dir(:galleries, :out), 
                   gallery_name,
                   File.join(output_gallery_name, config.dir(:thumbs, :out))
+
+      @relative_path = File.join(@dir, @name)
+      @extname = File.extname(@name)
+      @data = @site.frontmatter_defaults.all(relative_path, type)
+    end
+
+    def to_liquid()
+      return @to_liquid unless @to_liquid.nil?
+
+      @data['url'] = url
+      super
     end
 
     def write(dest)

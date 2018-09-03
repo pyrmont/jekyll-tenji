@@ -20,7 +20,7 @@ module Tenji
 
     def generate(site)
       @site = site
-      @config.configure
+      @config.configure site.config['galleries']
 
       read
       make
@@ -28,6 +28,8 @@ module Tenji
       reference
       write
       assign
+
+      Jekyll::Hooks.register :site, :pre_render, &method(:update_payload)
     end
 
     def assign()
@@ -137,6 +139,7 @@ module Tenji
     private def assign_image_files()
       post.image_files.each do |dirname, files|
         files.each do |file|
+          next unless file.downloadable?
           site.static_files << file
         end
       end
@@ -144,6 +147,7 @@ module Tenji
 
     private def assign_image_pages()
       post.image_pages.each do |dirname, pages|
+        next unless config.single_pages?(dirname)
         pages.each do |basename, page|
           site.pages << page
         end
@@ -151,6 +155,7 @@ module Tenji
     end
 
     private def assign_list_page()
+      return unless config.list?
       site.pages << post.list_page
     end
 
@@ -194,11 +199,13 @@ module Tenji
     end
 
     private def make_image_pages()
-      pre.image_pages.each do |dirname, files|
+      pre.image_files.each do |dirname, files|
         dir = (config.path(:galleries) + dirname).to_s
-        files.each do |basename, file|
-          image = Tenji::ImagePage.new(site, base, dir, file.name)
-          post.image_pages[dirname][basename] = image
+        files.each do |file|
+          actual_page = pre.image_pages[dirname][file.base]
+          name = actual_page&.name || file.base + '.html'
+          page = Tenji::ImagePage.new(site, base, dir, name)
+          post.image_pages[dirname][file.base] = page
         end
       end
     end
@@ -242,6 +249,13 @@ module Tenji
           file.position = index
         end
       end
+    end
+
+    private def update_payload(site, payload)
+      tenji = { 'all_galleries' => galleries['all'],
+                'galleries' => galleries['listed'],
+                'hidden_galleries' => galleries['hidden'] }
+      payload['tenji'] = tenji
     end
 
     private def write_cover_files()

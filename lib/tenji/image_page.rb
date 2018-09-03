@@ -35,8 +35,20 @@ module Tenji
       @data['image'] = image
     end
 
-    private def read_file(base, dir, name) 
-      read_yaml File.join(base, dir), name
+    def to_liquid(attrs = nil)
+      data['layout'] ||= config.layout(gallery_name, :single)
+      data['next'] = data['image'].image_next&.data&.fetch('page')
+      data['prev'] = data['image'].image_prev&.data&.fetch('page')
+      super(attrs)
+    end
+
+    private def read_file(base, dir, name)
+      if File.exist?(File.join(base, dir, name))
+        read_yaml File.join(base, dir), name
+      else
+        @content = nil
+        @data = Hash.new
+      end
     end
   end
 end

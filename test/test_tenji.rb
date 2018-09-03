@@ -18,6 +18,7 @@ describe Jekyll::Site do
       @site.process
       expected = [ 'albums', 
                    'albums/gallery',
+                   'albums/gallery/01-castle.html',
                    'albums/gallery/01-castle.jpg',
                    'albums/gallery/index.html',
                    'albums/gallery/thumbs',

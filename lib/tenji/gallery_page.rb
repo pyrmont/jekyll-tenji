@@ -74,6 +74,11 @@ module Tenji
       data['images'] = items
     end
 
+    def to_liquid(attrs = nil)
+      data['layout'] ||= config.layout(gallery_name, :gallery)
+      super(attrs)
+    end
+
     private def add_config()
       config.add_config gallery_name, settings
     end
@@ -90,7 +95,7 @@ module Tenji
       else
         read_yaml File.join(base, dir), name
         data['period'] = parse_period data['period'] if data['period']
-      end
+      end  
     end
 
     private def settings()

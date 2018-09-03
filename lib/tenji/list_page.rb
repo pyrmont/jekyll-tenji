@@ -42,6 +42,11 @@ module Tenji
       data['galleries'] = galleries
     end
     
+    def to_liquid(attrs = nil)
+      data['layout'] ||= config.layout
+      super(attrs)
+    end
+
     private def read_file(base, dir, name) 
       if name.nil?
         @content = ''

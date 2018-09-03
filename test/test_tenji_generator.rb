@@ -188,6 +188,8 @@ describe Tenji::Generator do
       @obj.site = @site
       @obj.post = Tenji::Queue.new(factory.make :entities)
 
+      @obj.post.image_files.each { |dirname, files| files.each { |file| file.data['page'] = @obj.post.image_pages[dirname][File.basename(file.name, '.*')] } }
+      
       @expected = factory.make :entities, :array, @obj.post.to_a, flatten: true
     end
 
