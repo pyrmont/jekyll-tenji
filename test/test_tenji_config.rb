@@ -152,6 +152,18 @@ describe Tenji::Config do
     end
   end
 
+  describe "::list?" do
+    it "returns true if a list index should be created" do
+      @config['list_index'] = true
+      assert @obj.list?
+    end
+
+    it "returns false if a list index should not be created" do
+      @config['list_index'] = false
+      refute @obj.list?
+    end
+  end
+
   describe "::option" do
     it "returns a setting for a given key" do
       assert_equal '_albums', @obj.option('galleries_dir')
