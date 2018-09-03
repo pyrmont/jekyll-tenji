@@ -89,6 +89,24 @@ describe Tenji::Config do
     end
   end
 
+  describe "::downloadable?" do
+    it "returns true if the original images in the given gallery are downloadable" do
+      @config['gallery']['foo']['downloadable'] = true
+      assert @obj.downloadable?('foo')
+    end
+
+    it "returns false if the original images in the given gallery are not downloadable" do
+      @config['gallery']['foo']['downloadable'] = false
+      refute @obj.downloadable?('foo')
+    end
+
+    it "returns the default value if there is no setting for the given gallery" do
+      assert @obj.downloadable?('foo')
+      @config['gallery_settings']['downloadable'] = false
+      refute @obj.downloadable?('foo')
+    end
+  end
+
   describe "::hidden?" do
     it "returns true if the given gallery is hidden" do
       @config['gallery']['foo']['hidden'] = true

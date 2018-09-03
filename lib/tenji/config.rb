@@ -103,7 +103,8 @@ module Tenji
 
     def self.option(name, dirname = nil)
       if dirname
-        @config['gallery'][dirname][name] || @config['gallery_settings'][name]
+        value = @config['gallery'][dirname][name]
+        value.nil? ? @config['gallery_settings'][name] : value
       else
         @config[name]
       end
