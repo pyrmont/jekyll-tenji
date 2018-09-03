@@ -92,7 +92,7 @@ describe Tenji::GalleryPage do
       assert_equal -1, @obj <=> @comps[1]
       assert_equal -1, @obj <=> @comps[2]
 
-      @config.set 'sort', { 'name' => 'asc', 'period' => 'ignore' }
+      @config.set 'sort', { 'name' => 'asc', 'time' => 'ignore' }
 
       assert_equal 1, @obj <=> @comps[0]
       assert_equal 0, @obj <=> @comps[1]
@@ -114,19 +114,19 @@ describe Tenji::GalleryPage do
       assert_equal 0, @obj <=> @comps[1]
       assert_equal 1, @obj <=> @comps[2]
       
-      @config.set 'sort', { 'name' => 'asc', 'period' => 'ignore' }
+      @config.set 'sort', { 'name' => 'asc', 'time' => 'ignore' }
       
       assert_equal 1, @obj <=> @comps[0]
       assert_equal 0, @obj <=> @comps[1]
       assert_equal -1, @obj <=> @comps[2]
 
-      @config.set 'sort', { 'name' => 'desc', 'period' => 'ignore' }
+      @config.set 'sort', { 'name' => 'desc', 'time' => 'ignore' }
 
       assert_equal -1, @obj <=> @comps[0]
       assert_equal 0, @obj <=> @comps[1]
       assert_equal 1, @obj <=> @comps[2]
 
-      @config.set 'sort', { 'name' => 'asc', 'period' => 'asc' }
+      @config.set 'sort', { 'name' => 'asc', 'time' => 'asc' }
 
       assert_equal 1, @obj <=> @comps[0]
       assert_equal 0, @obj <=> @comps[1]

@@ -282,29 +282,29 @@ describe Tenji::Config do
 
     it "returns the default sort order for the top-level setting" do
       assert_equal @asc, @obj.sort('name')
-      assert_equal @desc, @obj.sort('period')
+      assert_equal @desc, @obj.sort('time')
     end
 
     it "returns the default sort order for the gallery-level setting" do
       assert_equal @asc, @obj.sort('name', 'foo')
-      assert_equal @desc, @obj.sort('period', 'foo')
+      assert_equal @desc, @obj.sort('time', 'foo')
     end
 
     it "returns a descending sort order" do
-      @config['gallery']['foo']['sort'] = { 'name' => 'desc', 'period' => 'desc' }
+      @config['gallery']['foo']['sort'] = { 'name' => 'desc', 'time' => 'desc' }
       assert_equal @desc, @obj.sort('name', 'foo')
-      assert_equal @desc, @obj.sort('period', 'foo')
+      assert_equal @desc, @obj.sort('time', 'foo')
     end
 
     it "returns an ascending sort order" do
-      @config['gallery']['foo']['sort'] = { 'name' => 'asc', 'period' => 'asc' }
+      @config['gallery']['foo']['sort'] = { 'name' => 'asc', 'time' => 'asc' }
       assert_equal @asc, @obj.sort('name', 'foo')
-      assert_equal @asc, @obj.sort('period', 'foo')
+      assert_equal @asc, @obj.sort('time', 'foo')
     end
 
     it "returns an ignore code for a characteristic to ignore" do
-      @config['gallery']['foo']['sort'] = { 'period' => 'ignore' }
-      assert_equal @ignore, @obj.sort('period', 'foo')
+      @config['gallery']['foo']['sort'] = { 'time' => 'ignore' }
+      assert_equal @ignore, @obj.sort('time', 'foo')
     end
 
     it "raises an error for an invalid sort setting" do

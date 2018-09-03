@@ -12,7 +12,7 @@ module Tenji
       'list_index'          => true,
       'scale_max'           => 2,
       'scale_suffix'        => '-#x',
-      'sort'                => { 'name' => 'asc', 'period' => 'desc' },
+      'sort'                => { 'name' => 'asc', 'time' => 'desc' },
       'thumbs_dir'          => '_thumbs',
       
       'gallery_settings'    => {
@@ -24,7 +24,7 @@ module Tenji
         'layout_single'   => 'gallery_single',
         'single_pages'    => true,
         'sizes'           => { 'small' => { 'resize' => 'fit', 'x' => 400 } },
-        'sort'            => { 'name' => 'asc', 'period' => 'desc' }
+        'sort'            => { 'name' => 'asc', 'time' => 'desc' }
       }
     }
 
@@ -159,7 +159,7 @@ module Tenji
 
     def self.sort(type, dirname = nil)
       value = option('sort', dirname)[type]
-      if type == 'period' && value == 'ignore'
+      if type == 'time' && value == 'ignore'
         :ignore
       elsif value.downcase == 'asc'
         1

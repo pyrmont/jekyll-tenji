@@ -45,16 +45,16 @@ module Tenji
       other_start = other.data['period']&.first
 
       name_sort = config.sort('name')
-      period_sort = config.sort('period')
+      time_sort = config.sort('time')
 
-      if period_sort == :ignore || this_start == other_start
+      if time_sort == :ignore || this_start == other_start
         (gallery_name <=> other.gallery_name) * name_sort
       elsif this_start.nil?
         1
       elsif other_start.nil?
         -1
       else
-        (this_start <=> other_start) * period_sort
+        (this_start <=> other_start) * time_sort 
       end
     end
 

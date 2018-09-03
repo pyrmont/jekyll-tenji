@@ -32,7 +32,21 @@ module Tenji
     end
 
     def <=>(other)
-      @name <=> other.name
+      this_datetime = data.fetch('exif', nil)&.fetch('date_time', nil)
+      other_datetime = other.data.fetch('exif', nil)&.fetch('date_time', nil)
+
+      name_sort = config.sort('name', gallery_name)
+      time_sort = config.sort('time', gallery_name)
+
+      if time_sort == :ignore || this_datetime == other_datetime
+        (name <=> other.name) * name_sort
+      elsif this_datetime.nil?
+        1
+      elsif other_datetime.nil?
+        -1
+      else
+        (this_datetime <=> other_datetime) * time_sort 
+      end
     end
 
     def downloadable?()
