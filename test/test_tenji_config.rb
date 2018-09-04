@@ -287,7 +287,7 @@ describe Tenji::Config do
 
     it "returns the default sort order for the gallery-level setting" do
       assert_equal @asc, @obj.sort('name', 'foo')
-      assert_equal @desc, @obj.sort('time', 'foo')
+      assert_equal @asc, @obj.sort('time', 'foo')
     end
 
     it "returns a descending sort order" do
