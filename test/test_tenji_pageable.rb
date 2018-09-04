@@ -3,6 +3,7 @@ require 'test_helper'
 describe Tenji::Pageable do
   before do
     @obj = Object.new
+    @obj.define_singleton_method(:site) { Object.new }
     @obj.singleton_class.include Tenji::Pageable
   end
 

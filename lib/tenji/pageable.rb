@@ -9,11 +9,24 @@ module Tenji
     def paginate(items_per_page)
       return unless items_per_page
       @__items_per_page__ = items_per_page
+      self.site.singleton_class.prepend Tenji::Pageable::Site
       self.singleton_class.prepend Tenji::Pageable::Page
     end
 
+    module Site
+      def render_regenerated(document, payload)
+        return super(document, payload) unless document.is_a? Tenji::Pageable::Page
+
+        document.pages.each do |page|
+          super(page, payload)
+        end
+      end
+    end
+
     module Page
-      def write(dest)
+      def pages()
+        return @__pages__ if @__pages__
+        
         pages = Array.new
 
         page_nums.each do |page_num|
@@ -31,6 +44,10 @@ module Tenji
           page.data['page_next'] = pages[num] if num < pages.size
         end
 
+        @__pages__ = pages
+      end
+
+      def write(dest)
         pages.each do |page|
           page.write(dest)
         end
@@ -39,6 +56,7 @@ module Tenji
       private def change_dir(page, num)
         return unless num > 1 && index?
         page.dir = File.join(@dir, num.to_s)
+        page.instance_variable_set(:@url, nil)
       end
 
       private def change_items(page, num)
