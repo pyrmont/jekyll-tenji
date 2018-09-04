@@ -24,7 +24,7 @@ module Tenji
         'layout_single'   => 'gallery_single',
         'single_pages'    => true,
         'sizes'           => { 'small' => { 'resize' => 'fit', 'x' => 400 } },
-        'sort'            => { 'name' => 'asc', 'time' => 'desc' }
+        'sort'            => { 'name' => 'asc', 'time' => 'asc' }
       }
     }
 
