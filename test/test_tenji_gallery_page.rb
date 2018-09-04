@@ -172,6 +172,12 @@ describe Tenji::GalleryPage do
     end
   end
   
+  describe "#to_liquid" do
+    it "ensures the hash that is returned includes a layout key" do
+      assert @obj.to_liquid.key?('layout')
+    end
+  end
+
   describe "#write" do
     it "uses the method defined on Tenji::Pageable::Page" do
       method = @obj.method(:write)
