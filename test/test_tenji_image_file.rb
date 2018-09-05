@@ -134,6 +134,24 @@ describe Tenji::ImageFile do
     end
   end
 
+  describe "#image_next" do
+    before do
+      @obj.instance_variable_set(:@position, 1)
+      @data = @obj.instance_variable_get(:@data)
+      @expected = Object.new
+    end
+
+    it "returns the object that is next in the gallery" do
+      @data['gallery'] = Struct.new(:data).new({ 'images' => [ nil, nil, @expected ] })
+      assert_equal @expected, @obj.image_next
+    end
+
+    it "returns nil if there is no image next in the gallery" do
+      @data['gallery'] = Struct.new(:data).new({ 'images' => [ nil, nil ] })
+      assert_nil @obj.image_next
+    end
+  end
+
   describe "#page=" do
     it "assigns the parameter" do
       page = Object.new
