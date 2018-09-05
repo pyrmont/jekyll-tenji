@@ -10,7 +10,7 @@ module Tenji
     def initialize(site, base, dir, name)
       @config = Tenji::Config
 
-			@site = site
+      @site = site
       @base = base
       @dir = dir
       @name = name ? name                       : 'index.html'
