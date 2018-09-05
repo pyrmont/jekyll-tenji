@@ -100,6 +100,32 @@ describe Tenji::ImageFile do
     end
   end
 
+  describe "#downloadable?" do
+    before do
+      @data = @obj.instance_variable_get(:@data)
+      @data['page'] = Struct.new(:data).new(Hash.new)
+    end
+
+    it "returns false if the metadata for the image specifies false" do
+      @data['page'].data['downloadable'] = false
+      refute @obj.downloadable?
+    end
+
+    it "returns true if the images in the given gallery can be downloaded" do
+      @config.set 'downloadable', true, 'gallery'
+      assert @obj.downloadable?
+    end
+
+    it "returns false if the images in the given gallery cannot be downloaded" do
+      @config.set 'downloadable', false, 'gallery'
+      refute @obj.downloadable?
+    end
+
+    it "returns the default vslue if the image can be downloaded" do
+      assert @obj.downloadable?
+    end
+  end
+
   describe "#gallery=" do
     it "assigns the parameter" do
       gallery = Object.new

@@ -50,8 +50,8 @@ module Tenji
     end
 
     def downloadable?()
-      raise StandardError unless @data['page']
-      @data['page'].data['downloadable'] || config.downloadable?(gallery_name)
+      res = @data['page'].data['downloadable']
+      res.nil? ? config.downloadable?(gallery_name) : res
     end
     
     def gallery=(gallery)
