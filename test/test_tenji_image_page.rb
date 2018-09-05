@@ -44,4 +44,18 @@ describe Tenji::ImagePage do
       assert_equal image, @obj.data['image']
     end
   end
+
+  describe "#to_liquid" do
+    before do
+      @data = @obj.instance_variable_get(:@data)
+      @data['image'] = Struct.new(:image_next, :image_prev).new(nil, nil)
+    end
+
+    it "returns a hash with certain keys set" do
+      res = @obj.to_liquid
+      assert res.key?('layout')
+      assert res.key?('next')
+      assert res.key?('prev')
+    end
+  end
 end
