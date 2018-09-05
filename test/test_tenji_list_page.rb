@@ -54,6 +54,13 @@ describe Tenji::ListPage do
       assert_equal galleries, @obj.instance_variable_get(:@data)['galleries']
     end
   end
+
+  describe "#to_liquid" do
+    it "returns a hash with certain keys" do
+      res = @obj.to_liquid
+      assert res.key?('layout')
+    end
+  end
   
   describe "#write" do
     it "uses the method defined on Tenji::Pageable::Page" do
