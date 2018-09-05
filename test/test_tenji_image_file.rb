@@ -21,6 +21,9 @@ describe Tenji::ImageFile do
       assert_equal 'albums/gallery', obj.instance_variable_get(:@dir)
       assert_equal '01-castle.jpg', obj.name
       assert_equal File.join(@base, '_albums/gallery', '01-castle.jpg'), obj.path
+      assert_equal File.join('albums/gallery', '01-castle.jpg'), obj.relative_path
+      assert_equal '.jpg', obj.extname
+      assert_equal Hash, obj.data.class
       assert_nil obj.position
     end
     
@@ -31,6 +34,9 @@ describe Tenji::ImageFile do
       assert_equal 'albums/gallery', obj.instance_variable_get(:@dir)
       assert_equal 'foo.jpg', obj.name
       assert_equal File.join(@base, '_albums/gallery', 'foo.jpg'), obj.path
+      assert_equal File.join('albums/gallery', 'foo.jpg'), obj.relative_path
+      assert_equal '.jpg', obj.extname
+      assert_equal Hash.new, obj.data
       assert_nil obj.position
     end
   end
@@ -41,7 +47,53 @@ describe Tenji::ImageFile do
       @comps = factory.make :image_files, flatten: true
     end
 
-    it "compares itself with Tenji::ImageFiles with no EXIF data" do
+    it "compares itself with Tenji::ImageFile objects with no EXIF data" do
+      assert_equal 1, @obj <=> @comps[0]
+      assert_equal 0, @obj <=> @comps[1]
+      assert_equal -1, @obj <=> @comps[2]
+
+      @obj.instance_variable_get(:@data).update({ 'exif' => { 'date_time' => Date.new(1970, 1, 1).to_time } })
+
+      assert_equal -1, @obj <=> @comps[0]
+      assert_equal -1, @obj <=> @comps[1]
+      assert_equal -1, @obj <=> @comps[2]
+
+      @config.set 'sort', { 'name' => 'asc', 'time' => 'ignore' }, 'gallery'
+
+      assert_equal 1, @obj <=> @comps[0]
+      assert_equal 0, @obj <=> @comps[1]
+      assert_equal -1, @obj <=> @comps[2] 
+    end
+    
+    it "compares itself with Tenji::ImageFile objects with EXIF data" do
+      @comps[0].instance_variable_get(:@data).update({ 'exif' => { 'date_time' => Date.new(1870, 1, 1).to_time } })
+      @comps[1].instance_variable_get(:@data).update({ 'exif' => { 'date_time' => Date.new(1970, 1, 1).to_time } })
+      @comps[2].instance_variable_get(:@data).update({ 'exif' => { 'date_time' => Date.new(2070, 1, 1).to_time } })
+      
+      assert_equal 1, @obj <=> @comps[0]
+      assert_equal 1, @obj <=> @comps[1]
+      assert_equal 1, @obj <=> @comps[2] 
+      
+      @obj.instance_variable_get(:@data).update({ 'exif' => { 'date_time' => Date.new(1970, 1, 1).to_time } })
+       
+      assert_equal 1, @obj <=> @comps[0]
+      assert_equal 0, @obj <=> @comps[1]
+      assert_equal -1, @obj <=> @comps[2]
+
+      @config.set 'sort', { 'name' => 'asc', 'time' => 'ignore' }, 'gallery'
+      
+      assert_equal 1, @obj <=> @comps[0]
+      assert_equal 0, @obj <=> @comps[1]
+      assert_equal -1, @obj <=> @comps[2]
+      
+      @config.set 'sort', { 'name' => 'desc', 'time' => 'ignore' }, 'gallery'
+
+      assert_equal -1, @obj <=> @comps[0]
+      assert_equal 0, @obj <=> @comps[1]
+      assert_equal 1, @obj <=> @comps[2]
+
+      @config.set 'sort', { 'name' => 'asc', 'time' => 'asc' }, 'gallery'
+
       assert_equal 1, @obj <=> @comps[0]
       assert_equal 0, @obj <=> @comps[1]
       assert_equal -1, @obj <=> @comps[2]

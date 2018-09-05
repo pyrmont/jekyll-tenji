@@ -25,7 +25,7 @@ module Tenji
       
       @relative_path = File.join(@dir, @name)
       @extname = File.extname(@name)
-      @data = @site.frontmatter_defaults.all(relative_path, type)
+      @data = @site.frontmatter_defaults.all(File.join(dir, name), type)
       @position = nil
 
       read_exif base, dir, name
