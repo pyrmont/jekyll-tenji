@@ -173,7 +173,7 @@ describe Tenji::GalleryPage do
   end
   
   describe "#to_liquid" do
-    it "ensures the hash that is returned includes a layout key" do
+    it "returns a hash with certain keys set" do
       assert @obj.to_liquid.key?('layout')
     end
   end

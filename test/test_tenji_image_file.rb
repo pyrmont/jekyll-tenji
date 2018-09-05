@@ -186,4 +186,21 @@ describe Tenji::ImageFile do
       assert_equal sizes, @obj.data['sizes']
     end
   end
+
+  describe "#to_liquid" do
+    before do
+      @obj.instance_variable_set(:@position, 1)
+      @data = @obj.instance_variable_get(:@data)
+      @data['page'] = Struct.new(:data).new(Hash.new)
+      @data['gallery'] = Struct.new(:data).new({ 'images' => [ nil, nil, nil ] })
+    end
+
+    it "returns a hash with certain keys set" do
+      res = @obj.to_liquid
+      assert res.key?('downloadable')
+      assert res.key?('next')
+      assert res.key?('prev')
+      assert res.key?('url')
+    end
+  end
 end
