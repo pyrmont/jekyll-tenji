@@ -21,6 +21,9 @@ describe Tenji::ThumbFile do
       assert_equal 'albums/gallery/thumbs', obj.instance_variable_get(:@dir)
       assert_equal File.join(@base, '_thumbs/gallery/', 'foo.jpg'), obj.path
       assert_nil obj.source_path
+      assert_equal 'albums/gallery/thumbs/foo.jpg', obj.relative_path
+      assert_equal '.jpg', obj.extname
+      assert_equal Hash, obj.data.class
     end 
 
     it "instantiates a Tenji::ThumbFile object with a source" do
@@ -30,6 +33,9 @@ describe Tenji::ThumbFile do
       assert_equal 'albums/gallery/thumbs', obj.instance_variable_get(:@dir)
       assert_equal File.join(@base, '_thumbs/gallery/', 'foo.jpg'), obj.path
       assert_equal File.join('_albums/gallery/', 'bar.jpg'), obj.source_path
+      assert_equal 'albums/gallery/thumbs/foo.jpg', obj.relative_path
+      assert_equal '.jpg', obj.extname
+      assert_equal Hash, obj.data.class
     end 
   end
 
