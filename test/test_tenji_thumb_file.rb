@@ -39,6 +39,13 @@ describe Tenji::ThumbFile do
     end 
   end
 
+  describe "#to_liquid" do
+    it "returns a hash with certain keys" do
+      res = @obj.to_liquid
+      assert res.key?('url')
+    end
+  end
+
   describe "#write" do
     before do
       Jekyll::StaticFile.alias_method :orig_write, :write

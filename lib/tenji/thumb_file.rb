@@ -30,8 +30,6 @@ module Tenji
     end
 
     def to_liquid()
-      return @to_liquid unless @to_liquid.nil?
-
       @data['url'] = url
       super
     end
