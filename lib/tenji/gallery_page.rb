@@ -44,8 +44,8 @@ module Tenji
       this_start = data['period']&.first
       other_start = other.data['period']&.first
 
-      name_sort = config.sort('name')
-      time_sort = config.sort('time')
+      name_sort = config.sort(:name)
+      time_sort = config.sort(:time)
 
       if time_sort == :ignore || this_start == other_start
         (gallery_name <=> other.gallery_name) * name_sort

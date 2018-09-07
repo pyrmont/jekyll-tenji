@@ -60,6 +60,10 @@ describe Tenji::Config do
       @config['gallery']['foo']['sizes'] = { 'unusual' => { 'resize' => 'fit', 'x' => 300, 'y' => 50 } }
       assert_equal Hash['x' => 300, 'y' => 50], @obj.constraints('unusual', 'foo')
     end
+
+    it "raises an error if a directory name is provides when name is :cover" do
+      assert_raises(Tenji::Config::NotGalleryLevelError) { @obj.constraints(:cover, 'foo') }
+    end
   end
 
   describe "::cover" do
@@ -84,8 +88,8 @@ describe Tenji::Config do
       assert_equal 'thumbs', @obj.dir(:thumbs, :out)
     end
 
-    it "returns nil if the key doesn't exist" do
-      assert_nil @obj.dir('foo')
+    it "raises an error if the key doesn't exist" do
+      assert_raises(Tenji::Config::NoKeyError) { @obj.dir('foo') }
     end
   end
 
@@ -142,13 +146,22 @@ describe Tenji::Config do
 
   describe "::layout" do
     it "returns the given layout at the top level" do
-      @config['layout_custom'] = 'custom'
-      assert_equal 'custom', @obj.layout(:custom)
+      @config['layout_list'] = 'custom'
+      assert_equal 'custom', @obj.layout(:list)
     end
 
-    it "returns the given layout for a given gallery" do
-      @config['gallery']['foo']['layout_custom'] = 'custom'
-      assert_equal 'custom', @obj.layout(:custom, 'foo')
+    it "returns the gallery layout for a given gallery" do
+      @config['gallery']['foo']['layout_gallery'] = 'custom'
+      assert_equal 'custom', @obj.layout(:gallery, 'foo')
+    end
+
+    it "returns the single layout for a given gallery" do
+      @config['gallery']['foo']['layout_single'] = 'custom'
+      assert_equal 'custom', @obj.layout(:single, 'foo')
+    end
+
+    it "raises an error if the given document type does not exist" do
+      assert_raises(Tenji::Config::NoDocumentError) { @obj.layout(:foo) }
     end
   end
 
@@ -163,23 +176,6 @@ describe Tenji::Config do
       refute @obj.list?
     end
   end
-
-  describe "::option" do
-    it "returns a setting for a given key" do
-      assert_equal '_albums', @obj.option('galleries_dir')
-    end
-
-    it "returns a setting for a given key and a given gallery" do
-      assert_equal 'gallery_index', @obj.option('layout_gallery', 'foo')
-      @config['gallery']['foo']['layout_gallery'] = 'custom'
-      assert_equal 'custom', @obj.option('layout_gallery', 'foo')
-    end
-
-    it "returns nil if the key doesn't exist" do
-      assert_nil @obj.option('foo')
-      assert_nil @obj.option('scale_max', 'foo')
-    end
-  end
   
   describe "::path" do
     it "returns the directory name as a Tenji::Path object" do
@@ -187,8 +183,8 @@ describe Tenji::Config do
       assert_equal Tenji::Path.new('_thumbs'), @obj.path(:thumbs)
     end
 
-    it "returns nil if the key doesn't exist" do
-      assert_nil @obj.path('foo')
+    it "raises an error if the key doesn't exist" do
+      assert_raises(Tenji::Config::NoKeyError) { @obj.path('foo') }
     end
   end
 
@@ -204,6 +200,10 @@ describe Tenji::Config do
     it "returns the custom resize function for a given gallery and given thumbnail size" do
       @config['gallery']['foo']['sizes'] = { 'large' => { 'resize' => 'custom' } }
       assert_equal 'custom', @obj.resize_function('large', 'foo')
+    end
+
+    it "raises an error if the given size does not exist" do
+      assert_raises(Tenji::Config::NoSizeError) { @obj.resize_function('foo', 'bar') }
     end
   end
 
@@ -253,6 +253,10 @@ describe Tenji::Config do
     it "returns the settings associated with a key" do
       assert_equal @config['gallery_settings'], @obj.settings(:gallery)
     end
+
+    it "raises an error if the gallery type is not supported" do
+      assert_raises(Tenji::Config::NoGalleryTypeError) { @obj.settings(:foo) }
+    end
   end
 
   describe "::single_pages?" do
@@ -281,35 +285,42 @@ describe Tenji::Config do
     end
 
     it "returns the default sort order for the top-level setting" do
-      assert_equal @asc, @obj.sort('name')
-      assert_equal @desc, @obj.sort('time')
+      assert_equal @asc, @obj.sort(:name)
+      assert_equal @desc, @obj.sort(:time)
     end
 
     it "returns the default sort order for the gallery-level setting" do
-      assert_equal @asc, @obj.sort('name', 'foo')
-      assert_equal @asc, @obj.sort('time', 'foo')
+      assert_equal @asc, @obj.sort(:name, 'foo')
+      assert_equal @asc, @obj.sort(:time, 'foo')
     end
 
     it "returns a descending sort order" do
       @config['gallery']['foo']['sort'] = { 'name' => 'desc', 'time' => 'desc' }
-      assert_equal @desc, @obj.sort('name', 'foo')
-      assert_equal @desc, @obj.sort('time', 'foo')
+      assert_equal @desc, @obj.sort(:name, 'foo')
+      assert_equal @desc, @obj.sort(:time, 'foo')
     end
 
     it "returns an ascending sort order" do
       @config['gallery']['foo']['sort'] = { 'name' => 'asc', 'time' => 'asc' }
-      assert_equal @asc, @obj.sort('name', 'foo')
-      assert_equal @asc, @obj.sort('time', 'foo')
+      assert_equal @asc, @obj.sort(:name, 'foo')
+      assert_equal @asc, @obj.sort(:time, 'foo')
     end
 
     it "returns an ignore code for a characteristic to ignore" do
       @config['gallery']['foo']['sort'] = { 'time' => 'ignore' }
-      assert_equal @ignore, @obj.sort('time', 'foo')
+      assert_equal @ignore, @obj.sort(:time, 'foo')
+    end
+
+    it "raises an error for an invalid sort type" do
+      assert_raises(Tenji::Config::NoSortTypeError) { @obj.sort(:foo) }
     end
 
     it "raises an error for an invalid sort setting" do
       @config['gallery']['foo']['sort'] = { 'name' => 'ignore' }
-      assert_raises(Tenji::ConfigurationError) { @obj.sort('name', 'foo') }
+      assert_raises(Tenji::Config::InvalidSortError) { @obj.sort(:name, 'foo') }
+      
+      @config['gallery']['foo']['sort'] = { 'name' => 'bar' }
+      assert_raises(Tenji::Config::InvalidSortError) { @obj.sort(:name, 'foo') }
     end
   end
 
