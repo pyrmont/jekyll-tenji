@@ -12,7 +12,7 @@ describe Tenji::GalleryPage do
   after do
     @config.reset
   end
-    
+
   describe "#initialize" do
     it "instantiates a Tenji::GalleryPage object for a directory with an index file" do
       obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery', 'index.md'
@@ -28,40 +28,40 @@ describe Tenji::GalleryPage do
       assert_equal [ Date.new(2018, 01, 01), Date.new(2018, 01, 05) ], obj.data['period']
       assert_equal 15, obj.instance_variable_get(:@__items_per_page__)
     end
-    
+
     it "instantiates a Tenji::GalleryPage object for a directory without an index file" do
-      obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery2', nil 
+      obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery2', nil
       assert_equal Tenji::GalleryPage, obj.class
       assert_equal 'gallery2', obj.gallery_name
       assert_equal '', obj.path
       assert_equal 'index', obj.basename
       assert_equal '.html', obj.ext
-      assert_equal '/albums/gallery2/', obj.dir 
+      assert_equal '/albums/gallery2/', obj.dir
       assert_nil obj.content
       assert_equal 25, obj.instance_variable_get(:@__items_per_page__)
     end
 
     it "instantiates a Tenji::GalleryPage object for a directory without a numeric prefix" do
-      obj = Tenji::GalleryPage.new @site, @base, '_albums/01-gallery', nil 
+      obj = Tenji::GalleryPage.new @site, @base, '_albums/01-gallery', nil
       assert_equal Tenji::GalleryPage, obj.class
       assert_equal '01-gallery', obj.gallery_name
       assert_equal '', obj.path
       assert_equal 'index', obj.basename
       assert_equal '.html', obj.ext
-      assert_equal '/albums/gallery/', obj.dir 
+      assert_equal '/albums/gallery/', obj.dir
       assert_nil obj.content
       assert_equal 25, obj.instance_variable_get(:@__items_per_page__)
     end
 
     it "instantiates a Tenji::GalleryPage object for a hidden directory" do
       @config.debug['gallery_settings']['hidden'] = true
-      obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery', nil 
+      obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery', nil
       assert_equal Tenji::GalleryPage, obj.class
       assert_equal 'gallery', obj.gallery_name
       assert_equal '', obj.path
       assert_equal 'index', obj.basename
       assert_equal '.html', obj.ext
-      assert_equal '/albums/Z2FsbGVyeQ/', obj.dir 
+      assert_equal '/albums/Z2FsbGVyeQ/', obj.dir
       assert_nil obj.content
       assert_equal 25, obj.instance_variable_get(:@__items_per_page__)
     end
@@ -77,15 +77,15 @@ describe Tenji::GalleryPage do
 
   describe "#<=>" do
     before do
-      factory = TestFactory.new @site, galleries: [ '00-gallery/', '01-gallery/', '02-gallery/' ]  
+      factory = TestFactory.new @site, galleries: [ '00-gallery/', '01-gallery/', '02-gallery/' ]
       @comps = factory.make :gallery_pages, flatten: true
     end
 
     it "compares itself with Tenji::Gallery objects with no period" do
-      assert_equal 1, @obj <=> @comps[0]
+      assert_equal -1, @obj <=> @comps[0]
       assert_equal 0, @obj <=> @comps[1]
-      assert_equal -1, @obj <=> @comps[2]
-      
+      assert_equal 1, @obj <=> @comps[2]
+
       @obj.data['period'] = [ Date.new(1970, 1, 1) ]
 
       assert_equal -1, @obj <=> @comps[0]
@@ -96,7 +96,7 @@ describe Tenji::GalleryPage do
 
       assert_equal 1, @obj <=> @comps[0]
       assert_equal 0, @obj <=> @comps[1]
-      assert_equal -1, @obj <=> @comps[2] 
+      assert_equal -1, @obj <=> @comps[2]
     end
 
     it "compares itself with Tenji::Gallery objects with a period" do
@@ -107,15 +107,15 @@ describe Tenji::GalleryPage do
       assert_equal 1, @obj <=> @comps[0]
       assert_equal 1, @obj <=> @comps[1]
       assert_equal 1, @obj <=> @comps[2]
-      
+
       @obj.data['period'] = [ Date.new(1970, 1, 1) ]
 
       assert_equal -1, @obj <=> @comps[0]
       assert_equal 0, @obj <=> @comps[1]
       assert_equal 1, @obj <=> @comps[2]
-      
+
       @config.set 'sort', { 'name' => 'asc', 'time' => 'ignore' }
-      
+
       assert_equal 1, @obj <=> @comps[0]
       assert_equal 0, @obj <=> @comps[1]
       assert_equal -1, @obj <=> @comps[2]
@@ -140,8 +140,8 @@ describe Tenji::GalleryPage do
       @obj.cover = cover
       assert_equal cover, @obj.data['cover']
     end
-  end 
-  
+  end
+
   describe "#images=" do
     it "assigns the parameter" do
       images = Object.new
@@ -160,7 +160,7 @@ describe Tenji::GalleryPage do
       assert_equal images, @obj.items
     end
   end
-  
+
   describe "#items=" do
     it "sets the pageable items" do
       assert_nil @obj.instance_variable_get(:@data)['images']
@@ -171,7 +171,7 @@ describe Tenji::GalleryPage do
       assert_equal images, @obj.instance_variable_get(:@data)['images']
     end
   end
-  
+
   describe "#to_liquid" do
     it "returns a hash with certain keys set" do
       assert @obj.to_liquid.key?('layout')
@@ -187,7 +187,7 @@ describe Tenji::GalleryPage do
     it "uses the method defined on Jekyll::Convertible" do
       @config.set [ 'gallery_settings', 'images_per_page' ], false
       @obj = Tenji::GalleryPage.new @site, @base, '_albums/other', nil
-      
+
       method = @obj.method(:write)
       assert_equal Jekyll::Convertible, method.owner
     end
@@ -199,9 +199,9 @@ describe Tenji::GalleryPage do
 
         @config.set [ 'gallery_settings', 'images_per_page' ], 1
         factory = TestFactory.new @site, images: [ 'gallery/1.jpg', 'gallery/2.jpg', 'gallery/3.jpg' ]
-        
+
         @obj = Tenji::GalleryPage.new @site, @base, '_albums/gallery', nil
-        @obj.images = factory.make :image_files, flatten: true  
+        @obj.images = factory.make :image_files, flatten: true
       end
 
       after do
@@ -210,7 +210,7 @@ describe Tenji::GalleryPage do
       end
 
       it "outputs the paths to which it will write its pages" do
-        output, errors = capture_io { @obj.write '' } 
+        output, errors = capture_io { @obj.write '' }
         paths = output.split("\n")
         assert_equal File.join(@site.dest, 'albums/gallery/index.html'), paths[0]
         assert_equal File.join(@site.dest, 'albums/gallery/2/index.html'), paths[1]

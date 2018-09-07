@@ -71,12 +71,12 @@ describe Tenji::Config do
       @config['gallery']['foo']['cover'] = 'bar.jpg'
       assert_equal 'bar.jpg', @obj.cover('foo')
     end
-    
+
     it "returns nil if no cover image set for the gallery" do
       assert_nil @obj.cover('foo')
     end
   end
-  
+
   describe "::dir" do
     it "returns the directory name as a string" do
       assert_equal '_albums', @obj.dir(:galleries)
@@ -121,7 +121,7 @@ describe Tenji::Config do
       @config['gallery']['foo']['hidden'] = false
       refute @obj.hidden?('foo')
     end
-    
+
     it "returns the default value if there is no setting for the given gallery" do
       refute @obj.hidden?('foo')
       @config['gallery_settings']['hidden'] = true
@@ -176,7 +176,7 @@ describe Tenji::Config do
       refute @obj.list?
     end
   end
-  
+
   describe "::path" do
     it "returns the directory name as a Tenji::Path object" do
       assert_equal Tenji::Path.new('_albums'), @obj.path(:galleries)
@@ -269,7 +269,7 @@ describe Tenji::Config do
       @config['gallery']['foo']['single_pages'] = false
       refute @obj.single_pages?('foo')
     end
-    
+
     it "returns the default value if there is no setting for the given gallery" do
       assert @obj.single_pages?('foo')
       @config['gallery_settings']['single_pages'] = false
@@ -285,7 +285,7 @@ describe Tenji::Config do
     end
 
     it "returns the default sort order for the top-level setting" do
-      assert_equal @asc, @obj.sort(:name)
+      assert_equal @desc, @obj.sort(:name)
       assert_equal @desc, @obj.sort(:time)
     end
 
@@ -318,7 +318,7 @@ describe Tenji::Config do
     it "raises an error for an invalid sort setting" do
       @config['gallery']['foo']['sort'] = { 'name' => 'ignore' }
       assert_raises(Tenji::Config::InvalidSortError) { @obj.sort(:name, 'foo') }
-      
+
       @config['gallery']['foo']['sort'] = { 'name' => 'bar' }
       assert_raises(Tenji::Config::InvalidSortError) { @obj.sort(:name, 'foo') }
     end

@@ -7,15 +7,15 @@ module Tenji
   # @note This document describes the operation of the {Tenji::Config} class.
   #   For information on how to configure Tenji, see {file:Configuration.md}.
   #
-  # {Tenji::Config} allows for transparent access to Tenji's configuration 
-  # options. If the requested option has not been set by the user, 
+  # {Tenji::Config} allows for transparent access to Tenji's configuration
+  # options. If the requested option has not been set by the user,
   # {Tenji::Config}'s methods will return the default value.
   #
-  # As a means of consistently sharing state, data is stored in an instance 
-  # variable on {Tenji::Config}'s singleton class and should be accessed via 
-  # the defined class methods. When debugging, the internal structure can be 
+  # As a means of consistently sharing state, data is stored in an instance
+  # variable on {Tenji::Config}'s singleton class and should be accessed via
+  # the defined class methods. When debugging, the internal structure can be
   # accessed via {Tenji::Config.debug}.
-  # 
+  #
   # @since 0.1.0
   # @api private
   module Config
@@ -25,7 +25,7 @@ module Tenji
     #
     # @since 0.1.0
     # @api private
-    DEFAULTS = { 
+    DEFAULTS = {
       'cover'               => { 'resize' => 'fill', 'x' => 200, 'y' => 200 },
       'galleries_dir'       => '_albums',
       'galleries_per_page'  => 10,
@@ -33,9 +33,9 @@ module Tenji
       'list_index'          => true,
       'scale_max'           => 2,
       'scale_suffix'        => '-#x',
-      'sort'                => { 'name' => 'asc', 'time' => 'desc' },
+      'sort'                => { 'name' => 'desc', 'time' => 'desc' },
       'thumbs_dir'          => '_thumbs',
-      
+
       'gallery_settings'    => {
         'cover'           => nil,
         'downloadable'    => true,
@@ -51,7 +51,7 @@ module Tenji
 
     # Return a minimal summary of the class
     #
-    # @note The method {.debug} can be used to return the internal data 
+    # @note The method {.debug} can be used to return the internal data
     #   structure.
     #
     # @return [String] the text summary
@@ -106,12 +106,12 @@ module Tenji
     # Return the size constraints for the given thumbnail size
     #
     # @param name [:cover, String] the name of the thumbnail size
-    # @param dirname [String] the directory name of the gallery 
+    # @param dirname [String] the directory name of the gallery
     #
-    # @return [Hash<String, Integer>] a hash with keys `x` and `y` specifying 
+    # @return [Hash<String, Integer>] a hash with keys `x` and `y` specifying
     #   the width and height constraints respectively
     #
-    # @raise [ConfigurationTopLevelOptionError] if `dirname` is provides when 
+    # @raise [ConfigurationTopLevelOptionError] if `dirname` is provides when
     #   `name` is `:cover`
     #
     # @since 0.1.0
@@ -140,7 +140,7 @@ module Tenji
     def self.cover(name)
       option('cover', name)
     end
-    
+
     # Return the directory name
     #
     # @param name [:galleries, :thumbs] the key
@@ -157,9 +157,9 @@ module Tenji
     def self.dir(name, output = nil)
       key = name.to_s + '_dir'
       dirname = option key
-     
+
       raise NoKeyError if dirname.nil?
-      
+
       if output == :out
         dirname.slice(1..-1)
       else
@@ -193,14 +193,14 @@ module Tenji
 
     # Returns the number of items per page of a document
     #
-    # If `dirname` is provided, this will return the number of images to be 
+    # If `dirname` is provided, this will return the number of images to be
     # displayed per page for the given gallery. If `dirname` is not provided,
     # this will return the number of galleries to be displayed per page of the
     # gallery list.
     #
     # @param dirname [String] the directory name of the gallery
     #
-    # @return [Integer] if the document should be paginated, the number of 
+    # @return [Integer] if the document should be paginated, the number of
     #   items per page
     # @return [false] if the document should not be paginated, false
     #
@@ -229,7 +229,7 @@ module Tenji
     def self.layout(type, dirname = nil)
       types = [ :list, :gallery, :single ]
       raise NoDocumentError unless types.include?(type)
-      
+
       key = 'layout_' + type.to_s
       option(key, dirname)
     end
@@ -237,7 +237,7 @@ module Tenji
     # Return whether to generate a list index
     #
     # By default, Tenji will generate a separate page listing the non-hidden
-    # galleries. For a website that is only for images, this may be 
+    # galleries. For a website that is only for images, this may be
     # unnecessary. In this case, a user may wish to disable the list page.
     #
     # @return [Boolean] whether to generate a list index
@@ -247,7 +247,7 @@ module Tenji
     def self.list?()
       option('list_index')
     end
-    
+
     # Return a Tenji::Path object representing the given directory name
     #
     # @param name [String] the directory name of the gallery
@@ -287,7 +287,7 @@ module Tenji
         res[name]
       end.fetch('resize')
     end
-    
+
     # Return a range of scaling factors
     #
     # @return [Range] the scaling factors
@@ -302,7 +302,7 @@ module Tenji
     #
     # @note The empty string is returned when the scaling factor is 1.
     #
-    # When it creates thumbnails for different display densities, Tenji appends 
+    # When it creates thumbnails for different display densities, Tenji appends
     # a suffix to the filename of the thumbnail. A user can customise the format
     # of the suffix by setting the key `suffix_format`.
     #
@@ -345,7 +345,7 @@ module Tenji
     #
     # @note Tenji currently only supports one gallery type.
     #
-    # @param type [:gallery] the gallery type 
+    # @param type [:gallery] the gallery type
     #
     # @return [Hash] a hash of settings
     #
@@ -389,7 +389,7 @@ module Tenji
     # @api private
     def self.sort(type, dirname = nil)
       raise NoSortTypeError unless [:name, :time].include?(type)
-      
+
       value = option('sort', dirname)[type.to_s].downcase
 
       case value
