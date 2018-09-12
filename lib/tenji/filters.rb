@@ -13,7 +13,7 @@ module Tenji
   module Filters
     using Tenji::Refinements
 
-    # Format the Time object
+    # Format the date and time
     #
     # @param datetime [Time] the date and time
     # @param fmt [String] the format for the output
@@ -76,12 +76,12 @@ module Tenji
     # default format is `'%{d}&deg; %{m}&prime; %{s}&Prime; %{h}'`.
     #
     # @param coord [Array<Numeric, Numeric, Numeric>] the coordinate
-    # @param lat ['lat', 'long'] the type of the coordinate
+    # @param type ['lat', 'long'] the type of the coordinate
     # @param fmt [String] a format for the output coordinate
     #
     # @return [String] the coordinate in decimal minute second notation
     #
-    # @raise [ArgumentError] if `type` is not `lat' or 'long'
+    # @raise [ArgumentError] if `type` is not `'lat'` or `'long'`
     #
     # @since 0.1.0
     # @api public
@@ -134,6 +134,13 @@ module Tenji
 
     # Format the URL into a URL appropriate for the `srcset` attribute in a
     # `<source>` tag
+    #
+    # A `<source>` tag has a `srcset` attribute that lists the resources that
+    # are available. When nested within a `<picture>` element, the `srcset`
+    # attribute will list images for display at different pixel densities. This
+    # list is comma-separated, with each resource followed by a string listing
+    # the particular density to which it applies, eg. `'/image.jpg,
+    # /image@2x.jpg 2x'`.
     #
     # @param link [String] the URL
     #
