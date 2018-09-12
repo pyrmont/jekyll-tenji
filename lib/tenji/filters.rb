@@ -4,12 +4,12 @@ module Tenji
 
   # A collection of Liquid filters for use with Tenji
   #
-  # @note This document describes the operation of the {Tenji:Filters} module.
+  # @note This document describes the operation of the {Tenji::Filters} module.
   #   For information on how to write Liquid templates for use with Tenji, see
   #   {file:Templating.md}.
   #
   # @since 0.1.0
-  # @api public
+  # @api private
   module Filters
     using Tenji::Refinements
 
@@ -21,7 +21,7 @@ module Tenji
     # @return [String] the formatted date and time
     #
     # @since 0.1.0
-    # @api public
+    # @api private
     def format_datetime(datetime, fmt = '%e %B %Y')
       return datetime unless datetime.is_a? Time
       datetime.strftime(fmt).strip
@@ -35,7 +35,7 @@ module Tenji
     # @return [String] the formatted period
     #
     # @since 0.1.0
-    # @api public
+    # @api private
     def format_period(period, fmt = '%e %B %Y', sep = '&ndash;')
       return period unless period.is_a? Array
       case period.length
@@ -60,7 +60,7 @@ module Tenji
     # @return [String] the coordinate in decimal degree notation
     #
     # @since 0.1.0
-    # @api public
+    # @api private
     def to_dd(coord)
       return coord unless coord.is_a?(Array) && coord.length == 3
       d, m, s = coord
@@ -84,7 +84,7 @@ module Tenji
     # @raise [ArgumentError] if `type` is not `'lat'` or `'long'`
     #
     # @since 0.1.0
-    # @api public
+    # @api private
     def to_dms(coord, type = 'lat', fmt = nil)
       return coord unless coord.is_a?(Array) && coord.length == 3
 
@@ -126,7 +126,7 @@ module Tenji
     # @return [Float] the converted number
     #
     # @since 0.1.0
-    # @api public
+    # @api private
     def to_float(num)
       return num unless num.is_a? Numeric
       num.to_f
@@ -147,7 +147,7 @@ module Tenji
     # @return [String] the converted URL
     #
     # @since 0.1.0
-    # @api public
+    # @api private
     def to_srcset(link)
       return link unless link.is_a?(String)
 
