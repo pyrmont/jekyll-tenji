@@ -6,45 +6,6 @@ describe Tenji::Filters do
     @obj = filters.new
   end
 
-  describe "#format_coord" do
-    before do
-      @format = "%s&deg; %s&prime; %s&Prime; %s"
-    end
-
-    it "formats the origin coordinate into a latitude in DMS notation" do
-      coord = [ 0, 0, 0 ]
-      res = @obj.format_coord coord, 'long'
-      assert_equal (@format % [0, 0, 0, 'E']), res
-    end
-
-    it "formats a decimal degree coordinate into a latitude in DMS notation" do
-      coord = [ -33.8678513, 0, 0 ]
-      res = @obj.format_coord coord, 'lat'
-      assert_equal (@format % [33, 52, 4, 'S']), res
-    end
-
-    it "formats a decimal minute coordinate into a latitude in DMS notation" do
-      coord = [ -33, 52.071, 0 ]
-      res = @obj.format_coord coord, 'lat'
-      assert_equal (@format % [33, 52, 4, 'S']), res
-    end
-
-    it "formats a DMS coordinate into a latitude in DMS notation" do
-      coord = [ -33, 52, 4 ]
-      res = @obj.format_coord coord, 'lat'
-      assert_equal (@format % [33, 52, 4, 'S']), res
-    end
-
-    it "returns the first argument if not an array of length 3" do
-      coord = 'Not an array'
-      res = @obj.format_coord(coord)
-    end
-
-    it "raises an error if the arguments are invalid" do
-      assert_raises(::ArgumentError) { @obj.format_coord([ 0, 0, 0 ], 'not') }
-    end
-  end
-
   describe "#format_datetime" do
     before do
       @date = Time.parse '1 January 1901'
@@ -105,6 +66,68 @@ describe Tenji::Filters do
 
     it "raise an error if the arguments are invalid" do
       assert_raises(::ArgumentError) { @obj.format_period([ 0, 0, 0 ]) }
+    end
+  end
+
+  describe "#to_dd" do
+    it "formats the origin coordinate into a coordinate in DD notation" do
+      coord = [ 0, 0, 0 ]
+      assert_equal 0.0, @obj.to_dd(coord)
+    end
+
+    it "formats a decimal degree coordinate in DD notation" do
+      coord = [ -33.8678513, 0, 0 ]
+      assert_equal -33.8678513, @obj.to_dd(coord)
+    end
+
+    it "formats a decimal minute coordinate into a latitude in DMS notation" do
+      coord = [ -33, 52.071, 0 ]
+      assert_equal -32.13215, @obj.to_dd(coord)
+    end
+
+    it "formats a DMS coordinate into a latitude in DMS notation" do
+      coord = [ -33, 52, 4 ]
+      assert_equal -32.132222222222225, @obj.to_dd(coord)
+    end
+  end
+
+  describe "#to_dms" do
+    before do
+      @format = "%s&deg; %s&prime; %s&Prime; %s"
+    end
+
+    it "formats the origin coordinate into a latitude in DMS notation" do
+      coord = [ 0, 0, 0 ]
+      res = @obj.to_dms coord, 'long'
+      assert_equal (@format % [0, 0, 0, 'E']), res
+    end
+
+    it "formats a decimal degree coordinate into a latitude in DMS notation" do
+      coord = [ -33.8678513, 0, 0 ]
+      res = @obj.to_dms coord, 'lat'
+      assert_equal (@format % [33, 52, 4, 'S']), res
+    end
+
+    it "formats a decimal minute coordinate into a latitude in DMS notation" do
+      coord = [ -33, 52.071, 0 ]
+      res = @obj.to_dms coord, 'lat'
+      assert_equal (@format % [33, 52, 4, 'S']), res
+    end
+
+    it "formats a DMS coordinate into a latitude in DMS notation" do
+      coord = [ -33, 52, 4 ]
+      res = @obj.to_dms coord, 'lat'
+      assert_equal (@format % [33, 52, 4, 'S']), res
+    end
+
+    it "returns the first argument if not an array of length 3" do
+      coord = 'Not an array'
+      res = @obj.to_dms(coord)
+      assert 'Not an array', res
+    end
+
+    it "raises an error if the arguments are invalid" do
+      assert_raises(::ArgumentError) { @obj.to_dms([ 0, 0, 0 ], 'not') }
     end
   end
 
