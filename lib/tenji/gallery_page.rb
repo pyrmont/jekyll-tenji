@@ -9,10 +9,10 @@ module Tenji
   # by Jekyll like any other page in the website.
   #
   # One important difference is how the class handles the initialisation
-  # parameters. Jekyll pages assume that the `dir` parameter represents both
-  # the source directory name and the output directory name. This is not
-  # necessarily the case in Tenji. See the {#initialize} documentation for
-  # more information.
+  # parameters. Jekyll assumes that the `dir` parameter represents both
+  # the directory name in the source directory and the directory name in the 
+  # destination directory name. This is not necessarily the case in Tenji. See 
+  # the {#initialize} documentation for more information.
   #
   # Another difference is that Tenji implements its own mechanism for
   # pagination, set out in the {Tenji::Pageable} module. See the
@@ -46,10 +46,15 @@ module Tenji
     # destination directory path. The obfuscation uses
     # `Base64#urlsafe_encode64` to transform the name.
     #
+    # Tenji does not require that an actual index page exist for a particular
+    # gallery. If the page does not exist, the value of `name` should be set to
+    # `nil`. A gallery page will nevertheless be generated for each gallery. 
+    #
     # @param site [Jekyll::Site] an object representing the Jekyll site
     # @param base [String] the base path
     # @param dir [String] the directory path
-    # @param name [String] the basename of the page
+    # @param name [String, nil] the basename of the page (`nil` if the page does
+    #   not exist)
     #
     # @return [Tenji::GalleryPage] the intialised object
     #
@@ -103,10 +108,10 @@ module Tenji
 
     # Comparison operator
     #
-    # {Tenji::GalleryPage} objects are compared on some bination of the period
-    # of the gallery and the name of the gallery. A user can configure whether
-    # the period is ignored and the direction in which periods and names are
-    # sorted.
+    # {Tenji::GalleryPage} objects are compared on some combination of the 
+    # period of the gallery and the name of the gallery. A user can configure 
+    # whether the period is ignored and the direction in which periods and 
+    # names are sorted.
     #
     # @param other [Tenji::GalleryPage] the object to compare
     #
