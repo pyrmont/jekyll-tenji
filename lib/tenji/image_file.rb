@@ -18,6 +18,9 @@ module Tenji
   # the `@data['exif']` object. The value for the `exif` keyword is `nil` if no
   # EXIF data is present in this image.
   #
+  # Finally, {Tenji::ImageFile} includes the {Tenji::Processable} module. This
+  # module contains common methods that are shared with other objects that
+  # produce output.
   #
   # @since 0.1.0
   # @api private

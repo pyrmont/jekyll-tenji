@@ -19,8 +19,8 @@ module Tenji
   # {Tenji::Pageable} documentation for more information.
   #
   # Finally, {Tenji::GalleryPage} includes the {Tenji::Processable} module. This
-  # module contains common methods that are shared with other page objects in
-  # the Tenji system (specifically {Tenji::ImagePage} and {Tenji::ListPage}).
+  # module contains common methods that are shared with other objects that
+  # produce output.
   #
   # @since 0.1.0
   # @api private
