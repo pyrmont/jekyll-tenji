@@ -108,10 +108,9 @@ module Tenji
     # gallery and {Tenji::ThumbFile} represents the graphics file for a
     # thumbnail of an image in the gallery.
     #
-    # This method goes through each of the file paths in the pre-production
-    # attribute of the {Tenji::Queue} object, makes the relevant object and 
-    # then adds each object to the post-production attribute of the
-    # {Tenji::Queue} object.
+    # This method goes through each of the file paths in the pre-production 
+    # {Tenji::Queue} object, makes the relevant object and then adds each object
+    # to the post-production {Tenji::Queue} object.
     #
     # @since 0.1.0
     # @api private
@@ -126,9 +125,8 @@ module Tenji
 
     # Read the directory
     #
-    # Tenji creates a pre-production queue of file paths by looking at the
-    # directory structure under the galleries directory. Paths are added to the
-    # pre-production attribute of the {Tenji::Queue} object.
+    # Tenji creates a pre-production {Tenji::Queue} object of file paths by 
+    # looking at the directory structure under the galleries directory.
     #
     # @since 0.1.0
     # @api private
