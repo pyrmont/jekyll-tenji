@@ -24,7 +24,7 @@ module Tenji
                   gallery_name,
                   File.join(output_gallery_name, config.dir(:thumbs, :out))
 
-      @relative_path = File.join(@dir, @name)
+      @relative_path = File.join(@dir, output_name)
       @extname = File.extname(@name)
       @data = @site.frontmatter_defaults.all(relative_path, type)
     end

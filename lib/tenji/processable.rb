@@ -14,6 +14,10 @@ module Tenji
       end
     end
 
+    def destination(dest)
+      super(dest).sub(@name, output_name) 
+    end
+
     def inspect()
       ivar_list = instance_variables.map do |v|
                     val = instance_variable_get(v)
@@ -35,6 +39,10 @@ module Tenji
       return res unless config.hidden?(gallery_name)
       Base64.urlsafe_encode64(res, padding: false)
     end
+
+    private def output_name()
+      @name.sub(/^\d+-/, '')
+    end
     
     private def pathify(dir)
       Tenji::Path.new(dir)
@@ -47,6 +55,7 @@ module Tenji
     
     private def process_name()
       process name
+      basename = output_name[0..-ext.length - 1]
     end
   end
 end

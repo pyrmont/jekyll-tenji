@@ -11,8 +11,8 @@ module Tenji
   # One important difference is how the class handles the initialisation
   # parameters. Jekyll assumes that the `dir` parameter represents both
   # the directory name in the source directory and the directory name in the 
-  # destination directory name. This is not necessarily the case in Tenji. See 
-  # the {#initialize} documentation for more information.
+  # destination directory. This is not the case in Tenji. See the {#initialize}
+  # documentation for more information.
   #
   # Another difference is that Tenji implements its own mechanism for
   # pagination, set out in the {Tenji::Pageable} module. See the
@@ -32,19 +32,31 @@ module Tenji
 
     # Initialise an object of this class
     #
-    # As noted above, while the `dir` parameter represents the path to the
-    # source directory, it does not necessarily represent the path to the
-    # destination directory. There are two situations in which this occurs.
+    # @note The parameter name `dir` is misleading. It has been retained for
+    #   consistency with the parent class. While the name suggests it is a
+    #   directory name, it is instead the path to the parent of the file
+    #   relative to `base`.
     #
-    # The first is if the user prefixes the directory with an ordinal pattern
-    # (eg. `01-`, `02-`) as a means of ordering the galleries. Tenji will use
-    # this prefix to order the galleries in internal references but will remove
-    # the prefix in the output.
+    # As noted above, while the `dir` parameter is a component of the path in
+    # the source directory, it is not a component of the path in the destination
+    # directory.
     #
-    # The second is is if the user has marked the gallery as `hidden`. In this
-    # case, Tenji will generate an obfuscated name and use this in the
-    # destination directory path. The obfuscation uses
-    # `Base64#urlsafe_encode64` to transform the name.
+    # At a minimum, this is true in respect of the portion of `dir` that
+    # includes the name of the top-level galleries directory. To avoid Jekyll 
+    # processing this directory and its contents independent of Tenji, the 
+    # directory must be prefixed with an `_`. This prefix is stripped when
+    # output (eg. `_albums` becomes `albums`).
+    #
+    # In addition, if the user prefixes the gallery directory's name with an 
+    # ordinal pattern (eg. `01-`, `02-`) as a means of ordering the galleries,
+    # this pattern will be stripped when output.
+    #
+    # Finally, if the user has marked the gallery as `hidden`, Tenji will 
+    # generate an obfuscated name and use this for the gallery's name in the
+    # destination directory. Tenji uses [`Base64#urlsafe_encode64`][doc] to 
+    # transform the name.
+    #
+    # [doc]: https://ruby-doc.org/stdlib/libdoc/base64/rdoc/Base64.html#method-i-urlsafe_encode64
     #
     # Tenji does not require that an actual index page exist for a particular
     # gallery. If the page does not exist, the value of `name` should be set to
@@ -56,7 +68,7 @@ module Tenji
     # @param name [String, nil] the basename of the page (`nil` if the page does
     #   not exist)
     #
-    # @return [Tenji::GalleryPage] the intialised object
+    # @return [Tenji::GalleryPage] the initialised object
     #
     # @since 0.1.0
     # @api private

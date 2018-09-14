@@ -21,7 +21,7 @@ describe Tenji::ImageFile do
       assert_equal 'albums/gallery', obj.instance_variable_get(:@dir)
       assert_equal '01-castle.jpg', obj.name
       assert_equal File.join(@base, '_albums/gallery', '01-castle.jpg'), obj.path
-      assert_equal File.join('albums/gallery', '01-castle.jpg'), obj.relative_path
+      assert_equal File.join('albums/gallery', 'castle.jpg'), obj.relative_path
       assert_equal '.jpg', obj.extname
       assert_equal Hash, obj.data.class
       assert_nil obj.position
