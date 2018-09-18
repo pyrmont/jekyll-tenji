@@ -62,8 +62,7 @@ module Tenji
     # @param site [Jekyll::Site] an object representing the Jekyll site
     # @param base [String] the base path
     # @param dir [String] the directory path
-    # @param name [String, nil] the basename of the page (`nil` if the page does
-    #   not exist)
+    # @param name [String] the basename of the page 
     #
     # @return [Tenji::ImagePage] the initialised object
     #

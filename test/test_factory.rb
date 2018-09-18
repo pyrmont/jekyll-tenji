@@ -132,9 +132,10 @@ class TestFactory
       size_stop = filename.rindex('.')
       size = filename[size_start...size_stop]
       path = Tenji::Path.new filename
-      dir = File.join(@t_dir, path.parent.to_s)
       source_path = Tenji::Path.new(File.join(@g_dir, filename.sub("-#{size}", '')))
-      memo[path.parent.to_s][source_path.name][size] = Tenji::ThumbFile.new @site, @base, dir, path.name, source_path.to_s
+      dir = File.join(@t_dir, path.parent.to_s)
+      thumb = Tenji::ThumbFile.new @site, @base, dir, path.name
+      memo[path.parent.to_s][source_path.name][size] = thumb 
       memo
     end
   end

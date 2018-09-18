@@ -121,7 +121,7 @@ module Tenji
 
       # Write the page
       #
-      # @param dest [String] the destination to which the page will be written
+      # @param dest [String] the path to the destination directory
       #
       # @since 0.1.0
       # @api private

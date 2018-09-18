@@ -6,7 +6,8 @@ describe Tenji::ThumbFile do
     @config.configure({ 'galleries_dir' => '_albums' })
     @site = TestSite.site source: 'test/data/', dest: 'tmp'
     @base = @site.source
-    @obj = Tenji::ThumbFile.new @site, @base, '_thumbs/gallery', 'foo.jpg', '_albums/gallery/bar.jpg'
+    @obj = Tenji::ThumbFile.new @site, @base, '_thumbs/gallery', 'foo.jpg'
+    @obj.source_path = '_albums/gallery/bar.jpg'
   end
 
   after do
@@ -24,19 +25,7 @@ describe Tenji::ThumbFile do
       assert_equal 'albums/gallery/thumbs/foo.jpg', obj.relative_path
       assert_equal '.jpg', obj.extname
       assert_equal Hash, obj.data.class
-    end 
-
-    it "instantiates a Tenji::ThumbFile object with a source" do
-      obj = Tenji::ThumbFile.new @site, @base, '_thumbs/gallery', 'foo.jpg', '_albums/gallery/bar.jpg'
-      assert_equal Tenji::ThumbFile, obj.class
-      assert_equal 'foo.jpg', obj.name
-      assert_equal 'albums/gallery/thumbs', obj.instance_variable_get(:@dir)
-      assert_equal File.join(@base, '_thumbs/gallery/', 'foo.jpg'), obj.path
-      assert_equal File.join('_albums/gallery/', 'bar.jpg'), obj.source_path
-      assert_equal 'albums/gallery/thumbs/foo.jpg', obj.relative_path
-      assert_equal '.jpg', obj.extname
-      assert_equal Hash, obj.data.class
-    end 
+    end
   end
 
   describe "#to_liquid" do

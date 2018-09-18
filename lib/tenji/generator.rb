@@ -145,11 +145,14 @@ module Tenji
 
     # Adds cross references between Tenji objects
     #
-    # To assist with testing, Tenji objects are kept relatively decoupled.
-    # However, for templating purposes, the system needs to be able to access
-    # related objects and the easiest way to do this is for each object to
-    # hold a reference to the objects to which it is related. This method adds
-    # those references.
+    # Although all {Tenji::Processable} objects share relations with other
+    # {Tenji::Processable} objects, these relations are not added at the time of
+    # instantiation. Rather, Tenji adds the references after all the objects
+    # have been created.
+    #
+    # It should be noted that the references added for the {Tenji::ThumbFile}
+    # objects are merely paths to the source image, expressed as a string. The
+    # other objects hold references to their related objects.
     #
     # @since 0.1.0
     # @api private
@@ -157,6 +160,7 @@ module Tenji
       add_references_to_list
       add_references_to_galleries
       add_references_to_images
+      add_references_to_thumbs
       add_references_to_covers
     end
 
@@ -266,6 +270,22 @@ module Tenji
     # @api private
     private def add_references_to_list()
       post.list_page.galleries = galleries['listed']
+    end
+
+    # Add cross references for {Tenji::ThumbFile} objects representing thumbnail
+    # images
+    #
+    # @since 0.1.0
+    # @api private
+    private def add_references_to_thumbs()
+      post.thumb_files.each do |dirname, listings|
+        listings.each do |name,thumbs|
+          thumbs.each do |_, thumb|
+            dir = (config.path(:galleries) + dirname).to_s
+            thumb.source_path = File.join(base, dir, name)
+          end
+        end
+      end
     end
 
     # Assign the {Tenji::ThumbFile} objects representing cover images to the
@@ -422,7 +442,7 @@ module Tenji
         files.each do |file|
           config.thumb_sizes(dirname).each do |size, options|
             name = file.name.append_to_base("-#{size}")
-            thumb = Tenji::ThumbFile.new(site, base, dir, name, file.to_s)
+            thumb = Tenji::ThumbFile.new(site, base, dir, name)
             post.thumb_files[dirname][file.name][size] = thumb
           end
         end

@@ -45,7 +45,6 @@ module Tenji
     # @since 0.1.0
     # @api private
     def destination(dest)
-      puts 'dest is ' + dest
       super(dest).sub(@name, output_name) 
     end
 
