@@ -58,8 +58,20 @@ describe Tenji::Writer do
       assert_equal first_time, second_time
     end
 
+    it "raises an error when the constraints are invalid for the fill function" do
+      assert_raises(Tenji::Writer::ResizeConstraintError) do
+        @obj.write_thumb @input_path.to_s, @output_path.to_s, { 'x' => 100 }, 'fill'
+      end
+    end
+
+    it "raises an error when the constraints are invalid for the fit function" do
+      assert_raises(Tenji::Writer::ResizeConstraintError) do
+        @obj.write_thumb @input_path.to_s, @output_path.to_s, Hash.new, 'fit'
+      end
+    end
+
     it "raises an error when the resize function is unknown" do
-      assert_raises(StandardError) do
+      assert_raises(Tenji::Writer::ResizeInvalidFunctionError) do
         @obj.write_thumb @input_path.to_s, @output_path.to_s, @constraints, 'unknown'
       end
     end

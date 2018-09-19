@@ -111,7 +111,7 @@ module Tenji
     # @return [Hash<String, Integer>] a hash with keys `x` and `y` specifying
     #   the width and height constraints respectively
     #
-    # @raise [ConfigurationTopLevelOptionError] if `dirname` is provides when
+    # @raise [Tenji::Config::NotGalleryLevelError] if `dirname` is provided when
     #   `name` is `:cover`
     #
     # @since 0.1.0
@@ -349,7 +349,8 @@ module Tenji
     #
     # @return [Hash] a hash of settings
     #
-    # @raise [NoGalleryTypeError] if the type is not one of the supported types
+    # @raise [Tenji::Config::NoGalleryTypeError] if the type is not one of the 
+    #   supported types
     #
     # @since 0.1.0
     # @api private
@@ -383,7 +384,10 @@ module Tenji
     #
     # @return [:ignore, -1, 1] the toggle
     #
-    # @raise [NoSortTypeError] if the given sort type does not exist
+    # @raise [Tenji::Config::NoSortTypeError] if the given sort type does not 
+    #   exist
+    # @raise [Tenji::Config::InvalidSortError] if the value for the sort set in
+    #   the configuration file is invalid
     #
     # @since 0.1.0
     # @api private

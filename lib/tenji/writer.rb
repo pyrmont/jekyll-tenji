@@ -52,8 +52,10 @@ module Tenji
     # @param constraints [Hash] height and width constraints
     # @param resize ['fill', 'fit'] the name of the resizing function
     #
-    # @raise [StandardError] the function specified by `resize` is not
-    #   supported
+    # @raise [Tenji::Writer::ResizeConstraintError] if `constraints` were not 
+    #   valid
+    # @raise [Tenji::Writer::ResizeInvalidFunctionError] if `resize` is not
+    #   `'fill'` or `'fit'`
     #
     # @return [Magick::Image] the resized image
     #
@@ -65,16 +67,13 @@ module Tenji
 
       case resize
       when 'fill'
-        msg = 'The fill resize function requires both constraints'
-        raise Tenji::ResizeError, msg unless constraints['x'] && constraints['y']
+        raise ResizeConstraintError unless constraints['x'] && constraints['y']
         image.resize_to_fill! constraints['x'], constraints['y']
       when 'fit'
-        msg = 'The fit resize function requires at least one dimension'
-        raise Tenji::ResizeError, msg unless constraints['x'] || constraints['y']
+        raise ResizeConstraintError unless constraints['x'] || constraints['y']
         image.resize_to_fit! constraints['x'], constraints['y']
       else
-        msg = 'Unrecognised resize function'
-        raise StandardError, msg
+        raise ResizeInvalidFunctionError
       end
     end
   end

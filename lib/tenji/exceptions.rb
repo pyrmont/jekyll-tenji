@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 module Tenji
-  class ConfigurationError < ::StandardError
-  end
-
   module Config
     class InvalidSortError < ::StandardError
       def to_s
@@ -54,12 +51,17 @@ module Tenji
     end
   end
 
-  class NotAFileError < ::StandardError
-  end
+  class Writer 
+    class ResizeConstraintError < ::StandardError
+      def to_s
+        'The given constraints are not valid'
+      end
+    end
 
-  class NotFoundError < ::StandardError
-  end
-
-  class ResizeError < ::StandardError
+    class ResizeInvalidFunctionError < ::StandardError
+      def to_s
+        "The given resizing function must be 'fit' or 'fill'"
+      end
+    end
   end
 end
