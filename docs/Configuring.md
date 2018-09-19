@@ -1,4 +1,4 @@
-## Configuration
+## Configuring Tenji
 
 This document describes how a user can configure Tenji.
 
