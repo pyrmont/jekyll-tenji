@@ -141,15 +141,15 @@ Here's an example of an include that displays all the hidden galleries:
 
 ```html
 {% for gallery in tenji.hidden_galleries %}
-    <li>
-      <a href="{{ gallery.url }}">
-        <picture>
-          <source srcset="{{ gallery.cover.url | to_srcset }}">
-          <img src="{{ gallery.cover.url }}"> 
-        </picture>
-        <h3>{{ gallery.title }}</h3>
-        <p>{{ gallery.description }}</p>
-      </a>
-    </li>
- {% endfor %}
+  <li>
+    <a href="{{ gallery.url }}">
+      <picture>
+        <source srcset="{{ gallery.cover.url | to_srcset }}">
+        <img src="{{ gallery.cover.url }}"> 
+      </picture>
+      <h3>{{ gallery.title }}</h3>
+      <p>{{ gallery.description }}</p>
+    </a>
+  </li>
+{% endfor %}
 ```
