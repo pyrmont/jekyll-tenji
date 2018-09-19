@@ -5,7 +5,7 @@ module Tenji
   # A store of the configuration options for Tenji
   #
   # @note This document describes the operation of the {Tenji::Config} class.
-  #   For information on how to configure Tenji, see {file:Configuration.md}.
+  #   For information on how to configure Tenji, see {file:docs/Configuring.md}.
   #
   # {Tenji::Config} allows for transparent access to Tenji's configuration
   # options. If the requested option has not been set by the user,

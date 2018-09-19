@@ -1,1 +1,1 @@
---markup markdown - Configuration.md
+--plugin yard-commonmarker --markup-provider commonmarker --markup markdown - docs/Configuring.md docs/Templating.md

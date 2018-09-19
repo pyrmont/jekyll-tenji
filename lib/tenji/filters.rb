@@ -6,7 +6,7 @@ module Tenji
   #
   # @note This document describes the operation of the {Tenji::Filters} module.
   #   For information on how to write Liquid templates for use with Tenji, see
-  #   {file:Templating.md}.
+  #   {file:docs/Templating.md}.
   #
   # @since 0.1.0
   # @api private
