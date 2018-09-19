@@ -34,7 +34,7 @@ module Tenji
 
     # Initialise an object of this class
     #
-    # @param [Hash] a pre-prepared collection
+    # @param prepared [Hash] a pre-prepared collection
     #
     # @return [Tenji::Queue] the intialised object 
     def initialize(prepared = nil)

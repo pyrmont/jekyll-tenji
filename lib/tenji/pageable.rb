@@ -82,7 +82,7 @@ module Tenji
       end
     end
 
-    # A module to patch a {Tenji::Page} object's singleton class
+    # A module to patch a {Tenji::Pageable::Page} object's singleton class
     #
     # @since 0.1.0
     # @api private
